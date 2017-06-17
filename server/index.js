@@ -6,7 +6,7 @@ const koaStatic = require('koa-static')
 const bodyParser = require('koa-bodyparser')
 const middleware = require('./middleware')
 const http = require('http')
-const IO = require('socket.io')
+const io = require('./io')
 
 app.keys = [' some secret hurr']
 const CONFIG = {
@@ -16,30 +16,24 @@ const CONFIG = {
 }
 
 const router = new Router()
+router.use('/dynamicjs', require('./routers/contentScript').routes())
 router.use('*', require('./routers/index').routes())
 
 app
   .use(koaStatic(__dirname + '/../build'))
   .use(middleware)
   .use(session(CONFIG, app))
+  .use(async (ctx, next) => {
+    // mock user login
+    if (!ctx.session.uid) {
+      ctx.session.uid = 'A' + new Date().getTime()
+    }
+    await next()
+  })
   .use(bodyParser())
   .use(router.routes())
   .use(router.allowedMethods())
 
 const server = http.createServer(app.callback())
 server.listen(8080)
-
-const io = new IO()
 io.attach(server)
-
-// io
-let ioId = 0
-app.context.wss = {}
-io.on('connection', socket => {
-  socket.__id = ++ioId
-  console.log('io connection ', ioId)
-  app.context.wss[socket.__id] = socket
-  socket.on('disconnect', () => {
-    delete app.context.wss[socket.__id]
-  })
-})
