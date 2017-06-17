@@ -1,0 +1,8 @@
+# Algorithm
+
+init -> {
+  shuffle cards[]
+}
+
+
+
