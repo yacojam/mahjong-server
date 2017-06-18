@@ -24,4 +24,8 @@ router.get('/createroom', ctx => {
   const roomid = 'Room' + new Date().getTime()
 })
 
+router.get('/redis', ctx => {
+  ctx.json = redis.getAll()
+})
+
 module.exports = router

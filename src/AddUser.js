@@ -15,9 +15,14 @@ class AddUser extends React.Component {
         return
       }
       const user = { uid: values.uid, name: values.name }
-      window.socket.emit('userjoin', {
-        user,
-        roomid: this.props.roomid
+      window.socket.emit('userjoin', user, user => {
+        window.socket.emit('data', {
+          action: {
+            roomid: this.props.roomid,
+            type: 'ACTION_ROOM_USER_JOIN',
+            user
+          }
+        })
       })
     })
   }

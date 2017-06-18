@@ -26,6 +26,7 @@ async function reducer(room, action) {
       throw 'user alreay in room'
     }
     room.users.push(user)
+    console.log(`user ${user} join room ${room}`)
     return room
   }
 
