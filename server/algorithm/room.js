@@ -1,40 +1,35 @@
 const Game = require('./mahjong')
 const actionTypes = require('./actiontypes')
 
-class Room {
-  constructor(id) {
-    this.id = id
-    this.game = null
-    this.users = []
-    this.state = ROOM_STATE_INIT
-  }
-
-  userJoin(uid) {
-    if (this.users.length == 4 || this.users.indexOf(uid)) {
-      return false
-    }
-    this.users.push(uid)
-    return true
-  }
-
-  start() {
-    this.game = new Game()
+function create(id) 
+  return {
+    id,
+    game: null,
+    users: [],
+    state: actionTypes.ROOM_STATE_INIT
   }
 }
 
-function reducer(room, action, cb) {
+async function reducer(room, action) {
   if (action.type === actionTypes.ACTION_ROOM_USER_JOIN) {
     const uid = action.uid
     if (room.users.length == 4) {
-      return cb('room full')
+      throw('room full')
     }
     if (room.users.indexOf(uid) != -1) {
-      return cb('user alreay in room')
+      throw('user alreay in room')
     }
-    room.users.push(uid)
-    return cb(null, room)
+    room.users.push({
+      uid
+    })
   }
 
   if (action.type == actionTypes.ACTION_ROOM_USER_START) {
+    const uid = action.uid 
   }
+}
+
+module.exports = {
+  create,
+  reducer
 }

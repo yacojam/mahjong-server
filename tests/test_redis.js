@@ -1,7 +1,6 @@
-const Redis = require('ioredis')
-const redis = new Redis()
+const redis = require('../server/redis')
 
-redis.set('foo', 'bar2')
+redis.set('foo', { a: 1 })
 /*
 redis.get('foo', (error, result) => {
   console.log(result)

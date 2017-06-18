@@ -1,5 +1,6 @@
 const Router = require('koa-router')
 const router = new Router()
+const redis = require('../redis')
 
 router.get('/add', async ctx => {
   ctx.json = {
@@ -17,6 +18,10 @@ router.get('/test', ctx => {
       data: new Date()
     })
   })
+})
+
+router.get('/createroom', ctx => {
+  const roomid = 'Room' + new Date().getTime()
 })
 
 module.exports = router
