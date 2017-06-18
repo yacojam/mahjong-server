@@ -21,13 +21,9 @@ class AddUser extends React.Component {
         alert('uid & name required')
         return
       }
-      const user = { uid: values.uid, name: values.name }
-      window.socket.emit('userjoin', user, user => {
-        window.socket.emit('action', {
-          roomid: this.state.roomid,
-          type: 'ACTION_ROOM_USER_JOIN',
-          user
-        })
+      window.socket.emit('action', {
+        roomid: this.state.roomid,
+        type: 'ACTION_ROOM_USER_JOIN'
       })
     })
   }
@@ -50,15 +46,6 @@ class AddUser extends React.Component {
     const { getFieldProps } = this.props.form
     return (
       <div>
-        <TextField
-          {...getFieldProps('uid', {
-            rules: [{ required: true }],
-            initialValue: this.state.uid
-          })}
-          style={{ marginRight: 10 }}
-          hintText="uid"
-          floatingLabelText="uid"
-        />
         <TextField
           {...getFieldProps('name', {
             rules: [{ required: true }],

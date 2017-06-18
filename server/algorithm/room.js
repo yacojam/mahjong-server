@@ -18,11 +18,14 @@ async function reducer(room, action) {
   await Promise.all(room.users.map(user => User.reducer(user, action)))
 
   if (action.type === actionTypes.ACTION_ROOM_USER_JOIN) {
-    const user = action.user
+    const user = action.user || {
+      uid: action._uid,
+      name: action._uid
+    }
     if (room.users.length == 4) {
       throw 'room full'
     }
-    if (room.users.indexOf(user.uid) != -1) {
+    if (room.users.findIndex(user => user.uid == action._uid) != -1) {
       throw 'user alreay in room'
     }
     room.users.push(user)
