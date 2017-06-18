@@ -25,10 +25,14 @@ io.on('connection', socket => {
       userManager.setUserConnection(uid, null)
     })
     socket.on('action', async action => {
-      console.log('HANDLE:', action)
-      action._uid = uid
-      const newData = await dispatch(action)
-      publish(newData, action)
+      try {
+        console.log('HANDLE:', action)
+        action._uid = uid
+        const newData = await dispatch(action)
+        publish(newData, action)
+      } catch (e) {
+        console.log(e)
+      }
     })
 
     // mock multi user

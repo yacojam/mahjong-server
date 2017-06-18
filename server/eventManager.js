@@ -6,8 +6,8 @@ async function dispatch(action) {
     try {
       let room = await redis.get(action.roomid)
       if (!room) {
-        console.log(`room ${room.id} not exists`)
-        return
+        console.log(`room ${action.roomid} not exists`)
+        return null
       }
       room = await Room.reducer(room, action)
       await redis.set(room.id, room)

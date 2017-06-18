@@ -26,7 +26,7 @@ class App extends Component {
           </Box>
           <hr />
           <AddRoom onRoomCreate={this.onRoomCreate} />
-          <AddUser roomid={this.state.roomid} />
+          <AddUser />
         </VBox>
       </MuiThemeProvider>
     )

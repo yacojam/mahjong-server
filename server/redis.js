@@ -15,7 +15,7 @@ const redis = {
   },
   get(key) {
     return new Promise(resolve => {
-      resolve(mem[key])
+      resolve(mem[key] || null)
     })
   },
   getAll() {

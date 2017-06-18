@@ -19,5 +19,6 @@ function sendMessage(uid, message) {
 
 module.exports = {
   setUserConnection,
-  getUserConnection
+  getUserConnection,
+  sendMessage
 }

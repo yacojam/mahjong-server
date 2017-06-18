@@ -28,4 +28,9 @@ router.get('/redis', ctx => {
   ctx.json = redis.getAll()
 })
 
+router.get('/rooms', async ctx => {
+  const rooms = await redis.get('rooms')
+  ctx.json = rooms
+})
+
 module.exports = router
