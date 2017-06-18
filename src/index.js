@@ -9,6 +9,7 @@ const socket = new io(':8080')
 socket.on('data', data => {
   console.log(data)
 })
+window.socket = socket
 
 ReactDOM.render(<App />, document.getElementById('root'))
 registerServiceWorker()
