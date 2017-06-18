@@ -1,0 +1,1 @@
+function dispatch(roomid, action) {}
