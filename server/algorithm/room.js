@@ -30,10 +30,13 @@ async function reducer(room, action) {
   }
 
   if (action.type == actionTypes.ACTION_ROOM_USER_START) {
-    if (room.users.length == 4 && room.users.every(user => user.state === states.STATE_USER_START)) {
+    if (
+      room.users.length == 4 &&
+      room.users.every(user => user.state === states.STATE_USER_START)
+    ) {
       dispatch({
-        roomid: room.id
-        type: actionTypes.ACTION_ROOM_START,
+        roomid: room.id,
+        type: actionTypes.ACTION_ROOM_START
       })
     }
   }

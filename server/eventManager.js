@@ -9,6 +9,8 @@ async function dispatch(action) {
       return
     }
     room = await Room.reducer(room, action)
+    await redis.set(room.id, room)
+    return room
   }
 }
 
