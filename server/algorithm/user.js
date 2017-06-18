@@ -15,3 +15,8 @@ async function reducer(user, action) {
     user.state = states.STATE_USER_START
   }
 }
+
+module.exports = {
+  create,
+  reducer
+}

@@ -1,7 +1,10 @@
 const Game = require('./mahjong')
 const actionTypes = require('./actiontypes')
+const states = require('./states')
+const User = require('./user')
+const dispatch = require('../eventManager')
 
-function create(id) 
+function create(id) {
   return {
     id,
     game: null,
@@ -11,22 +14,31 @@ function create(id)
 }
 
 async function reducer(room, action) {
+  // apply user reducer
+  await Promise.all(room.users.map(user => User.reducer(user, action)))
+
   if (action.type === actionTypes.ACTION_ROOM_USER_JOIN) {
-    const uid = action.uid
+    const user = action.user
     if (room.users.length == 4) {
-      throw('room full')
+      throw 'room full'
     }
-    if (room.users.indexOf(uid) != -1) {
-      throw('user alreay in room')
+    if (room.users.indexOf(user.uid) != -1) {
+      throw 'user alreay in room'
     }
-    room.users.push({
-      uid
-    })
+    room.users.push(user)
+    return room
   }
 
   if (action.type == actionTypes.ACTION_ROOM_USER_START) {
-    const uid = action.uid 
+    if (room.users.length == 4 && room.users.every(user => user.state === states.STATE_USER_START)) {
+      dispatch({
+        roomid: room.id
+        type: actionTypes.ACTION_ROOM_START,
+      })
+    }
   }
+
+  return room
 }
 
 module.exports = {
