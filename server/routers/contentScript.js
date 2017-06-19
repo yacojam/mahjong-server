@@ -3,7 +3,7 @@ const router = new Router()
 
 router.get('/index.js', ctx => {
   ctx.type = 'application/javascript'
-  ctx.body = 'console.log("index.js")'
+  ctx.body = `const uid = '${ctx.session.uid}';`
 })
 
 module.exports = router

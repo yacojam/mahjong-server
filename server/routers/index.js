@@ -29,7 +29,12 @@ router.get('/redis', ctx => {
 })
 
 router.get('/rooms', async ctx => {
-  const rooms = await redis.get('rooms')
+  const roomids = (await redis.get('rooms')) || []
+  console.log(roomids)
+  const ps = roomids.map(roomid => {
+    return redis.get(roomid)
+  })
+  const rooms = await Promise.all(ps)
   ctx.json = rooms
 })
 

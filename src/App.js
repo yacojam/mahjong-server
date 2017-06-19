@@ -37,8 +37,8 @@ class App extends Component {
           {this.state.rooms.map(room => (
             <RaisedButton
               style={style}
-              key={room}
-              label={'join: ' + room}
+              key={room.id}
+              label={'join: ' + room.id + ' (' + room.users.length + ' users)'}
               primary={true}
             />
           ))}
