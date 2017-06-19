@@ -29,22 +29,32 @@ class App extends Component {
   }
   render() {
     const style = {
-      marginRight: 10
+      marginRight: 10,
+      marginBottom: 10
     }
     return (
       <MuiThemeProvider>
-        <VBox style={{ padding: 20 }}>
-          {this.state.rooms.map(room => (
-            <RaisedButton
-              style={style}
-              key={room.id}
-              label={'join: ' + room.id + ' (' + room.users.length + ' users)'}
-              primary={true}
-            />
-          ))}
-          <hr />
-          <AddRoom onRoomCreate={this.onRoomCreate} />
-        </VBox>
+        <Box>
+          <Box width={240}>
+            left
+          </Box>
+          <VBox flex={1}>
+            <div>
+              {this.state.rooms.map(room => (
+                <RaisedButton
+                  style={style}
+                  key={room.id}
+                  label={
+                    'join: ' + room.id + ' (' + room.users.length + ' users)'
+                  }
+                  primary={true}
+                />
+              ))}
+            </div>
+            <hr />
+            <AddRoom onRoomCreate={this.onRoomCreate} />
+          </VBox>
+        </Box>
       </MuiThemeProvider>
     )
   }

@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 class AddRoom extends React.Component {
   onClick = () => {
     window.socket.emit('createroom', roomid => {
-      this.props.onRoomCreate && this.props.onRoomCreate(roomid)
+      window.location.reload()
     })
   }
   render() {
