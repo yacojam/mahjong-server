@@ -1,13 +1,13 @@
-const Room = require('./algorithm/room')
-const redis = require('./redis')
-const userManager = require('./userManager')
-const dispatch = require('./eventManager')
-const actionTypes = require('./algorithm/actiontypes')
+const Room = require('../algorithm/room')
+const redis = require('../redis')
+const user2ws = require('../socket/user2ws')
+const dispatch = require('../dataflow/dispatch')
+const actionTypes = require('../algorithm/actiontypes')
 
 function bind(socket) {
   socket.on('userjoin', async (user, fn) => {
     console.log('user join', user)
-    userManager.setUserConnection(user.uid, socket)
+    user2ws.setUserConnection(user.uid, socket)
     fn(user)
   })
   socket.on('createroom', async fn => {

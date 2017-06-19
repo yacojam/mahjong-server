@@ -2,7 +2,6 @@ const Game = require('./mahjong')
 const actionTypes = require('./actiontypes')
 const states = require('./states')
 const User = require('./user')
-const dispatch = require('../eventManager')
 
 function create(id) {
   return {
@@ -38,10 +37,7 @@ async function reducer(room, action) {
       room.users.length == 4 &&
       room.users.every(user => user.state === states.STATE_USER_START)
     ) {
-      dispatch({
-        roomid: room.id,
-        type: actionTypes.ACTION_ROOM_START
-      })
+      // start game
     }
   }
 

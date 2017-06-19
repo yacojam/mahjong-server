@@ -1,10 +1,10 @@
 const cookie = require('cookie')
 const IO = require('socket.io')
 const io = new IO()
-const userManager = require('./userManager')
-const dispatch = require('./eventManager')
-const publish = require('./publishManager')
-const iomock = require('./iomock')
+const user2ws = require('../socket/user2ws')
+const dispatch = require('../dataflow/dispatch')
+const publish = require('../dataflow/publish')
+const iomock = require('../socket/iomock')
 
 io.on('connection', socket => {
   let uid = 0
@@ -19,10 +19,10 @@ io.on('connection', socket => {
     socket.disconnect(true)
   } else {
     console.log(`user ${uid} connect`)
-    userManager.setUserConnection(uid, socket)
+    user2ws.setUserConnection(uid, socket)
     socket.on('disconnect', reason => {
       console.log(`user ${uid} leave ${reason}`)
-      userManager.setUserConnection(uid, null)
+      user2ws.setUserConnection(uid, null)
     })
     socket.on('action', async action => {
       try {

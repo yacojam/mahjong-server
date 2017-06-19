@@ -4,9 +4,9 @@ const session = require('koa-session')
 const Router = require('koa-router')
 const koaStatic = require('koa-static')
 const bodyParser = require('koa-bodyparser')
-const middleware = require('./middleware')
+const middleware = require('./koa/middleware')
 const http = require('http')
-const io = require('./io')
+const io = require('./socket/io')
 
 app.keys = [' some secret hurr']
 const CONFIG = {

@@ -1,5 +1,5 @@
-const redis = require('./redis')
-const Room = require('./algorithm/room')
+const redis = require('../redis')
+const Room = require('../algorithm/room')
 async function dispatch(action) {
   if (action.roomid) {
     // room event
