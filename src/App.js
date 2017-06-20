@@ -5,12 +5,16 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Box, { VBox } from 'react-layout-components'
 import AddRoom from './AddRoom'
 import Rooms from './Rooms'
+import Messages from './Messages'
 
 injectTapEventPlugin()
 class App extends Component {
   constructor(context) {
     super(context)
-    this.state = { rooms: [] }
+    this.state = {
+      rooms: [],
+      messages: []
+    }
   }
   onRoomCreate = roomid => {
     this.refreshRooms()
@@ -31,7 +35,13 @@ class App extends Component {
     this.refreshRooms()
 
     window.socket.on('data', data => {
-      console.log('socket:', data)
+      const messages = this.state.messages
+      messages.push({
+        date: new Date(),
+        type: 1,
+        data
+      })
+      this.setState({ messages })
     })
   }
   render() {
@@ -39,7 +49,7 @@ class App extends Component {
       <MuiThemeProvider>
         <Box>
           <Box width={240}>
-            left
+            <Messages messages={this.state.messages} />
           </Box>
           <VBox flex={1}>
             <Rooms rooms={this.state.rooms} />
