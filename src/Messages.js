@@ -4,10 +4,10 @@ class Messages extends Component {
   render() {
     const messages = this.props.messages
     return (
-      <ul>
+      <ul className="messages">
         {messages.map(msg => (
           <li key={msg.date.getTime()}>
-            <div>{msg.date.getTime()}</div>
+            <div>{msg.date.toString()}</div>
             <div>{JSON.stringify(msg.data)}</div>
           </li>
         ))}
