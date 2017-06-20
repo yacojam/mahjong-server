@@ -29,8 +29,12 @@ io.on('connection', socket => {
         console.log('HANDLE:', action)
         action._uid = uid
         // TODO add pre process
-        const newData = await dispatch(action)
-        await publish(newData, action)
+        try {
+          const newData = await dispatch(action)
+          await publish(null, newData, action)
+        } catch (e) {
+          await publish(e, null, action)
+        }
       } catch (e) {
         console.log(e)
       }

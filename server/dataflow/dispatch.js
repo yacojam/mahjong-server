@@ -3,18 +3,13 @@ const Room = require('../algorithm/room')
 async function dispatch(action) {
   if (action.roomid) {
     // room event
-    try {
-      let room = await redis.get(action.roomid)
-      if (!room) {
-        console.log(`room ${action.roomid} not exists`)
-        return null
-      }
-      room = await Room.reducer(room, action)
-      await redis.set(room.id, room)
-      return room
-    } catch (e) {
-      console.error(e)
+    let room = await redis.get(action.roomid)
+    if (!room) {
+      throw `room ${action.roomid} not exists`
     }
+    room = await Room.reducer(room, action)
+    await redis.set(room.id, room)
+    return room
   }
 }
 
