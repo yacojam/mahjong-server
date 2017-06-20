@@ -6,12 +6,14 @@ import Box, { VBox } from 'react-layout-components'
 import AddRoom from './AddRoom'
 import Rooms from './Rooms'
 import Messages from './Messages'
+import Room from './room/Room'
 
 injectTapEventPlugin()
 class App extends Component {
   constructor(context) {
     super(context)
     this.state = {
+      room: null,
       rooms: [],
       messages: []
     }
@@ -26,7 +28,11 @@ class App extends Component {
         alert(ret.message)
         return
       }
+      const room = ret.data.find(room => {
+        return !room.users.every(user => user.uid === window.uid)
+      })
       this.setState({
+        room,
         rooms: ret.data || []
       })
     })
@@ -52,9 +58,13 @@ class App extends Component {
             <Messages messages={this.state.messages} />
           </Box>
           <VBox flex={1}>
-            <Rooms rooms={this.state.rooms} />
+            {this.state.room
+              ? <Room room={this.state.room} />
+              : <Rooms rooms={this.state.rooms} />}
             <hr />
-            <AddRoom onRoomCreate={this.onRoomCreate} />
+            {this.state.room
+              ? 'left room'
+              : <AddRoom onRoomCreate={this.onRoomCreate} />}
           </VBox>
         </Box>
       </MuiThemeProvider>
