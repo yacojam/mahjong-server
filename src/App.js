@@ -4,8 +4,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import Box, { VBox } from 'react-layout-components'
 import AddRoom from './AddRoom'
+import Rooms from './Rooms'
 
-import RaisedButton from 'material-ui/RaisedButton'
 injectTapEventPlugin()
 class App extends Component {
   constructor(context) {
@@ -13,9 +13,9 @@ class App extends Component {
     this.state = { rooms: [] }
   }
   onRoomCreate = roomid => {
-    this.setState({ roomid })
+    this.refreshRooms()
   }
-  componentDidMount = () => {
+  refreshRooms = () => {
     fetch('/rooms').then(rsp => rsp.json()).then(ret => {
       console.log(ret)
       if (ret.code !== 0) {
@@ -27,11 +27,14 @@ class App extends Component {
       })
     })
   }
+  componentDidMount = () => {
+    this.refreshRooms()
+
+    window.socket.on('data', data => {
+      console.log('socket:', data)
+    })
+  }
   render() {
-    const style = {
-      marginRight: 10,
-      marginBottom: 10
-    }
     return (
       <MuiThemeProvider>
         <Box>
@@ -39,18 +42,7 @@ class App extends Component {
             left
           </Box>
           <VBox flex={1}>
-            <div>
-              {this.state.rooms.map(room => (
-                <RaisedButton
-                  style={style}
-                  key={room.id}
-                  label={
-                    'join: ' + room.id + ' (' + room.users.length + ' users)'
-                  }
-                  primary={true}
-                />
-              ))}
-            </div>
+            <Rooms rooms={this.state.rooms} />
             <hr />
             <AddRoom onRoomCreate={this.onRoomCreate} />
           </VBox>
