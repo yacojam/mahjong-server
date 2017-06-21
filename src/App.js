@@ -29,7 +29,7 @@ class App extends Component {
         return
       }
       const room = ret.data.find(room => {
-        return !room.users.every(user => user.uid === window.uid)
+        return !room.users.every(user => user.uid !== window.uid)
       })
       this.setState({
         room,
