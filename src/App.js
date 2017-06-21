@@ -48,6 +48,10 @@ class App extends Component {
         data
       })
       this.setState({ messages })
+
+      if (!data.error && data.data) {
+        this.setState({ room: data.data })
+      }
     })
   }
   render() {
