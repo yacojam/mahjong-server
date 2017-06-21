@@ -98,7 +98,7 @@ class Game {
     this.tiles = shuffle(allTiles(opts))
   }
   static render(tile) {
-    render(tile)
+    return render(tile)
   }
   getTiles() {
     return this.tiles.slice(0)

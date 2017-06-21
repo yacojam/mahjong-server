@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Game from '../mahjong'
 
 class Tile extends Component {
   chupai = () => {
@@ -10,12 +11,16 @@ class Tile extends Component {
     const style = {
       padding: 5
     }
+    console.log(tile, Game.render(tile))
+    const tileImg = Game.render(tile) + '(' + tile + ')'
     if (chupai) {
       return (
-        <a style={style} onClick={this.chupai} href="javascript:;">{tile}</a>
+        <a style={style} onClick={this.chupai} href="#">
+          {tileImg}
+        </a>
       )
     } else {
-      return <span style={style}>{tile}</span>
+      return <span style={style}>{tileImg}</span>
     }
   }
 }
