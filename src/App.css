@@ -39,3 +39,7 @@ ul, li {
   padding: 0;
   list-style: none;
 }
+
+a.tile:hover {
+  font-size: 120%
+}

@@ -7,6 +7,7 @@ const MAX_USER = 2 // just for test
 function create(id) {
   return {
     id,
+    index: 0,
     game: null,
     users: [],
     state: actionTypes.ROOM_STATE_INIT
@@ -14,9 +15,6 @@ function create(id) {
 }
 
 async function reducer(room, action) {
-  // apply user reducer
-  await Promise.all(room.users.map(user => User.reducer(user, action)))
-
   if (action.type === actionTypes.ACTION_ROOM_USER_JOIN) {
     const user = action.user || {
       uid: action._uid,
@@ -48,11 +46,26 @@ async function reducer(room, action) {
       room.leftTiles = tiles
     }
 
+    if (action.type === actionTypes.ACTION_ROOM_USER_CHUPAI) {
+      // check is valid
+      if (
+        !room.users.find(
+          user =>
+            user.actions.indexOf('chupai') !== -1 && user.uid === action._uid
+        )
+      ) {
+        throw `user ${user.uid} cannot chupai`
+      }
+      const tile = action.tile
+    }
+
     return room
   }
 
   return room
 }
+
+function tileActions(tiles, tile) {}
 
 module.exports = {
   create,

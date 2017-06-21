@@ -11,16 +11,15 @@ class Tile extends Component {
     const style = {
       padding: 5
     }
-    console.log(tile, Game.render(tile))
     const tileImg = Game.render(tile) + '(' + tile + ')'
     if (chupai) {
       return (
-        <a style={style} onClick={this.chupai} href="#">
+        <a className="tile" style={style} onClick={this.chupai} href="#">
           {tileImg}
         </a>
       )
     } else {
-      return <span style={style}>{tileImg}</span>
+      return <span className="tile" style={style}>{tileImg}</span>
     }
   }
 }

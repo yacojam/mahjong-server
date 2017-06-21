@@ -100,6 +100,12 @@ class Game {
   static render(tile) {
     return render(tile)
   }
+  static getWans(tiles) {
+    return tiles.filter(tile => tile >= wanStart && tile <= wanEnd)
+  }
+  static getBings(tiles) {
+    return tiles.filter(tile => tile >= bingStart && tile <= bingEnd)
+  }
   getTiles() {
     return this.tiles.slice(0)
   }
