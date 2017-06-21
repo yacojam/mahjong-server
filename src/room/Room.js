@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Tiles from './Tiles'
 
 class Room extends Component {
   render() {
@@ -9,7 +10,12 @@ class Room extends Component {
         <div>
           {room.users.map(user => (
             <div key={user.uid}>
-              {user.name}
+              <div>
+                {user.name}
+              </div>
+              {user.tiles
+                ? <Tiles tiles={user.tiles} actions={user.actions} />
+                : null}
             </div>
           ))}
         </div>
