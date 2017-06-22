@@ -106,6 +106,9 @@ class Game {
   static getBings(tiles) {
     return tiles.filter(tile => tile >= bingStart && tile <= bingEnd)
   }
+  static getZis(tiles) {
+    return tiles.filter(tile => tile >= ziStart && tile <= ziEnd)
+  }
   getTiles() {
     return this.tiles.slice(0)
   }

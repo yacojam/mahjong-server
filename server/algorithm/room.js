@@ -67,6 +67,62 @@ async function reducer(room, action) {
 
 function tileActions(tiles, tile) {}
 
+function canHu(tiles, tile) {}
+
+function is332(tiles) {
+  tiles.sort((a, b) => a - b)
+  for (let i = 0; i != tiles.length; ++i) {
+  }
+}
+
+function pick3(tiles, tile) {
+  if (tiles.length == 0) {
+    return 3
+  }
+  if (tiles.length == 2) {
+    return 2
+  }
+  if (hasAAA(tiles, tile)) {
+    const leftTiles = []
+    let cnt = 0
+    tiles.forEach(t => {
+      if (t === tile && cnt != 3) {
+        ++cnt
+      } else {
+        leftTiles.push(t)
+      }
+    })
+    return leftTiles
+  }
+  if (hasABC(tiles, tile)) {
+    const i1 = tiles.indexOf(tile)
+    const i2 = tiles.indexOf(tile + 1)
+    const i3 = tiles.indexOf(tile + 2)
+    const leftTiles = []
+    tiles.forEach((t, i) => {
+      if (i != i1 && i != i2 && i != i3) {
+        leftTiles.push(t)
+      }
+    })
+    return leftTiles
+  }
+  return 0
+}
+
+function hasAAA(tiles, tile) {
+  let cnt = 0
+  tiles.forEach(t => {
+    if (t === tile) {
+      ++cnt
+    }
+  })
+  return cnt >= 3
+}
+
+function hasABC(tiles, tile) {
+  return tiles.indexOf(tile + 1) !== -1 && tiles.indexOf(tile + 2) !== -1
+}
+
 module.exports = {
   create,
   reducer
