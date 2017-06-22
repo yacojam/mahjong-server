@@ -1,9 +1,18 @@
 var mysql = require('mysql');
+var config = require('../config/config');
+
 var pool = null;
 
-function nop(a,b,c,d,e,f,g){
 
-}
+exports.init = function(){
+    pool = mysql.createPool({
+	    host : '106.15.206.180',
+	    user : 'test',
+	    password : 'Njnova211',
+	    port : '3306',
+	    database :'Nova_game'
+    });
+};
 
 function query(sql,callback){  
     pool.getConnection(function(err,conn){  
@@ -20,36 +29,72 @@ function query(sql,callback){
     });  
 };
 
-exports.init = function(){
-    pool = mysql.createPool({
-	    host : '106.15.206.180',
-	    user : 'test',
-	    password : 'Njnova211',
-	    port : '3306',
-	    database :'Nova_game'
+/** 获取用户信息，没有数据返回 null **/
+if (config.DEV) {
+	exports.get_account_info = function(account,password,callback){
+        if(account == null || password == null){
+            callback(null);
+            return;
+        }  
+
+        var sql = 'SELECT * FROM t_users WHERE account = "' + account + '" and password = "'+ password +'"';
+        query(sql, function(err, rows, fields) {
+            if (err) {
+                callback(null);
+                throw err;
+            }
+        
+            if(rows.length == 0){
+                callback(null);
+                return;
+            }
+            callback(rows[0]);
+        }); 
+    };
+} else {
+	exports.get_account_info = function(account,callback){
+        if(account == null){
+            callback(null);
+            return;
+        }  
+
+        var sql = 'SELECT * FROM nv_users WHERE account = "' + account + '"';
+        query(sql, function(err, rows, fields) {
+            if (err) {
+                callback(null);
+                throw err;
+            }
+        
+            if(rows.length == 0){
+                callback(null);
+                return;
+            }
+            callback(rows[0]);
+        }); 
+    };
+};
+
+
+/** 创建用户，测试环境下不做测试 **/
+exports.create_account = function(account,wxid,name,sex,headimg,callback){
+    if(account == null || name == null){
+        callback(false);
+        return;
+    }
+    var sql = 'INSERT INTO '+ config.userTable +'(account,wxid,name,sex,headimg) VALUES("' + account + '","' + wxid + '","'+ name +'",'+ sex +',"'+ headimg +'")';
+    query(sql, function(err, rows, fields) {
+        if (err) {
+            callback(false);
+            throw err;
+        }
+        else{
+            callback(true);            
+        }
     });
 };
 
-exports.get_account_info = function(account,password,callback){
-    if(account == null || password == null){
-        callback(null);
-        return;
-    }  
 
-    var sql = 'SELECT * FROM t_users WHERE account = "' + account + '" and password = "'+ password +'"';
-    query(sql, function(err, rows, fields) {
-        if (err) {
-            callback(null);
-            throw err;
-        }
-        
-        if(rows.length == 0){
-            callback(null);
-            return;
-        }
-        callback(rows[0]);
-    }); 
-};
+
 
 exports.is_account_exists = function(account,callback){
 	callback = callback == null? nop:callback;
@@ -60,8 +105,6 @@ exports.is_account_exists = function(account,callback){
 
     var sql = 'SELECT * FROM t_users WHERE account = "' + account + '"';
     query(sql, function(err, rows, fields) {
-    	console.log(rows);
-    	console.log(fields);
         if (err) {
             callback(false);
             throw err;
@@ -77,29 +120,7 @@ exports.is_account_exists = function(account,callback){
     });
 };
 
-exports.create_account = function(account,password,name,sex,headimg,callback){
-    callback = callback == null? nop:callback;
-    if(account == null || password == null || name == null){
-        callback(false);
-        return;
-    }
-    var gems = 9;
-    var psw = crypto.md5(password);
-    var sql = 'INSERT INTO t_users(account,password,name,sex,headimg,gems) VALUES("' + account + '","' + psw + '","'+ name +'")';
-    query(sql, function(err, rows, fields) {
-        if (err) {
-            if(err.code == 'ER_DUP_ENTRY'){
-                callback(false);
-                return;         
-            }
-            callback(false);
-            throw err;
-        }
-        else{
-            callback(true);            
-        }
-    });
-};
+
 
 exports.is_wx_exists = function(wxid,callback){
     callback = callback == null ? nop:callback;
