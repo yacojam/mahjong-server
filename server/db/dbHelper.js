@@ -30,58 +30,34 @@ function query(sql,callback){
 };
 
 /** 获取用户信息，没有数据返回 null **/
-if (config.DEV) {
-	exports.get_account_info = function(account,password,callback){
-        if(account == null || password == null){
+
+exports.get_account_info = function(account,callback){
+    if(account == null || account == ''){
+        callback(null);
+        return;
+    }  
+    var sql = 'SELECT * FROM nv_users WHERE account = "' + account + '"';
+    query(sql, function(err, rows, fields) {
+        if (err) {
+            callback(null);
+            throw err;
+        }
+        if(rows.length == 0){
             callback(null);
             return;
-        }  
-
-        var sql = 'SELECT * FROM t_users WHERE account = "' + account + '" and password = "'+ password +'"';
-        query(sql, function(err, rows, fields) {
-            if (err) {
-                callback(null);
-                throw err;
-            }
-        
-            if(rows.length == 0){
-                callback(null);
-                return;
-            }
-            callback(rows[0]);
-        }); 
-    };
-} else {
-	exports.get_account_info = function(account,callback){
-        if(account == null){
-            callback(null);
-            return;
-        }  
-
-        var sql = 'SELECT * FROM nv_users WHERE account = "' + account + '"';
-        query(sql, function(err, rows, fields) {
-            if (err) {
-                callback(null);
-                throw err;
-            }
-        
-            if(rows.length == 0){
-                callback(null);
-                return;
-            }
-            callback(rows[0]);
-        }); 
-    };
+        }
+        callback(rows[0]);
+    }); 
 };
 
 
 /** 创建用户，测试环境下不做测试 **/
 exports.create_account = function(account,wxid,name,sex,headimg,callback){
-    if(account == null || name == null){
+    if(account == null || name == null || account == ''|| name == ''){
         callback(false);
         return;
     }
-    var sql = 'INSERT INTO '+ config.userTable +'(account,wxid,name,sex,headimg) VALUES("' + account + '","' + wxid + '","'+ name +'",'+ sex +',"'+ headimg +'")';
+    var sql = 'INSERT INTO nv_users(account,wxid,name,sex,headimg) VALUES("' + account + '","' + wxid + '","'+ name +'",'+ sex +',"'+ headimg +'")';
     query(sql, function(err, rows, fields) {
         if (err) {
             callback(false);
@@ -93,6 +69,28 @@ exports.create_account = function(account,wxid,name,sex,headimg,callback){
     });
 };
 
+/** 获取用户当前的房卡数量 **/
+exports.get_card_of_account = function(account,callback){
+	if (account == null || account == '') {
+		callback(0);
+		return;
+	};
+	var sql = 'select card from nv_users where account = "' + account + '"';
+	query(sql, function(err,rows.fields){
+		if (err) {
+            callback(0);
+            throw err;
+        }
+        else{
+            if(rows.length > 0){
+                callback(rows[0].card);
+            }
+            else{
+                callback(0);
+            }
+        }
+	}); 
+};
 
 
 
