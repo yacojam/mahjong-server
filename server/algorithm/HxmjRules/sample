@@ -1,0 +1,325 @@
+//乱分
+var shouPais = [47,51,53,55]; 
+var pengPais = [41,43,45];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 55;
+
+//双四核
+var shouPais = [34,34,21,22]; 
+var pengPais = [22,23,45];
+var gangPais = [45];
+var anGangPais = [];
+var huPai = 23;
+
+var shouPais = [12,12,12,12,14,22,22]; 
+var pengPais = [13,15];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [12,12,12,12,13,13,13,14,22,22]; 
+var pengPais = [15];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [12,12,12,12,13,13,13,14,14,19,19,22,22]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+//门清清一色
+var shouPais = [12,12,12,12,13,13,14,14,15,18,18,19,19]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 15;
+
+var shouPais = [11,11,11,12,13,14,15,16,17,18,19,19,19]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [11,11,11,12,13,14,15,16,17,18]; 
+var pengPais = [19];
+var gangPais = [19];
+var anGangPais = [19];
+var huPai = 13;
+
+//8通
+var shouPais = [11,12,13,13,13,14,14]; 
+var pengPais = [23,45];
+var gangPais = [23];
+var anGangPais = [];
+var huPai = 13;
+
+//11胡
+var shouPais = [11,11,19,19]; 
+var pengPais = [41,45,53];
+var gangPais = [41];
+var anGangPais = [];
+var huPai = 11;
+
+//七对双棒棒
+var shouPais = [11,11,12,12,13,24,24,25,25,26,26,41,41]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [11,11,12,12,13,13,13,14,14,15,15,41,41]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [11,11,12,12,13,24,24,41,41,43,43,45,45]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [11,11,12,12,13,24,24,41,41,51,51,53,53];（随风） 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+//门清碰碰胡
+var shouPais = [11,11,11,22,22,22,33,33,33,41,41,53,53]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 41;
+
+var shouPais = [11,11,11,12,12,12,13,13,13,14,14,53,53]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 53;
+
+//四缸
+var shouPais = [13]; 
+var pengPais = [41,23,26,15];
+var gangPais = [41,23,26,15];
+var anGangPais = [];
+var huPai = 13;
+
+//3通
+var shouPais = [11,12,17,17];
+var pengPais = [21,22,27];
+var gangPais = [21,22];
+var anGangPais = [];
+var huPai = 13;
+
+//4大砍
+var shouPais = [23,23,24,24,24,37,37];
+var pengPais = [21,22];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 23;
+
+var shouPais = [37,37,41,41,43,43,43];
+var pengPais = [45,47];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 41;
+
+var shouPais = [37,37,41,41,53,53,53];
+var pengPais = [45,47];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 41;
+
+//双通
+
+var shouPais = [25,25,26,27,28,31,32];
+var pengPais = [23,35];
+var gangPais = [23,35];
+var anGangPais = [];
+var huPai = 33;
+
+//双8支
+var shouPais = [21,22,25,25,26,27,28];
+var pengPais = [34,39];
+var gangPais = [34,39];
+var anGangPais = [];
+var huPai = 23;
+
+//3g
+var shouPais = [21,22,25,25];
+var pengPais = [34,39,26];
+var gangPais = [34,39,26];
+var anGangPais = [];
+var huPai = 23;
+
+//清一色
+var shouPais = [11,11,11,12,13,14,15,16,17,18]; 
+var pengPais = [19];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+//测试三大砍
+var shouPais = [11,11,11,12,12,12,13,13,14,14]; 
+var pengPais = [53];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [11,11,11,12,12,12,13,13,15,15]; 
+var pengPais = [53];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+
+var shouPais = [11,11,51,51,51,55,55]; 
+var pengPais = [53,12];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 55;
+
+//31点+10
+清一色 + 四核
+var shouPais = [11,11,11,12,13,14,15,16,17,18]; 
+var pengPais = [18];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+清一色 + 枯枝呀
+var shouPais = [11,12,14,14]; 
+var pengPais = [16,18,19];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+清一色 + 碰碰胡
+var shouPais = [11,11,14,14]; 
+var pengPais = [16,18,19];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 11;
+
+清一色 + 三大砍
+var shouPais = [11,12,13,13,13,17,17]; 
+var pengPais = [18,19];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 17;
+
+七对 + 四核
+var shouPais = [11,11,12,12,13,13,13,27,27,41,41,43,43]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [11,11,12,12,13,16,16,19,19,41,41,43,43]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+大跳车 + 草一色
+var shouPais = [13]; 
+var pengPais = [11,14,41,43];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+大跳车 + 三大砍
+var shouPais = [13]; 
+var pengPais = [21,41,43,45];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+//安老小头
+
+var shouPais = [11,11,11,19,19,19,23,24,27,28,29,43,43]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 22;
+
+var shouPais = [11,11,19,19,19,22,23,24,27,28,29,43,43]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 11;
+
+//计算点数
+var shouPais = [11,11,12,12,13,13,13,17,17,41,41,43,43]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 13;
+
+var shouPais = [11,11,13,13,14,14,15,43,43,43]; 
+var pengPais = [25];
+var gangPais = [25];
+var anGangPais = [];
+var huPai = 15;
+
+var shouPais = [11,11,13,14,43,43,43]; 
+var pengPais = [25,27];
+var gangPais = [25];
+var anGangPais = [];
+var huPai = 15;
+
+
+var shouPais = [11,11,12,13,14,14,14,15,16,17]; 
+var pengPais = [25];
+var gangPais = [25];
+var anGangPais = [];
+var huPai = 11;
+
+
+var shouPais = [11,11,12,13,14,15,16,17,18,19]; 
+var pengPais = [25];
+var gangPais = [25];
+var anGangPais = [];
+var huPai = 11;
+
+var shouPais = [11,12,12,13,13,14,15,16,17,18,19,27,27]; 
+var pengPais = [];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 11;
+
+
+var shouPais = [11,11,43,43]; 
+var pengPais = [19,21,29];
+var gangPais = [];
+var anGangPais = [];
+var huPai = 11;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
