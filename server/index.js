@@ -17,6 +17,7 @@ const CONFIG = {
 
 const router = new Router()
 router.use('/dynamicjs', require('./routers/contentScript').routes())
+router.use('/services', require('./routers/userService').routes())
 router.use('*', require('./routers/index').routes())
 
 app

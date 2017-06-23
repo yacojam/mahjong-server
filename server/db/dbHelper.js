@@ -3,7 +3,6 @@ var config = require('../config/config');
 
 var pool = null;
 
-
 exports.init = function(){
     pool = mysql.createPool({
 	    host : '106.15.206.180',
@@ -30,42 +29,71 @@ function query(sql,callback){
 };
 
 /** 获取用户信息，没有数据返回 null **/
-
-exports.get_account_info = function(account,callback){
-    if(account == null || account == ''){
-        callback(null);
-        return;
-    }  
-    var sql = 'SELECT * FROM nv_users WHERE account = "' + account + '"';
-    query(sql, function(err, rows, fields) {
-        if (err) {
-            callback(null);
-            throw err;
-        }
-        if(rows.length == 0){
-            callback(null);
-            return;
-        }
-        callback(rows[0]);
-    }); 
+exports.sync_get_account_info = async function(account){
+    return new Promise(resolve => {
+        if(account == null || account == ''){
+            resolve(null);
+        }  
+        var sql = 'SELECT * FROM nv_users WHERE account = "' + account + '"';
+        query(sql, function(err, rows, fields) {
+            if (err) {
+                resolve(null);
+            }
+            if(rows.length == 0){
+                resolve(null);
+            }
+            resolve(rows[0]);
+        }); 
+    });
 };
 
 
 /** 创建用户，测试环境下不做测试 **/
-exports.create_account = function(account,wxid,name,sex,headimg,callback){
-    if(account == null || name == null || account == ''|| name == ''){
-        callback(false);
-        return;
-    }
-    var sql = 'INSERT INTO nv_users(account,wxid,name,sex,headimg) VALUES("' + account + '","' + wxid + '","'+ name +'",'+ sex +',"'+ headimg +'")';
-    query(sql, function(err, rows, fields) {
-        if (err) {
-            callback(false);
-            throw err;
+exports.sync_create_account = async function(account,wxid,name,sex,headimg){
+    return new Promise(resolve => {
+        if(account == null || name == null || account == ''|| name == ''){
+            resolve(false);
         }
-        else{
-            callback(true);            
-        }
+        var sql = 'INSERT INTO nv_users(account,wxid,name,sex,headimg) VALUES("' + account + '","' + wxid + '","'+ name +'",'+ sex +',"'+ headimg +'")';
+        query(sql, function(err, rows, fields) {
+            if (err) {
+                resolve(false);
+            } else { 
+                resolve(true);            
+            }
+        });
+    });
+};
+
+exports.sync_get_userid_of_account = async function(account){
+    return new Promise(resolve => {
+        if (account == null || account == '') {
+            resolve(0);
+        };
+        var sql = 'select userid from nv_users where account = "'+ account +'"';
+        query(sql, function(err, rows, fields) {
+            if (err) {
+                resolve(0);
+            } else { 
+                resolve(rows[0].userid);            
+            }
+        });
+    });
+};
+
+exports.sync_get_roomid_of_userid = async function(userid){
+    return new Promise(resolve => {
+        if (account == null || account == '') {
+            resolve(null);
+        };
+        var sql = 'select roomid from nv_users where userid = "'+ userid +'"';
+        query(sql, function(err, rows, fields) {
+            if (err) {
+                resolve(null);
+            } else { 
+                resolve(rows[0].userid);            
+            }
+        });
     });
 };
 
@@ -76,7 +104,7 @@ exports.get_card_of_account = function(account,callback){
 		return;
 	};
 	var sql = 'select card from nv_users where account = "' + account + '"';
-	query(sql, function(err,rows.fields){
+	query(sql, function(err,rows,fields){
 		if (err) {
             callback(0);
             throw err;
@@ -93,6 +121,32 @@ exports.get_card_of_account = function(account,callback){
 };
 
 
+
+/** 获取当前玩法所需的房卡数 **/
+exports.get_cardnum_of_ruleid = function(ruleid,callback){
+    if (ruleid == 0) {
+    	callback(0);
+    	return;
+    };
+    var sql = 'select cardnum from nv_cardrules where id = "' + ruleid + '"';
+    query(sql, function(err,rows,fields){
+    	if (err) {
+            callback(0);
+            throw err;
+        }
+        else{
+            if(rows.length > 0){
+                callback(rows[0].card);
+            }
+            else{
+                callback(0);
+            }
+        }
+    });
+};
+
+/** 创建房间 **/
+exports.create_room = function(){};
 
 exports.is_account_exists = function(account,callback){
 	callback = callback == null? nop:callback;

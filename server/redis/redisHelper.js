@@ -6,4 +6,4 @@ var redis = new Redis({
 	password: 'Njnova211'
 });
 
-exports = redis;
+module.exports = redis;
