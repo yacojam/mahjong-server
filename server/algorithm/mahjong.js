@@ -101,13 +101,31 @@ class Game {
     return render(tile)
   }
   static getWans(tiles) {
-    return tiles.filter(tile => tile >= wanStart && tile <= wanEnd)
+    return tiles.filter(Game.isWan)
   }
   static getBings(tiles) {
-    return tiles.filter(tile => tile >= bingStart && tile <= bingEnd)
+    return tiles.filter(Game.isBing)
+  }
+  static getTiaos(tiles) {
+    return tiles.filter(Game.isTiao)
   }
   static getZis(tiles) {
-    return tiles.filter(tile => tile >= ziStart && tile <= ziEnd)
+    return tiles.filter(Game.isZi)
+  }
+  static isWan(tile) {
+    return tile >= wanStart && tile <= wanEnd
+  }
+  static isBing(tile) {
+    return tile >= bingStart && tile <= bingEnd
+  }
+  static isTiao(tile) {
+    return tile >= tiaoStart && tile <= tiaoEnd
+  }
+  static isZi(tile) {
+    return tile >= ziStart && tile <= ziEnd
+  }
+  static isHua(tile) {
+    return tile >= huaStart && tile <= huaEnd
   }
   getTiles() {
     return this.tiles.slice(0)

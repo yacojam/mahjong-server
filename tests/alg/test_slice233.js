@@ -11,7 +11,8 @@ function parse(input) {
 describe('slice233', function() {
   it('', () => {
     // const tiles = parse('11223344556677')
-    const tiles = parse('11122233344')
+    // const tiles = parse('11122233344')
+    const tiles = parse('12344')
     let rets = slice233(tiles)
     console.log(rets)
     rets = slice233(tiles, false)
