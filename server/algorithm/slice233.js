@@ -34,7 +34,7 @@ function pickABC(tiles) {
   return null
 }
 
-function slice233(tiles) {
+function slice233(tiles, includeABC = true) {
   const rets = []
   function slice(tiles, results) {
     if (tiles.length === 0) {
@@ -53,7 +53,7 @@ function slice233(tiles) {
       copy.push(aaa)
       slice(left, copy)
     }
-    if ((slices = pickABC(tiles)) !== null) {
+    if (includeABC && (slices = pickABC(tiles)) !== null) {
       const [abc, left] = slices
       const copy = results.slice(0)
       copy.push(abc)
