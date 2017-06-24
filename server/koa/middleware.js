@@ -13,8 +13,8 @@ module.exports = async function(ctx, next) {
     set(error) {
       this.type = 'application/json'
       this.body = JSON.stringify({
-        code: -1,
-        error: typeof error === 'string'
+        code: error.code || error,
+        message: typeof error === 'string'
           ? error
           : error.message || error.toString()
       })
