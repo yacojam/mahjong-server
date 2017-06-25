@@ -12,7 +12,11 @@ const router = new Router();
 
 router.post('/login', async(ctx, next) => {
     var account = ctx.request.body.account;
+    console.log(account);
     var deviceid = ctx.request.body.deviceid;
+    console.log(deviceid);
+    console.log(ctx.query);
+    console.log(ctx.request.body);
     var userData = await dbHelper.sync_get_account_info(account);
     console.log(userData);
     if (userData == null) {
@@ -25,12 +29,12 @@ router.post('/login', async(ctx, next) => {
                 //获取userid
                 var userid = await dpHelper.sync_get_userid_of_account(account);
                 //生成token
-                var token = cryptoHelper.md5(account + deviceid);
+                var token = cryptoHelper.md5(userid + deviceid);
                 var date = new Date();
                 date.setDate(date.getDate()+60);
                 var validStamp = Date.parse(date);
-                redis.set(account+'token',token);
-                redis.set(account+'validtime',validStamp);
+                await redis.set(userid+deviceid+'token',token);
+                await redis.set(userid+deviceid+'validtime',validStamp);
                 var ret = {
                     userid : userid,
                     account : account,
@@ -48,12 +52,12 @@ router.post('/login', async(ctx, next) => {
             };  
         }      
     } else {
-        var token = cryptoHelper.md5(account + deviceid);
+        var token = cryptoHelper.md5(userData.userid + deviceid);
         var date = new Date();
         date.setDate(date.getDate()+60);
         var validStamp = Date.parse(date);
-        redis.set(account+'token',token);
-        redis.set(account+'validtime',validStamp);
+        await redis.set(userData.userid+deviceid+'token',token);
+        await redis.set(userData.userid+deviceid+'validtime',validStamp);
         var ret = {
             userid : userData.userid,
             account : userData.account,
@@ -70,10 +74,41 @@ router.post('/login', async(ctx, next) => {
     }; 
 });
 
+router.get('/get_account_info', async(ctx, next) => {
+    var userid = ctx.query.userid;
+    var deviceid = ctx.query.deviceid;
+    var token = ctx.query.token;
+    var isValid = await redis.isAccountValid(userid,deviceid,token);
+    if (isValid) {
+        var userData = await dbHelper.sync_get_account_info_by_userid(userid);
+        if (userData) {
+            var ret = {
+                userid : userData.userid,
+                account : userData.account,
+                wxid : userData.wxid,
+                name : userData.name,
+                sex : userData.set,
+                headimg : userData.headimg,
+                card : userData.card,
+                roomid : userData.roomid,
+                token : token
+            };
+            console.log(ret);
+            ctx.body = ret;
+        } else {
+            ctx.throw('account is not saved in db',517);
+        }
+
+    } else {
+        ctx.throw('account is not valid, please relogin',514);
+    }
+});
+
 router.get('/create_private_room', async(ctx, next) => {
-	var account = ctx.query.account;
+	var userid = ctx.query.userid;
 	var deviceid = ctx.query.deviceid;
-    if (isAccountValid) {
+    var isValid = await redis.isAccountValid(userid,deviceid,token);
+    if (isValid) {
         dbHelper.get_card_of_account(account,function(ret1){
         	if (ret1 == 0) {
                 ctx.throw('your account not have enough card',515);
@@ -97,15 +132,5 @@ router.get('/create_private_room', async(ctx, next) => {
     	ctx.throw('account is not valid, please relogin',514);
     }
 });
-
-function isAccountValid(account, deviceid){
-	var value = redis.get(account);
-	if (value == null) {
-		return false;
-	};
-	var token = cryptoHelper.md5(account + deviceid);
-	var nowStamp = Date.parse(new Date());
-	return token == value[0] && nowStamp <= value[1];
-}
 
 module.exports = router

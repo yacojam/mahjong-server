@@ -47,6 +47,24 @@ exports.sync_get_account_info = async function(account){
     });
 };
 
+exports.sync_get_account_info_by_userid = async function(userid){
+    return new Promise(resolve => {
+        if(account == null || account == ''){
+            resolve(null);
+        }  
+        var sql = 'SELECT * FROM nv_users WHERE userid = "' + userid + '"';
+        query(sql, function(err, rows, fields) {
+            if (err) {
+                resolve(null);
+            }
+            if(rows.length == 0){
+                resolve(null);
+            }
+            resolve(rows[0]);
+        }); 
+    });
+};
+
 
 /** 创建用户，测试环境下不做测试 **/
 exports.sync_create_account = async function(account,wxid,name,sex,headimg){
