@@ -27,8 +27,76 @@ CommonRules.getPaiType = function(mj) {
     return 6;
 };
 
+
+ /**
+  ** --- 碰杠牌检测 ---
+  ** 获取目标牌在自己手牌中的数量
+  **/ 
+CommonRules.getPaiNum = function(shouPais, pai){
+    var samePais = shouPais.filter(function(e){
+        return e == pai;
+    }); 
+    return samePais.length;
+};
+
+ /**
+  ** --- 弯杠检测 ---
+  ** 
+  **/
+CommonRules.getWanGangPais = function(shouPais, pai, pengPais){
+	var ret = [];
+    var allPais = shouPais.concat();
+    allPais.push(pai);
+    allPais.forEach(function(e){
+        if (CommonUtils.contains(pengPais, e)) {
+        	ret.push(e);
+        };
+    });
+    return ret;
+};
+
+ /**
+  ** --- 暗杠检测 ---
+  ** 
+  **/
+CommonRules.getAnGangPais = function(shouPais, pai){
+	var ret = [];
+    var allPais = shouPais.concat();
+    allPais.push(pai);
+    if (allPais.length < 4) {
+    	return ret;
+    };
+    for (var i = 0; i < allPais.length - 3; i++) {
+    	if (allPais[i] == allPais[i+1] && allPais[i] == allPais[i+2] && allPais[i] == allPais[i+3]) {
+    		ret.push(allPais[i]);
+    	};
+    };
+    return ret;
+};
+
+/**
+ ** 和县麻将的胡牌检测
+ **/
+CommonRules.getHuType = function(pengPais,shouPais,huPai){
+    //非正常胡牌1，乱分
+    var allPais = pengPais.concat(shouPais);
+    allPais.push(huPai);
+    var isLuanfeng = isAllPaisTypeFeng(allPais);
+    if (isLuanfeng) {
+        return 1;
+    };
+    //非正常胡牌2，七对
+    var isSP = isSevenPairs(shouPais, huPai);
+    if (isSP) {
+        return 2;
+    };
+
+    //判断能否正常胡牌
+    return canHu(shouPais,huPai) ? 3 : 0;
+};
+
 //判断牌组是不是都是 风 ／ 中发白
-CommonRules.isAllPaisTypeFeng = function(pais){
+function isAllPaisTypeFeng(pais){
 	var isAll = true;
 	for (var i = 0; i < pais.length; i++) {
 		type = CommonRules.getPaiType(pais[i]);
@@ -40,12 +108,12 @@ CommonRules.isAllPaisTypeFeng = function(pais){
 		}
 	};
 	return isAll;
-};
+}
 
 
 
 //检测是不是七对
-CommonRules.isSevenPairs = function(shouPais,huPai){
+function isSevenPairs(shouPais,huPai){
 	var copyShouPais = shouPais.concat();
 	copyShouPais.push(huPai);
 	copyShouPais.sort();
@@ -62,53 +130,22 @@ CommonRules.isSevenPairs = function(shouPais,huPai){
         return rt;
 	};
 	return false;
-};
- /**
-  ** --- 杠牌检测 ---
-  ** canGangWithOtherPai 记录别人打的牌能不能杠
-  ** canGangWithSelfPai 记录自己摸的时候可不可以杠
-  **/   
-
-// CommonRules.canGangWithOtherPai = function(shouPais,newPai) {
-//     var samePais = shouPais.filter(function(e,index,array){
-//         return e == newPai;
-//     }); 
-//     if (samePais.length == 3) {
-//       	return true;
-//     };
-//     return false;
-// };
-// CommonRules.canGangWithSelfPai = function(pengPais,shouPais,newPai) {
-// 	if (canGangWithOtherPai(shouPais,newPai)) {
-// 		return true;
-// 	}
-// 	if (commonUtils.contains(pengPais,newPai)) {
-// 		return true;
-// 	}
-// 	for (var i = 0; i<shouPais.length;i++)
-// 	{
-// 		if (commonUtils.contains(pengPais,shouPais[i])) {
-// 			return true;
-// 		}
-// 	}
-//     return false;
-// };
-
+}
 
 /**
  ** --- 传统胡牌的检测算法 ---
  **/
-CommonRules.canHu = function(shouPais,huPai){
+function canHu (shouPais,huPai){
 	if (shouPais.length == 1) {
 		return shouPais[0] == huPai;
 	};
     copyShouPais = shouPais.concat();
 	copyShouPais.push(huPai);
 	copyShouPais.sort();
-	return CommonRules.isMatchHu(copyShouPais);
+	return isMatchHu(copyShouPais);
 };
     
-CommonRules.isMatchHu = function(shouPai){
+function isMatchHu(shouPai){
     	var plength = shouPai.length;
 		for (var i = 0; i < plength;) {
 			//console.log(i);

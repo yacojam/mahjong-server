@@ -33,27 +33,7 @@ var HxRules = function(isFengForThreeKan,isNaForDouble,isNaFor3Gang,isNaForQYS,i
     
 };
 
-/**
- ** 和县麻将的胡牌检测
- **/
-HxRules.getHuType = function(pengPais,shouPais,huPai){
-    //非正常胡牌1，乱分
-    var allPais = pengPais.concat(shouPais);
-    allPais.push(huPai);
-    var isLuanfeng = CommonRules.isAllPaisTypeFeng(allPais);
-    if (isLuanfeng) {
-        return 1;
-    };
 
-    //非正常胡牌2，七对
-    var isSP = CommonRules.isSevenPairs(shouPais, huPai);
-    if (isSP) {
-        return 2;
-    };
-
-    //判断能否正常胡牌
-    return CommonRules.canHu(shouPais,huPai) ? 3 : 0;
-};
 
 /**
  ** ******** 自定义大拿的牌型检测 *********
