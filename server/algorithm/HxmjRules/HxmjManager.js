@@ -1,5 +1,6 @@
 const Action = require('./hxaction');
-const CommonRules = require('./CommonRules')
+const CommonRules = require('./CommonRules');
+const paisArr = [11,11,11,11,12,12,12,12,13,13,13,13,14,14,14,14,15,15,15,15,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,21,21,21,21,22,22,22,22,23,23,23,23,24,24,24,24,25,25,25,25,26,26,26,26,27,27,27,27,28,28,28,28,29,29,29,29,31,31,31,31,32,32,32,32,33,33,33,33,34,34,34,34,35,35,35,35,36,36,36,36,37,37,37,37,38,38,38,38,39,39,39,39,41,41,41,41,43,43,43,43,45,45,45,45,47,47,47,47,51,51,51,51,53,53,53,53,55,55,55,55];
 
 exports.getActions = function (shouPais, pengPais, action, desPai) {
 	var actions = [];
@@ -79,4 +80,65 @@ exports.getActions = function (shouPais, pengPais, action, desPai) {
 	}
 	return actions;
 };
+
+//136张牌随机排列
+exports.getRandomPais = function(){
+    var pais = paisArr.concat();
+    var len = paisArr.length;
+    for (var i = 0; i <= len - 1; i++) {
+        var idx = Math.floor(Math.random() * (len - i));
+        var temp = pais[idx];
+        pais[idx] = pais[len - i - 1];
+        pais[len - i - 1] = temp;
+    };
+    return pais;
+};
+
+//根据排列好的牌，从庄家开始分配牌，4441的形式
+exports.getUserPais = function(pais){
+    var usersPais = [];
+    var user0Pais = [];
+    var user1Pais = [];
+    var user2Pais = [];
+    var user3Pais = [];
+    if (pais.length == 136) {
+        for (var j = 0 ; j < 3; j++) {
+            for(var i = 0; i < 4; i++){
+                user0Pais.push(pais.pop());
+            }
+            for(var i = 0; i < 4; i++){
+                user1Pais.push(pais.pop());
+            }
+            for(var i = 0; i < 4; i++){
+                user2Pais.push(pais.pop());
+            }
+            for(var i = 0; i < 4; i++){
+                user3Pais.push(pais.pop());
+            }
+        };
+        user0Pais.push(pais.pop());
+        user1Pais.push(pais.pop());
+        user2Pais.push(pais.pop());
+        user3Pais.push(pais.pop());
+        user0Pais.push(pais.pop());
+        user0Pais.sort();
+        user1Pais.sort();
+        user2Pais.sort();
+        user3Pais.sort();
+
+        usersPais.push(user0Pais);
+        usersPais.push(user1Pais);
+        usersPais.push(user2Pais);
+        usersPais.push(user3Pais);
+    }
+    return usersPais;
+};
+
+//console.log(paisArr.length);
+// var pais = exports.getRandomPais();
+// var usersPais = exports.getUserPais(pais)
+// console.log(usersPais);
+//console.log(pais);
+
+
 
