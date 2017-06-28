@@ -1,5 +1,7 @@
 const Action = require('./hxaction');
 const CommonRules = require('./CommonRules');
+const HxmjUtils = require('./HxmjUtils');
+
 const paisArr = [11,11,11,11,12,12,12,12,13,13,13,13,14,14,14,14,15,15,15,15,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,21,21,21,21,22,22,22,22,23,23,23,23,24,24,24,24,25,25,25,25,26,26,26,26,27,27,27,27,28,28,28,28,29,29,29,29,31,31,31,31,32,32,32,32,33,33,33,33,34,34,34,34,35,35,35,35,36,36,36,36,37,37,37,37,38,38,38,38,39,39,39,39,41,41,41,41,43,43,43,43,45,45,45,45,47,47,47,47,51,51,51,51,53,53,53,53,55,55,55,55];
 
 exports.getActions = function (shouPais, pengPais, action, desPai) {
@@ -134,6 +136,24 @@ exports.getUserPais = function(pais){
     return usersPais;
 };
 
+//计算积分
+exports.getScore = function(pengPais,gangPais,anGangPais,shouPais,action,huPai,allChupais,roomRules){
+    var huPaiType = CommonRules.getHuType(pengPais, shouPais, huPai);
+    var tingPais = CommonRules.getTingPais(shouPais, pengPais);
+    var isZimo = (action == Action.ACTION_ZIMO || action == Action.ACTION_GSHUA);
+    var isKZY = CommonRules.isKZY(shouPais, pengPais, huPai, isZimo, allChupais);
+    var isGSH = action == Action.ACTION_GSHUA;
+    var isQGH = action == Action.ACTION_QGHU;
+ 
+    var hxmjInfo = new HxmjUtils(pengPais, gangPais, anGangPais, shouPais, huPai, huPaiType, tingPais, isKZY, isZimo, isGSH, isQGH, roomRules);
+    var result = [];
+    result.push(hxmjInfo.calculate());
+    result.push(hxmjInfo.getMotype());
+    return result;
+};
+
+// var shouPais = [11,11,11,12,13,14,15,16,17,18,19,19,19];
+// console.log(CommonRules.getTingPais(shouPais, []));
 //console.log(paisArr.length);
 // var pais = exports.getRandomPais();
 // var usersPais = exports.getUserPais(pais)

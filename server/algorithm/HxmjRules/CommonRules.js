@@ -6,6 +6,8 @@ var mj_tiao = 3; // 31 - 39 1 - 9 条
 var mj_dnxb = 4;  // 41 43 45 47 东南西北
 var mj_zfb = 5; // 51 53 55 中发白
 
+const paiTypes = [11,12,13,14,15,16,17,18,19,21,22,23,24,25,26,27,28,29,31,32,33,34,35,36,37,38,39,41,43,45,47,51,53,55];
+
 var CommonRules = function(){}
 
 CommonRules.getPaiType = function(mj) {
@@ -27,6 +29,46 @@ CommonRules.getPaiType = function(mj) {
     return 6;
 };
 
+ /**
+  ** --- 绝Y检测 ---
+  ** 检测是不是枯枝丫
+  ** 当只听一张牌的时候，且是最后一张的时候
+  **/ 
+CommonRules.isKZY = function(shouPais,pengPais,huPai,isZimo,allChupais){
+
+    var tingPais = CommonRules.getTingPais(shouPais, pengPais);
+    if (tingPais.length == 1) {
+        var copyAllChupais = allChupais.concat();
+        pengPais.forEach(e => {
+            copyAllChupais.push(e);
+            copyAllChupais.push(e);
+            copyAllChupais.push(e);
+        });
+        var filterHupais = copyAllChupais.filter(e => {
+            return e == huPai;
+        });
+        if ((isZimo && filterHupais.length == 3) || (!isZimo && filterHupais.length == 4)) {
+            return true;
+        };
+        return false;
+    };
+    return false;
+};
+
+
+ /**
+  ** --- 听牌检测 ---
+  ** 获取手牌的听牌
+  **/ 
+CommonRules.getTingPais = function(shouPais,pengPais){
+    var tingPais = [];
+    for (var i = 0; i < paiTypes.length; i++) {
+        if (CommonRules.getHuType(pengPais, shouPais, paiTypes[i]) > 0) {
+            tingPais.push(paiTypes[i]);
+        };
+    };
+    return tingPais;
+};
 
  /**
   ** --- 碰杠牌检测 ---
