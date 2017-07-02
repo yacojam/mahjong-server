@@ -8,6 +8,7 @@
     "ioredis": "^3.1.1",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
+    "koa-convert": "^1.2.0",
     "koa-cors": "^0.0.16",
     "koa-router": "^7.2.0",
     "koa-session": "^5.3.0",
