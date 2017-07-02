@@ -13,8 +13,8 @@ class Room extends Component {
               <div>
                 {user.name}
               </div>
-              {user.tiles
-                ? <Tiles tiles={user.tiles} actions={user.actions} />
+              {user.shouPais
+                ? <Tiles tiles={user.shouPais} actions={user.actions} />
                 : null}
             </div>
           ))}

@@ -11,19 +11,19 @@ const cnNumber = '一二三四五六七八九'
 const ziTiles = '东南西北中发白'
 const huaTiles = '春夏秋冬梅兰竹菊'
 const baidaTiles = ['财神', '猫', '老鼠', '聚宝盆', '百搭']
-const wanStart = 1
-const wanEnd = 9
-const bingStart = 11
-const bingEnd = 19
-const tiaoStart = 21
-const tiaoEnd = 29
-const ziStart = 31
-const ziEnd = 37
-const huaStart = 41
-const huaEnd = 48
-const baidaStart = 51
-const baidaEnd = 54
-const baidaTile = 55
+const wanStart = 11
+const wanEnd = 19
+const bingStart = 21
+const bingEnd = 29
+const tiaoStart = 31
+const tiaoEnd = 39
+const ziStart = 41
+const ziEnd = 55
+const huaStart = 61
+const huaEnd = 68
+const baidaStart = 71
+const baidaEnd = 74
+const baidaTile = 75
 function getCnNumber(num) {
   return cnNumber[num - 1]
 }
@@ -38,7 +38,8 @@ function render(tile) {
     return getCnNumber(tile % 10) + '条'
   }
   if (tile >= ziStart && tile <= ziEnd) {
-    return ziTiles[tile % 10 - 1]
+    const map = [41: '东', 43: '南', 45: '西', 47: '北', 51: '中', 53: '发', 55: '白']
+    return map[tile]
   }
   if (tile >= huaStart && tile <= huaEnd) {
     return huaTiles[tile % 10 - 1]

@@ -1,9 +1,11 @@
+const HXMJManager = require('../HxmjRules/HxmjManager')
+const userActions = require('../HxmjRules/hxaction')
 const MAX_USER = 2 // just for test
 async function userJoin(room, user) {
   if (room.users.length == MAX_USER) {
     throw 'room full'
   }
-  if (room.users.findIndex(user => user.uid == action._uid) != -1) {
+  if (room.users.findIndex(u => user.uid == u.uid) != -1) {
     throw 'user alreay in room'
   }
   room.users.push(user)
@@ -12,19 +14,19 @@ async function userJoin(room, user) {
     room.users.length == MAX_USER
     // && room.users.every(user => user.state === states.STATE_USER_START) // todo
   ) {
-    // start game
-    const game = new Game()
-    const tiles = game.getTiles()
-    // deal
-    room.users.forEach(user => {
-      user.tiles = tiles.splice(0, 13) // each 13 cards
-    })
-    const dealer = room.users[0]
-    dealer.tiles.push(tiles.pop()) // dealer has 14 cards, start
-    dealer.actions = ['chupai']
-
-    room.leftTiles = tiles
+    room = await startGame(room)
   }
+  return room
+}
+
+async function startGame(room) {
+  const pais = HXMJManager.getRandomPais()
+  const userPais = HXMJManager.getUserPais(pais)
+  room.users.forEach((user, idx) => {
+    user.shouPais = userPais[idx]
+    user.actions = [userActions.ACTION_DINGQUE]
+  })
+  room.leftPais = pais
   return room
 }
 
