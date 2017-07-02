@@ -5,12 +5,15 @@ const style = {
   margin: '2px'
 }
 class DingQueAction extends Component {
+  onClick = e => {
+    console.log(e.target.getAttribute('data-type'))
+  }
   render() {
     return (
       <div>
-        <a style={style} href="#">万</a>
-        <a style={style} href="#">饼</a>
-        <a style={style} href="#">条</a>
+        <button data-type="wan" onClick={this.onClick}>万</button>
+        <button data-type="bing" onClick={this.onClick}>饼</button>
+        <button data-type="tiao" onClick={this.onClick}>条</button>
       </div>
     )
   }
