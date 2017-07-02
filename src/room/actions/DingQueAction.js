@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Action from '../../hxaction'
 
 const style = {
   padding: '2px 5px',
@@ -6,7 +7,11 @@ const style = {
 }
 class DingQueAction extends Component {
   onClick = e => {
-    console.log(e.target.getAttribute('data-type'))
+    const que = e.target.getAttribute('data-type')
+    window.socket.emit('action', {
+      type: Action.ACTION_DINGQUE,
+      que
+    })
   }
   render() {
     return (
