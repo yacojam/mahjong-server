@@ -38,7 +38,15 @@ function render(tile) {
     return getCnNumber(tile % 10) + '条'
   }
   if (tile >= ziStart && tile <= ziEnd) {
-    const map = [41: '东', 43: '南', 45: '西', 47: '北', 51: '中', 53: '发', 55: '白']
+    const map = {
+      41: '东',
+      43: '南',
+      45: '西',
+      47: '北',
+      51: '中',
+      53: '发',
+      55: '白'
+    }
     return map[tile]
   }
   if (tile >= huaStart && tile <= huaEnd) {

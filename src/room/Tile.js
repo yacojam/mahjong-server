@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Game from '../../server/algorithm/mahjong'
+import Game from '../mahjong'
 
 class Tile extends Component {
   chupai = () => {
