@@ -8,14 +8,13 @@ class User extends Component {
     const { user } = this.props
     const actions = user.actions
     const dingque = actions.indexOf(Action.ACTION_DINGQUE) !== -1
+    const chupai = actions.indexOf(Action.ACTION_CHU) !== -1
     return (
       <div>
         <div>
           {user.name}
         </div>
-        {user.shouPais
-          ? <Tiles tiles={user.shouPais} actions={user.actions} />
-          : null}
+        {user.shouPais ? <Tiles tiles={user.shouPais} chupai={chupai} /> : null}
         <div className="userActions">
           {dingque ? <DingQueAction /> : ''}
         </div>

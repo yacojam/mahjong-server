@@ -4,8 +4,7 @@ import Tile from './Tile'
 class Tiles extends Component {
   render() {
     console.log(this.props)
-    const { actions, tiles } = this.props
-    const chupai = actions && actions.indexOf('chupai') !== -1
+    const { chupai, tiles } = this.props
     return (
       <div>
         {tiles

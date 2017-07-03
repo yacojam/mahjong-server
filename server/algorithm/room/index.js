@@ -3,7 +3,8 @@ const paiAction = require('../HxmjRules/hxaction')
 const states = require('../states')
 const User = require('../user')
 
-const handleUserJoinRoom = require('./actionUserJoin')
+const actionUserJoin = require('./actionUserJoin')
+const actionDingQue = require('./actionDingQue')
 
 function create(id) {
   return {
@@ -21,11 +22,11 @@ async function reducer(room, action) {
       uid: action._uid,
       name: action._uid
     }
-    room = handleUserJoinRoom(room, user)
+    room = await actionUserJoin(room, user)
   }
 
   if (action.type === paiAction.ACTION_DINGQUE) {
-    // do dinq que
+    room = await actionDingQue(action)
   }
 
   return room
