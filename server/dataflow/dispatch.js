@@ -1,16 +1,10 @@
-const redis = require('../redis')
+const store = require('./store')
 const Room = require('../algorithm/room')
 async function dispatch(action) {
-  if (action.roomid) {
-    // room event
-    let room = await redis.get(action.roomid)
-    if (!room) {
-      throw `room ${action.roomid} not exists`
-    }
-    room = await Room.reducer(room, action)
-    await redis.set(room.id, room)
-    return room
-  }
+  let room = action.room
+  room = await Room.reducer(room, action)
+  action.room = room
+  return room
 }
 
 module.exports = dispatch

@@ -11,6 +11,9 @@ async function attach(action) {
   }
 
   const room = await store.getRoom(rid)
+  if (!room) {
+    throw `room ${rid} not exists`
+  }
   // TODO fill user info
   // const user = store.getUserInfo(uid)
   const user = {

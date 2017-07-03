@@ -4,6 +4,7 @@ const io = new IO()
 const user2ws = require('../socket/user2ws')
 const attach = require('../dataflow/attach')
 const dispatch = require('../dataflow/dispatch')
+const save = require('../dataflow/save')
 const publish = require('../dataflow/publish')
 const iomock = require('../socket/iomock')
 
@@ -31,8 +32,9 @@ io.on('connection', socket => {
         action._uid = uid
         try {
           await attach(action)
-          const newData = await dispatch(action)
-          await publish(null, newData, action)
+          const room = await dispatch(action)
+          await save(action)
+          await publish(null, room, action)
         } catch (e) {
           await publish(e, null, action)
         }
