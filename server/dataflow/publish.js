@@ -1,7 +1,8 @@
+const colors = require('colors')
 const user2ws = require('../socket/user2ws')
 
 async function publish(error, data, action) {
-  console.log('PUBLISH', error, data, action)
+  console.log('PUBLISH'.green, error, JSON.stringify(data), '\n')
   if (action.roomid) {
     const room = data
     room.users.forEach(user => {

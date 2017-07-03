@@ -1,3 +1,4 @@
+const colors = require('colors')
 const store = require('./store')
 
 async function attach(action) {
@@ -23,7 +24,7 @@ async function attach(action) {
   }
   action.room = room
   action.user = user
-  console.log('ATTACH', action)
+  console.log('ATTACH'.green, JSON.stringify(action), '\n')
   return action
 }
 
