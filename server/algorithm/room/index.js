@@ -1,5 +1,5 @@
 const actionTypes = require('../actiontypes')
-const userAction = require('../HxmjRules/hxaction')
+const paiAction = require('../HxmjRules/hxaction')
 const states = require('../states')
 const User = require('../user')
 
@@ -22,6 +22,10 @@ async function reducer(room, action) {
       name: action._uid
     }
     room = handleUserJoinRoom(room, user)
+  }
+
+  if (action.type === paiAction.ACTION_DINGQUE) {
+    // do dinq que
   }
 
   return room

@@ -2,6 +2,7 @@ const cookie = require('cookie')
 const IO = require('socket.io')
 const io = new IO()
 const user2ws = require('../socket/user2ws')
+const attach = require('../dataflow/attach')
 const dispatch = require('../dataflow/dispatch')
 const publish = require('../dataflow/publish')
 const iomock = require('../socket/iomock')
@@ -28,8 +29,8 @@ io.on('connection', socket => {
       try {
         console.log('HANDLE:', action)
         action._uid = uid
-        // TODO add pre process
         try {
+          await attach(action)
           const newData = await dispatch(action)
           await publish(null, newData, action)
         } catch (e) {
