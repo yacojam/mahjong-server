@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
+import Action from '../hxaction'
 // import Game from '../mahjong'
 
 class Tile extends Component {
   chupai = () => {
     const { tile } = this.props
-    console.log('chupai', tile)
+    window.socket.emit('action', {
+      type: Action.ACTION_CHU,
+      pai: tile
+    })
   }
   render() {
     const { tile, chupai } = this.props
@@ -13,15 +17,16 @@ class Tile extends Component {
     }
     // const tileImg = Game.render(tile) + '(' + tile + ')'
     const tileImg = tile
-    if (chupai) {
-      return (
-        <button className="tile" style={style} onClick={this.chupai}>
-          {tileImg}
-        </button>
-      )
-    } else {
-      return <span className="tile" style={style}>{tileImg}</span>
-    }
+    return (
+      <button
+        className="tile"
+        style={style}
+        onClick={this.chupai}
+        disabled={chupai ? '' : 'disabled'}
+      >
+        {tileImg}
+      </button>
+    )
   }
 }
 

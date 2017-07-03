@@ -8,6 +8,13 @@ async function userJoin(room, user) {
   if (room.users.findIndex(u => user.uid == u.uid) != -1) {
     throw 'user alreay in room'
   }
+  Object.assign(user, {
+    shouPais: [],
+    chuPais: [],
+    pengPais: [],
+    gangPais: [],
+    anGangPais: []
+  })
   room.users.push(user)
   console.log(`user ${user} join room ${room}`)
   if (
