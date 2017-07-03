@@ -6,7 +6,7 @@ async function attach(action) {
   const userRoom = await store.getUserRoom(uid)
   if (userRoom && rid && rid != userRoom) {
     throw `user ${uid}'s room is ${userRoom}, but action room is ${rid}`
-  } else {
+  } else if (userRoom) {
     rid = userRoom
   }
 
@@ -18,9 +18,13 @@ async function attach(action) {
   // const user = store.getUserInfo(uid)
   const user = {
     uid,
-    name: uid
+    name: uid,
+    actions: []
   }
   action.room = room
   action.user = user
+  console.log('ATTACH', action)
   return action
 }
+
+module.exports = attach

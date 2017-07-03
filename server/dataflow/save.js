@@ -6,3 +6,5 @@ async function save(action) {
   await store.setUserRoom(user.uid, room.id)
   // TODO persistent
 }
+
+module.exports = save
