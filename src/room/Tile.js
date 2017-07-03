@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Game from '../mahjong'
+// import Game from '../mahjong'
 
 class Tile extends Component {
   chupai = () => {
@@ -11,12 +11,13 @@ class Tile extends Component {
     const style = {
       padding: 5
     }
-    const tileImg = Game.render(tile) + '(' + tile + ')'
+    // const tileImg = Game.render(tile) + '(' + tile + ')'
+    const tileImg = tile
     if (chupai) {
       return (
-        <a className="tile" style={style} onClick={this.chupai} href="#">
+        <button className="tile" style={style} onClick={this.chupai}>
           {tileImg}
-        </a>
+        </button>
       )
     } else {
       return <span className="tile" style={style}>{tileImg}</span>

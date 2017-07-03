@@ -4,7 +4,7 @@ import User from './User'
 class Room extends Component {
   render() {
     const { room } = this.props
-    const user = room.users.find(u => u.uid == window.uid)
+    const user = room.users.find(u => u.uid === window.uid)
     return (
       <div>
         <div>id: {room.id}</div>

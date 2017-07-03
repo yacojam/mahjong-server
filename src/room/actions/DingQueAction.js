@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 import Action from '../../hxaction'
 
-const style = {
-  padding: '2px 5px',
-  margin: '2px'
-}
 class DingQueAction extends Component {
   onClick = e => {
     const que = e.target.getAttribute('data-type')
@@ -16,9 +12,9 @@ class DingQueAction extends Component {
   render() {
     return (
       <div>
-        <button data-type="wan" onClick={this.onClick}>万</button>
-        <button data-type="bing" onClick={this.onClick}>饼</button>
-        <button data-type="tiao" onClick={this.onClick}>条</button>
+        <button data-type="wan" onClick={this.onClick}>w</button>
+        <button data-type="bing" onClick={this.onClick}>b</button>
+        <button data-type="tiao" onClick={this.onClick}>t</button>
       </div>
     )
   }
