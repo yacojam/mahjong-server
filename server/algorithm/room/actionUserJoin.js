@@ -1,5 +1,5 @@
 const HXMJManager = require('../HxmjRules/HxmjManager')
-const userActions = require('../HxmjRules/hxaction')
+const Action = require('../HxmjRules/hxaction')
 const MAX_USER = 2 // just for test
 async function userJoin(room, user) {
   if (room.users.length == MAX_USER) {
@@ -31,7 +31,7 @@ async function startGame(room) {
   const userPais = HXMJManager.getUserPais(pais)
   room.users.forEach((user, idx) => {
     user.shouPais = userPais[idx]
-    user.actions = [userActions.ACTION_DINGQUE]
+    user.actions = [Action.makeupAction(Action.ACTION_DINGQUE, 0)]
   })
   room.leftPais = pais
   return room

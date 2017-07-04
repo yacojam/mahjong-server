@@ -24,7 +24,7 @@ async function dingque(action) {
       Action.ACTION_MO,
       dealer.shouPais[dealer.shouPais.length - 1]
     )
-    dealer.actions.push(Action.ACTION_CHU)
+    dealer.actions.push(Action.makeupAction(Action.ACTION_CHU, 0))
   }
 
   return room

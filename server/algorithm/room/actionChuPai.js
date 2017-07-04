@@ -1,5 +1,6 @@
 const HXMJManager = require('../HxmjRules/HxmjManager')
 const Action = require('../HxmjRules/hxaction')
+require('colors')
 
 async function chupai(action) {
   const { user, room, pai } = action
@@ -11,6 +12,7 @@ async function chupai(action) {
   // remove pai from shou pai
   const paiIndex = currentUser.shouPais.findIndex(p => p === pai)
   currentUser.shouPais.splice(paiIndex, 1)
+  currentUser.shouPais.sort((a, b) => a - b)
 
   // clear user actions
   users.forEach(u => (u.actions = []))
@@ -36,7 +38,7 @@ async function chupai(action) {
     )
     nextUser.shouPais.push(moPai)
     if (nextUser.actions.length === 0) {
-      nextUser.actions = [Action.ACTION_CHU]
+      nextUser.actions = [Action.makeupAction(Action.ACTION_CHU, 0)]
     }
   }
   return room

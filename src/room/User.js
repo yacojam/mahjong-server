@@ -7,8 +7,13 @@ class User extends Component {
   render() {
     const { user } = this.props
     const actions = user.actions
-    const dingque = actions.indexOf(Action.ACTION_DINGQUE) !== -1
-    const chupai = actions.indexOf(Action.ACTION_CHU) !== -1
+    const dingque =
+      actions.findIndex(action => action.pAction === Action.ACTION_DINGQUE) !==
+      -1
+    const chupai =
+      actions.findIndex(action => action.pAction === Action.ACTION_CHU) !== -1
+    console.log(Action)
+
     return (
       <div>
         <div>
