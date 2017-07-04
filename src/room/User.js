@@ -13,18 +13,17 @@ class User extends Component {
       -1
     const chupai =
       actions.findIndex(action => action.pAction === Action.ACTION_CHU) !== -1
-    console.log(Action)
+
+    const style = isSelf
+      ? {
+          color: 'green'
+        }
+      : {
+          color: '#666'
+        }
 
     return (
-      <div
-        style={
-          !isSelf
-            ? {
-                color: '#666'
-              }
-            : { color: 'green' }
-        }
-      >
+      <div style={style}>
         <div>
           {isSelf ? <b>{user.name}</b> : user.name}
         </div>
