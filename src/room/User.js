@@ -19,7 +19,18 @@ class User extends Component {
         <div>
           {user.name}
         </div>
-        {user.shouPais ? <Tiles tiles={user.shouPais} chupai={chupai} /> : null}
+        <div style={{ border: '1px solid red', padding: 2 }}>
+          chupai: <Tiles tiles={user.chuPais} chupai={false} />
+          <br />
+          peng: <Tiles tiles={user.pengPais} chupai={false} />
+          gang: <Tiles tiles={user.gangPais} chupai={false} />
+          angang: <Tiles tiles={user.anGangPais} chupai={false} />
+        </div>
+        <div>
+          {user.shouPais
+            ? <Tiles tiles={user.shouPais} chupai={chupai} />
+            : null}
+        </div>
         <div className="userActions">
           {dingque ? <DingQueAction /> : ''}
         </div>
