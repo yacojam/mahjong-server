@@ -9,8 +9,7 @@ class Room extends Component {
       <div>
         <div>id: {room.id}</div>
         <div>
-          {/* room.users.map(user => <User user={user} key={user.uid} />) */}
-          <User user={user} />
+          {room.users.map(user => <User user={user} key={user.uid} />)}
         </div>
       </div>
     )

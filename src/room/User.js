@@ -6,6 +6,7 @@ import DingQueAction from './actions/DingQueAction'
 class User extends Component {
   render() {
     const { user } = this.props
+    const isSelf = user.uid === window.uid
     const actions = user.actions
     const dingque =
       actions.findIndex(action => action.pAction === Action.ACTION_DINGQUE) !==
@@ -15,11 +16,19 @@ class User extends Component {
     console.log(Action)
 
     return (
-      <div>
+      <div
+        style={
+          !isSelf
+            ? {
+                color: '#666'
+              }
+            : { color: 'green' }
+        }
+      >
         <div>
-          {user.name}
+          {isSelf ? <b>{user.name}</b> : user.name}
         </div>
-        <div style={{ border: '1px solid red', padding: 2 }}>
+        <div style={{ padding: 2 }}>
           chupai: <Tiles tiles={user.chuPais} chupai={false} />
           <br />
           peng: <Tiles tiles={user.pengPais} chupai={false} />
@@ -28,7 +37,7 @@ class User extends Component {
         </div>
         <div>
           {user.shouPais
-            ? <Tiles tiles={user.shouPais} chupai={chupai} />
+            ? <Tiles tiles={user.shouPais} chupai={isSelf && chupai} />
             : null}
         </div>
         <div className="userActions">
