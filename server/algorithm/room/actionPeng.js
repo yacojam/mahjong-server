@@ -9,14 +9,12 @@ async function peng(action) {
   // check if other user has action or pending action
   let waitForOtherUserAction = false
   room.users.forEach(u => {
-    if (u.actions.length > 0 && !u.pendingAction) {
+    if (u.uid !== user.uid && u.actions.length > 0 && !u.pendingAction) {
       waitForOtherUserAction = true
     }
   })
-
-  if (waitForOtherUserAction) {
-    currentUser.pendingAction = Action.makeupAction(action.type, pai)
-  } else {
+  currentUser.pendingAction = Action.makeupAction(action.type, pai)
+  if (!waitForOtherUserAction) {
     // all user has acted
     utils.filterUserAction(room)
     // remove user actions & pendingAction
