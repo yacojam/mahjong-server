@@ -1,119 +1,4 @@
-var mysql = require('mysql');
-var config = require('../config/config');
 
-var pool = null;
-
-exports.init = function(){
-    pool = mysql.createPool({
-	    host : '106.15.206.180',
-	    user : 'test',
-	    password : 'Njnova211',
-	    port : '3306',
-	    database :'Nova_game'
-    });
-};
-
-function query(sql,callback){  
-    pool.getConnection(function(err,conn){  
-        if(err){  
-            callback(err,null,null);  
-        }else{  
-            conn.query(sql,function(qerr,vals,fields){  
-                //释放连接  
-                conn.release();  
-                //事件驱动回调  
-                callback(qerr,vals,fields);  
-            });  
-        }  
-    });  
-};
-
-/** 获取用户信息，没有数据返回 null **/
-exports.sync_get_account_info = async function(account){
-    return new Promise(resolve => {
-        if(account == null || account == ''){
-            resolve(null);
-        }  
-        var sql = 'SELECT * FROM nv_users WHERE account = "' + account + '"';
-        query(sql, function(err, rows, fields) {
-            if (err) {
-                resolve(null);
-            }
-            if(rows.length == 0){
-                resolve(null);
-            }
-            resolve(rows[0]);
-        }); 
-    });
-};
-
-exports.sync_get_account_info_by_userid = async function(userid){
-    return new Promise(resolve => {
-        if(account == null || account == ''){
-            resolve(null);
-        }  
-        var sql = 'SELECT * FROM nv_users WHERE userid = "' + userid + '"';
-        query(sql, function(err, rows, fields) {
-            if (err) {
-                resolve(null);
-            }
-            if(rows.length == 0){
-                resolve(null);
-            }
-            resolve(rows[0]);
-        }); 
-    });
-};
-
-
-/** 创建用户，测试环境下不做测试 **/
-exports.sync_create_account = async function(account,wxid,name,sex,headimg){
-    return new Promise(resolve => {
-        if(account == null || name == null || account == ''|| name == ''){
-            resolve(false);
-        }
-        var sql = 'INSERT INTO nv_users(account,wxid,name,sex,headimg) VALUES("' + account + '","' + wxid + '","'+ name +'",'+ sex +',"'+ headimg +'")';
-        query(sql, function(err, rows, fields) {
-            if (err) {
-                resolve(false);
-            } else { 
-                resolve(true);            
-            }
-        });
-    });
-};
-
-exports.sync_get_userid_of_account = async function(account){
-    return new Promise(resolve => {
-        if (account == null || account == '') {
-            resolve(0);
-        };
-        var sql = 'select userid from nv_users where account = "'+ account +'"';
-        query(sql, function(err, rows, fields) {
-            if (err) {
-                resolve(0);
-            } else { 
-                resolve(rows[0].userid);            
-            }
-        });
-    });
-};
-
-exports.sync_get_roomid_of_userid = async function(userid){
-    return new Promise(resolve => {
-        if (account == null || account == '') {
-            resolve(null);
-        };
-        var sql = 'select roomid from nv_users where userid = "'+ userid +'"';
-        query(sql, function(err, rows, fields) {
-            if (err) {
-                resolve(null);
-            } else { 
-                resolve(rows[0].userid);            
-            }
-        });
-    });
-};
 
 /** 获取用户当前的房卡数量 **/
 exports.get_card_of_account = function(account,callback){
@@ -154,7 +39,7 @@ exports.get_cardnum_of_ruleid = function(ruleid,callback){
         }
         else{
             if(rows.length > 0){
-                callback(rows[0].card);
+                callback(rows[0].cardnum);
             }
             else{
                 callback(0);
@@ -163,8 +48,30 @@ exports.get_cardnum_of_ruleid = function(ruleid,callback){
     });
 };
 
-/** 创建房间 **/
-exports.create_room = function(){};
+/** 根据当前玩法获取到ruleid **/
+
+exports.sync_get_ruleid_of_rulename = async function(ruleName){
+    return new Promise(resolve => {
+        if (ruleName == '' || ruleName == null) {
+            resolve(null);
+        };
+        var sql = 'select id from nv_cardrules where rname = "' + ruleName + '"';
+        query(sql, function(err,rows,fields){
+            if (err) {
+                resolve(null);
+            };
+            if (rows.length > 0) {
+                resolve(rows[0].id)
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
+
+
+
+/** ***/
 
 exports.is_account_exists = function(account,callback){
 	callback = callback == null? nop:callback;

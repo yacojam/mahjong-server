@@ -7,19 +7,19 @@ CREATE TABLE nv_users (
   sex int(1) DEFAULT 1,
   headimg varchar(256) DEFAULT NULL,
   card int(11) DEFAULT 9 COMMENT '房卡',
-  roomid varchar(8) DEFAULT NULL COMMENT '用户当前房间ID',
+  roomid int(11) DEFAULT 0 COMMENT '用户当前房间ID',
   PRIMARY KEY (userid),
   UNIQUE KEY account (account)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=100009 DEFAULT CHARSET=utf8;
 
-INSERT INTO `nv_users` VALUES ('1', '13311111111', '', '小白1', '0', null, '9', null);
-INSERT INTO `nv_users` VALUES ('2', '13311111112', '', '小白2', '0', null, '9', null);
-INSERT INTO `nv_users` VALUES ('3', '13311111113', '', '小白3', '0', null, '9', null);
-INSERT INTO `nv_users` VALUES ('4', '13311111114', '', '小白4', '0', null, '9', null);
-INSERT INTO `nv_users` VALUES ('5', '13311111115', '', '小白5', '0', null, '9', null);
-INSERT INTO `nv_users` VALUES ('6', '13311111116', '', '小白6', '0', null, '9', null);
-INSERT INTO `nv_users` VALUES ('7', '13311111117', '', '小白7', '0', null, '9', null);
-INSERT INTO `nv_users` VALUES ('8', '13311111118', '', '小白8', '1', null, '9', null);
+INSERT INTO `nv_users` VALUES ('100001', '13311111111', '', '小白1', '0', null, '9', 0);
+INSERT INTO `nv_users` VALUES ('100002', '13311111112', '', '小白2', '0', null, '9', 0);
+INSERT INTO `nv_users` VALUES ('100003', '13311111113', '', '小白3', '0', null, '9', 0);
+INSERT INTO `nv_users` VALUES ('100004', '13311111114', '', '小白4', '0', null, '9', 0);
+INSERT INTO `nv_users` VALUES ('100005', '13311111115', '', '小白5', '0', null, '9', 0);
+INSERT INTO `nv_users` VALUES ('100006', '13311111116', '', '小白6', '0', null, '9', 0);
+INSERT INTO `nv_users` VALUES ('100007', '13311111117', '', '小白7', '0', null, '9', 0);
+INSERT INTO `nv_users` VALUES ('100008', '13311111118', '', '小白8', '1', null, '9', 0);
 
 DROP TABLE IF EXISTS nv_cardrules;
 CREATE TABLE nv_cardrules (
@@ -37,16 +37,17 @@ INSERT INTO `nv_cardrules` VALUES ('2', '两刀连打', 2, 'hx');
 DROP TABLE IF EXISTS nv_rooms;
 CREATE TABLE nv_rooms (
   id int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '房间id',
-  presentid char(8) NOT NULL COMMENT '对外6位随机数字',
+  presentid varchar(8) NOT NULL COMMENT '对外6位随机数字',
   baseinfo varchar(16) NOT NULL,
   ruleid int(11) unsigned NOT NULL,
   createtime varchar(16) NOT NULL,
   userid0 int(11) NOT NULL COMMENT '创建者',
-  userid1 int(11) NOT NULL,
-  userid2 int(11) NOT NULL,
-  userid3 int(11) NOT NULL,
+  userid1 int(11),
+  userid2 int(11),
+  userid3 int(11),
   gameids varchar(16) DEFAULT NULL,
   roomresult varchar(8) DEFAULT NULL COMMENT '房间结算',
+  roomvalid boolean DEFAULT true COMMENT '房间解散才会被置为false'
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
