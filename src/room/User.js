@@ -2,15 +2,13 @@ import React, { Component } from 'react'
 import Tiles from './Tiles'
 import Action from '../hxaction'
 import DingQueAction from './actions/DingQueAction'
+import PengAction from './actions/PengAction'
 
 class User extends Component {
   render() {
     const { user } = this.props
     const isSelf = user.uid === window.uid
     const actions = user.actions
-    const dingque =
-      actions.findIndex(action => action.pAction === Action.ACTION_DINGQUE) !==
-      -1
     const chupai =
       actions.findIndex(action => action.pAction === Action.ACTION_CHU) !== -1
 
@@ -40,7 +38,16 @@ class User extends Component {
             : null}
         </div>
         <div className="userActions">
-          {dingque ? <DingQueAction /> : ''}
+          {isSelf
+            ? actions.map(a => {
+                if (a.pAction === Action.ACTION_DINGQUE) {
+                  return <DingQueAction key="dingque" />
+                }
+                if (a.pAction === Action.ACTION_PENG) {
+                  return <PengAction pai={a.pai} key="peng" />
+                }
+              })
+            : ''}
         </div>
       </div>
     )
