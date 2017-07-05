@@ -9,6 +9,11 @@ const convert = require('koa-convert')
 const middleware = require('./koa/middleware')
 const http = require('http')
 const io = require('./socket/io')
+const redis = require('./redis')
+;// load reids
+(async function() {
+  await redis.load()
+})()
 
 app.keys = [' some secret hurr']
 const CONFIG = {

@@ -7,6 +7,7 @@ const dispatch = require('../dataflow/dispatch')
 const save = require('../dataflow/save')
 const publish = require('../dataflow/publish')
 const iomock = require('../socket/iomock')
+const redis = require('../redis')
 
 io.on('connection', socket => {
   let uid = 0
@@ -35,6 +36,7 @@ io.on('connection', socket => {
           const room = await dispatch(action)
           await save(action)
           await publish(null, room, action)
+          await redis.save()
         } catch (e) {
           await publish(e, null, action)
         }
