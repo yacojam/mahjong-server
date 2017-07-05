@@ -6,6 +6,7 @@ const User = require('../user')
 const actionUserJoin = require('./actionUserJoin')
 const actionDingQue = require('./actionDingQue')
 const actionChuPai = require('./actionChuPai')
+const actionPeng = require('./actionPeng')
 
 function create(id) {
   return {
@@ -32,6 +33,10 @@ async function reducer(room, action) {
 
   if (action.type === paiAction.ACTION_CHU) {
     room = await actionChuPai(action)
+  }
+
+  if (action.type === paiAction.ACTION_PENG) {
+    room = await actionPeng(action)
   }
 
   return room

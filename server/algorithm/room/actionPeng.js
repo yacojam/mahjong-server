@@ -20,7 +20,7 @@ async function peng(action) {
     // all user has acted
     utils.filterUserAction(room)
     // remove user actions & pendingAction
-    room.user.forEach(u => {
+    room.users.forEach(u => {
       u.actions = []
       u.pendingAction = null
 
@@ -28,9 +28,12 @@ async function peng(action) {
         if (u.validAction.pAction === Action.ACTION_PENG) {
           u.pengPais.push(pai)
           u.actions = [Action.makeupAction(Action.ACTION_CHU, 0)]
+          u.shouPais = utils.removePai(u.shouPais, pai, 2)
         }
       }
     })
   }
   return room
 }
+
+module.exports = peng

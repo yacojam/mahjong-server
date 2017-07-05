@@ -9,9 +9,8 @@ const convert = require('koa-convert')
 const middleware = require('./koa/middleware')
 const http = require('http')
 const io = require('./socket/io')
-const redis = require('./redis')
-;// load reids
-(async function() {
+const redis = require('./redis') // load reids
+;(async function() {
   await redis.load()
 })()
 
@@ -33,9 +32,12 @@ app
   .use(session(CONFIG, app))
   .use(async (ctx, next) => {
     // mock user login
+    /*
     if (!ctx.session.uid) {
       ctx.session.uid = 'A' + new Date().getTime()
+      console.log(`new user ${ctx.session.uid} join`)
     }
+    */
     await next()
   })
   .use(bodyParser())

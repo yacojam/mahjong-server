@@ -24,7 +24,7 @@ async function attach(action) {
   }
   action.room = room
   action.user = user
-  console.log('ATTACH'.green, JSON.stringify(action), '\n')
+  // console.log('ATTACH'.green, JSON.stringify(action), '\n')
   return action
 }
 
