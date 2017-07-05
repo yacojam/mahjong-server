@@ -3,6 +3,7 @@ import Tiles from './Tiles'
 import Action from '../hxaction'
 import DingQueAction from './actions/DingQueAction'
 import PengAction from './actions/PengAction'
+import HuAction from './actions/HuAction'
 
 class User extends Component {
   render() {
@@ -45,6 +46,12 @@ class User extends Component {
                 }
                 if (a.pAction === Action.ACTION_PENG) {
                   return <PengAction pai={a.pai} key="peng" />
+                }
+                if (
+                  a.pAction === Action.ACTION_PAOHU ||
+                  a.pAction === Action.ACTION_ZIMO
+                ) {
+                  return <HuAction type={a.pAction} pai={a.pai} key="hu" />
                 }
               })
             : ''}
