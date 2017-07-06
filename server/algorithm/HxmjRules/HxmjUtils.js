@@ -31,7 +31,7 @@ var HxmjUtils = function(pengPais,gangPais,anGangPais,shouPais,huPai,huPaiType,t
     this.is8tong = has8tong(this.tongArray);
 
     if (this.huPaiType == 3) {
-        this.allCommonHuPaiInfos = this.getAllCommonHuPaiInfos();
+        this.getAllCommonHuPaiInfos();
     };
     
 

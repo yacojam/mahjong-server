@@ -4,12 +4,12 @@ const HxmjUtils = require('./HxmjUtils');
 
 const paisArr = [11,11,11,11,12,12,12,12,13,13,13,13,14,14,14,14,15,15,15,15,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,21,21,21,21,22,22,22,22,23,23,23,23,24,24,24,24,25,25,25,25,26,26,26,26,27,27,27,27,28,28,28,28,29,29,29,29,31,31,31,31,32,32,32,32,33,33,33,33,34,34,34,34,35,35,35,35,36,36,36,36,37,37,37,37,38,38,38,38,39,39,39,39,41,41,41,41,43,43,43,43,45,45,45,45,47,47,47,47,51,51,51,51,53,53,53,53,55,55,55,55];
 
-exports.getActions = function (shouPais, pengPais, action, desPai) {
+exports.getActions = function (shouPais, pengPais, action, desPai, QueType) {
 	var actions = [];
 	switch(action){
 		//别人出的牌，只能产生，炮胡，碰，碰杠
 		case Action.ACTION_CHU:
-            if (CommonRules.getHuType(pengPais, shouPais, desPai) > 0) {
+            if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
             	actions.push(Action.makeupAction(Action.ACTION_PAOHU, desPai));
             };
             var num = CommonRules.getPaiNum(shouPais, desPai);
@@ -25,7 +25,7 @@ exports.getActions = function (shouPais, pengPais, action, desPai) {
         
         //别人弯杠的牌，只能产生抢杠胡
         case Action.ACTION_WGANG: 
-            if (CommonRules.getHuType(pengPais, shouPais, desPai) > 0) {
+            if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
             	actions.push(Action.makeupAction(Action.ACTION_QGHU, desPai));
             };
             return actions;
@@ -34,7 +34,7 @@ exports.getActions = function (shouPais, pengPais, action, desPai) {
         //自己摸的牌，只能产生，自摸，暗杠，弯杠
         case Action.ACTION_MO:
             //自摸检测
-            if (CommonRules.getHuType(pengPais, shouPais, desPai) > 0) {
+            if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
             	actions.push(Action.makeupAction(Action.ACTION_ZIMO, desPai));
             };
             //弯杠检测
@@ -57,7 +57,7 @@ exports.getActions = function (shouPais, pengPais, action, desPai) {
         //杠摸，只能产生，杠上花，暗杠，弯杠
         case Action.ACTION_GMO:
             //自摸检测
-            if (CommonRules.getHuType(pengPais, shouPais, desPai) > 0) {
+            if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
             	actions.push(Action.makeupAction(Action.ACTION_GSHUA, desPai));
             };
             //弯杠检测
@@ -137,8 +137,8 @@ exports.getUserPais = function(pais){
 };
 
 //计算积分
-exports.getScore = function(pengPais,gangPais,anGangPais,shouPais,action,huPai,allChupais,roomRules){
-    var huPaiType = CommonRules.getHuType(pengPais, shouPais, huPai);
+exports.getScore = function(pengPais,gangPais,anGangPais,shouPais,action,huPai,allChupais,roomRules,QueType){
+    var huPaiType = CommonRules.getHuType(pengPais, shouPais, huPai, QueType);
     var tingPais = CommonRules.getTingPais(shouPais, pengPais);
     var isZimo = (action == Action.ACTION_ZIMO || action == Action.ACTION_GSHUA);
     var isKZY = CommonRules.isKZY(shouPais, pengPais, huPai, isZimo, allChupais);

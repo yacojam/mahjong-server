@@ -118,8 +118,13 @@ CommonRules.getAnGangPais = function(shouPais, pai){
 
 /**
  ** 和县麻将的胡牌检测
+ ** 
+ ** Add: QueType缺一门的类型
+ ** 1：万
+ ** 2：筒
+ ** 3: 条
  **/
-CommonRules.getHuType = function(pengPais,shouPais,huPai){
+CommonRules.getHuType = function(pengPais,shouPais,huPai,QueType){
     //非正常胡牌1，乱分
     var allPais = pengPais.concat(shouPais);
     allPais.push(huPai);
@@ -127,6 +132,11 @@ CommonRules.getHuType = function(pengPais,shouPais,huPai){
     if (isLuanfeng) {
         return 1;
     };
+
+    //加一个缺的判断
+    if(!isQueOK(pengPais, shouPais, huPai, QueType)){
+        return 0;
+    }
     //非正常胡牌2，七对
     var isSP = isSevenPairs(shouPais, huPai);
     if (isSP) {
@@ -136,6 +146,23 @@ CommonRules.getHuType = function(pengPais,shouPais,huPai){
     //判断能否正常胡牌
     return canHu(shouPais,huPai) ? 3 : 0;
 };
+
+//判断牌组是不是缺一门
+function isQueOK(pengPais,shouPais,huPai,QueType){
+  var pais = pengPais.concat(shouPais);
+  pais.push(huPai);
+  var isAll = true;
+  for (var i = 0; i < pais.length; i++) {
+    type = CommonRules.getPaiType(pais[i]);
+    if (type != QueType) {
+      continue;
+    } else {
+      isAll = false;
+      break;
+    }
+  };
+  return isAll;
+}
 
 //判断牌组是不是都是 风 ／ 中发白
 function isAllPaisTypeFeng(pais){
