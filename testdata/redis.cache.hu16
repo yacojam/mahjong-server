@@ -5,8 +5,8 @@
     "game": null,
     "users": [
       {
-        "uid": "A1499261769771",
-        "name": "A1499261769771",
+        "uid": "alice",
+        "name": "alice",
         "actions": [
           {
             "pAction": 5,
@@ -64,8 +64,8 @@
         }
       },
       {
-        "uid": "A1499261763835",
-        "name": "A1499261763835",
+        "uid": "bob",
+        "name": "bob",
         "actions": [],
         "shouPais": [
           19,
@@ -163,6 +163,6 @@
   "rooms": [
     "Room1499262970633"
   ],
-  "USER_TO_ROOM_A1499261769771": "Room1499262970633",
-  "USER_TO_ROOM_A1499261763835": "Room1499262970633"
+  "USER_TO_ROOM_alice": "Room1499262970633",
+  "USER_TO_ROOM_bob": "Room1499262970633"
 }
