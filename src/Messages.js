@@ -5,7 +5,7 @@ class Messages extends Component {
     const messages = this.props.messages
     return (
       <ul className="messages">
-        {messages.map(msg => (
+        {messages.reverse().map(msg => (
           <li key={msg.date.getTime()}>
             <div>{msg.date.toString()}</div>
             <div>{JSON.stringify(msg.data)}</div>

@@ -32,6 +32,7 @@ class User extends Component {
           peng: <Tiles tiles={user.pengPais} chupai={false} />
           gang: <Tiles tiles={user.gangPais} chupai={false} />
           angang: <Tiles tiles={user.anGangPais} chupai={false} />
+          que: {user.que}
         </div>
         <div>
           {user.shouPais
