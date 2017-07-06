@@ -12,9 +12,9 @@ class DingQueAction extends Component {
   render() {
     return (
       <div>
-        <button data-type="wan" onClick={this.onClick}>w</button>
-        <button data-type="bing" onClick={this.onClick}>b</button>
-        <button data-type="tiao" onClick={this.onClick}>t</button>
+        <button data-type="1" onClick={this.onClick}>w</button>
+        <button data-type="2" onClick={this.onClick}>b</button>
+        <button data-type="3" onClick={this.onClick}>t</button>
       </div>
     )
   }
