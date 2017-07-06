@@ -8,6 +8,20 @@ router.get('/add', async ctx => {
   }
 })
 
+router.post('/setname', ctx => {
+  const username = ctx.request.body.username
+  if (username) {
+    ctx.session.uid = username
+  }
+  console.log(ctx.session)
+  ctx.json = true
+})
+
+router.get('/logout', ctx => {
+  ctx.session.uid = ''
+  ctx.json = true
+})
+
 router.get('/test', ctx => {
   console.log('in test', new Date())
   Object.keys(ctx.wss).forEach(key => {

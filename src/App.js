@@ -37,6 +37,17 @@ class App extends Component {
       })
     })
   }
+  onLogoutClick = () => {
+    fetch('/logout', {
+      credentials: 'same-origin'
+    })
+      .then(rsp => rsp.json())
+      .then(ret => {
+        if (ret.code === 0) {
+          window.location.reload()
+        }
+      })
+  }
   componentDidMount = () => {
     this.refreshRooms()
 
@@ -57,11 +68,13 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
-        <Box>
-          <Box width={240}>
-            <Messages messages={this.state.messages} />
+        <VBox>
+          <Box>
+            <button onClick={this.onLogoutClick} style={{ fontSize: '120%' }}>
+              logout: {window.uid}
+            </button>
           </Box>
-          <VBox flex={1}>
+          <VBox>
             {this.state.room
               ? <Room room={this.state.room} />
               : <Rooms rooms={this.state.rooms} />}
@@ -70,7 +83,11 @@ class App extends Component {
               ? 'left room'
               : <AddRoom onRoomCreate={this.onRoomCreate} />}
           </VBox>
-        </Box>
+          <Box>
+            <Messages messages={this.state.messages} />
+          </Box>
+
+        </VBox>
       </MuiThemeProvider>
     )
   }
