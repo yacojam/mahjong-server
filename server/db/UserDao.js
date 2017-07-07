@@ -102,6 +102,30 @@ exports.sycn_update_roomid_of_userid = async function(roomid, userid){
     });
 };
 
+/** 获取用户当前的房卡数量 **/
+exports.sycn_get_card_of_account = async function(userid){
+    return new Promise(resolve => {
+        if (userid == null || userid == '') {
+            resolve(0);
+        };
+        var sql = 'select card from nv_users where userid = "' + userid + '"';
+        DBBase.query(sql, function(err,rows,fields){
+            if (err) {
+                resolve(0);
+            }
+            else {
+                if(rows.length > 0){
+                    resolve(rows[0].card);
+                }
+                else {
+                    resolve(0);
+                }
+            }
+        }); 
+    });
+};
+
+
 
 
 
