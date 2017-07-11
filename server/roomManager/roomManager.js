@@ -11,7 +11,7 @@ function setRoom(roomPresentId, roomInfo) {
 }
 
 function getRoom(roomPresentId) {
-	return manager[roomPresentId]
+	return manager[roomPresentId] || null
 }
 
 function delRoom(roomPresentId) {
@@ -19,8 +19,25 @@ function delRoom(roomPresentId) {
 	ids.delete(roomPresentId)
 }
 
+var user2ids = {}
+
+function setRidForUid(rpid, uid) {
+	user2ids[uid] = rpid
+}
+
+function getRidForUid(uid) {
+	return user2ids[uid] || null
+}
+
+function delUid(uid) {
+	delete user2ids[uid]
+}
+
 module.exports = {
 	setRoom,
 	getRoom,
-	delRoom
+	delRoom,
+	setRidForUid,
+	getRidForUid,
+	delUid
 }

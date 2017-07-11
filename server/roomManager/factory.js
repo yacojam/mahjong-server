@@ -33,7 +33,7 @@ async function createRoom(userid, userCardNum, userConfigs) {
 		var roomPresentId = ensureRoomValid()
 		var roomRule = roomUtil.getRoomRule(userConfigs)
 		//加await
-		var roomid = roomDao.sync_create_room(
+		var roomid = await roomDao.sync_create_room(
 			userid,
 			roomPresentId,
 			Date.now(),
@@ -59,7 +59,7 @@ async function createRoom(userid, userCardNum, userConfigs) {
 			ret.data = { rid: roomPresentId, sign: room.sign }
 			roomManager.setRoom(roomPresentId, room)
 			//更新数据库用户信息,加await
-			userDao.sycn_update_roomid_of_userid(roomPresentId, userid)
+			await userDao.sycn_update_roomid_of_userid(roomPresentId, userid)
 			resolve(ret)
 		}
 	})
@@ -91,7 +91,7 @@ async function enterRoom(userid, rpid) {
 			ret.type = 'connect'
 			ret.data = { rid: rpid, sign: roomManager[rpid].sign }
 			//更新数据库用户信息,加await
-			userDao.sycn_update_roomid_of_userid(roomPresentId, userid)
+			await userDao.sycn_update_roomid_of_userid(roomPresentId, userid)
 			resolve(ret)
 		}
 		ret.success = false
@@ -100,30 +100,36 @@ async function enterRoom(userid, rpid) {
 	})
 }
 
-async function exitRoom(userid, rpid) {
-	return new Promise(resolve => {
-		var ret = {}
-		index = roomManager[rpid].getUserIndex(userid)
-		if (index == -1) {
-			ret.success = false
-			ret.code = 1 //该房间用户不存在
-			resolve(ret)
-		}
-		roomManager[rpid].seat[index] = { userid: 0 }
-		//更新数据库用户信息,加await
-		userDao.sycn_update_roomid_of_userid('', userid)
-		ret.success = true
-		ret.code = 0 //房间已满
-		resolve(ret)
-	})
+module.exports = {
+	createRoom,
+	enterRoom
 }
 
-async function dissolveRoom(userid, rpid) {
-	return new Promise(resolve => {
-		var ret = {}
-		if (!roomManager[rpid].isCreator(userid)) {
-			ret.success = false
-			ret.code = 1 //非房主不能解散房间
-		}
-	})
-}
+// async function exitRoom(userid, rpid) {
+// 	return new Promise(resolve => {
+// 		var ret = {}
+// 		index = roomManager[rpid].getUserIndex(userid)
+// 		if (index == -1) {
+// 			ret.success = false
+// 			ret.code = 1 //该房间用户不存在
+// 			resolve(ret)
+// 		}
+// 		roomManager[rpid].seat[index] = { userid: 0 }
+// 		//更新数据库用户信息,加await
+// 		awiat userDao.sycn_update_roomid_of_userid('', userid)
+// 		ret.success = true
+// 		ret.code = 0 //房间已满
+// 		resolve(ret)
+// 	})
+// }
+
+// async function dissolveRoom(userid, rpid) {
+// 	return new Promise(resolve => {
+// 		var ret = {}
+// 		if (!roomManager[rpid].isCreator(userid)) {
+// 			ret.success = false
+// 			ret.code = 1 //非房主不能解散房间
+// 		}
+
+// 	})
+// }
