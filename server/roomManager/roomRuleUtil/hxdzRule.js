@@ -22,6 +22,7 @@ function generateEmptyRule() {
 	rule.isNaFor50Point = false
 	//大跳车自摸拿不拿
 	rule.isNaForDTCZM = false
+	return rule
 }
 
 module.exports.generateEmptyRule = generateEmptyRule
