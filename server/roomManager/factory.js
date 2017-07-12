@@ -105,24 +105,6 @@ module.exports = {
 	enterRoom
 }
 
-// async function exitRoom(userid, rpid) {
-// 	return new Promise(resolve => {
-// 		var ret = {}
-// 		index = roomManager[rpid].getUserIndex(userid)
-// 		if (index == -1) {
-// 			ret.success = false
-// 			ret.code = 1 //该房间用户不存在
-// 			resolve(ret)
-// 		}
-// 		roomManager[rpid].seat[index] = { userid: 0 }
-// 		//更新数据库用户信息,加await
-// 		awiat userDao.sycn_update_roomid_of_userid('', userid)
-// 		ret.success = true
-// 		ret.code = 0 //房间已满
-// 		resolve(ret)
-// 	})
-// }
-
 // async function dissolveRoom(userid, rpid) {
 // 	return new Promise(resolve => {
 // 		var ret = {}

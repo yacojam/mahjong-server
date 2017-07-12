@@ -2,6 +2,7 @@ const roomManager = require('../roomManager/roomManager')
 const Error = require('../routers/ServerError')
 const connectionManager = require('./connectionManager')
 const broadcast = require('./broadcast')
+const userDao = require('../db/UserDao')
 
 function generateSeatInfo(roomInfo) {
     var seats = roomInfo.seats
@@ -34,8 +35,29 @@ function generateSeatInfo(roomInfo) {
         })
 }
 
+async function dissolveRoom(rpid) {
+    return new Promise(resolve => {
+        var roomInfo = roomManager[rpid]
+        roomInfo.seats.forEach(seat => {
+            if (seat.userid > 0) {
+                let socket = connectionManager.get(seat.userid)
+                if (socket != null) {
+                    socket.emit('room_dissoved', {})
+                }
+                roomManager.delUid(seat.userid)
+                roomManager.delRoom(rpid)
+                connectionManager.del(seat.userid)
+                //更新数据库信息, 加await
+                userDao.sycn_update_roomid_of_userid('', seat.userid)
+                socket.disconnect()
+            }
+        })
+        resolve()
+    })
+}
+
 function bind(socket) {
-    socket.on('user_join', async (userData, fn) => {
+    socket.on('user_join', async userData => {
         if (socket.userid != null) {
             return
         }
@@ -102,13 +124,54 @@ function bind(socket) {
         }
     })
 
-    socket.on('user_reconnect', async (userData, fn) => {
-        var userid = userData.userid
+    socket.on('user_exit', async userData => {
+        var userid = socket.userid
+        if (userid == null || userid !== userData.userid) {
+            return
+        }
+        var rpid = roomManager.getRidForUid(userid)
+        if (rpid == null) {
+            return
+        }
+        if (roomManager[rpid].isCreator(userid)) {
+            return
+        }
+        //通知其他玩家有人退出房间
+        broadcast.broadcastInRoom(
+            'user_exit',
+            { userid: userid },
+            userid,
+            false
+        )
+
+        index = roomManager[rpid].getUserIndex(userid)
+        roomManager[rpid].seat[index] = { userid: 0, index: -1 }
+        //更新数据库用户信息,加await
+        userDao.sycn_update_roomid_of_userid('', userid)
+        //清除信息
+        roomManager.delUid(userid)
+        connectionManager.del(userid)
+        socket.emit('exit_success')
+        socket.disconnect()
     })
 
-    socket.on('user_exit', async userData => {})
-
-    socket.on('dissolve_room', async userData => {})
+    //解散房间
+    socket.on('dissolve_room', async userData => {
+        var userid = socket.userid
+        if (userid == null || userid !== userData.userid) {
+            return
+        }
+        var rpid = roomManager.getRidForUid(userid)
+        if (rpid == null) {
+            return
+        }
+        //非房主不能解散房间
+        if (!roomManager[rpid].isCreator(userid)) {
+            return
+        }
+        //
+        await dissolveRoom(rpid)
+    })
 
     socket.on('user_ready', async userData => {})
 
