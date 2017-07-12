@@ -1,13 +1,7 @@
 const DBBase = require('./DBBase')
 
 /** 创建用户,返回用户id **/
-exports.sync_create_account = async function(
-    account,
-    wxid,
-    name,
-    sex,
-    headimg
-) {
+exports.sync_create_account = function(account, wxid, name, sex, headimg) {
     return new Promise(resolve => {
         if (account == null || name == null || account == '' || name == '') {
             resolve(0)
@@ -36,7 +30,7 @@ exports.sync_create_account = async function(
 }
 
 /** 获取用户信息，没有数据返回 null **/
-exports.sync_get_account_info = async function(account) {
+exports.sync_get_account_info = function(account) {
     return new Promise(resolve => {
         if (account == null || account == '') {
             resolve(null)
@@ -54,7 +48,7 @@ exports.sync_get_account_info = async function(account) {
     })
 }
 
-exports.sync_get_account_info_by_userid = async function(userid) {
+exports.sync_get_account_info_by_userid = function(userid) {
     return new Promise(resolve => {
         if (userid == null || userid == 0) {
             resolve(null)
@@ -72,7 +66,7 @@ exports.sync_get_account_info_by_userid = async function(userid) {
     })
 }
 
-exports.sync_get_userid_of_account = async function(account) {
+exports.sync_get_userid_of_account = function(account) {
     return new Promise(resolve => {
         if (account == null || account == '') {
             resolve(0)
@@ -90,7 +84,7 @@ exports.sync_get_userid_of_account = async function(account) {
 }
 
 //获取用户当前所在房间id
-exports.sync_get_roomid_of_userid = async function(userid) {
+exports.sync_get_roomid_of_userid = function(userid) {
     return new Promise(resolve => {
         if (account == null || account == '') {
             resolve(null)
@@ -107,7 +101,7 @@ exports.sync_get_roomid_of_userid = async function(userid) {
 }
 
 //更新用户的roomid
-exports.sycn_update_roomid_of_userid = async function(roomid, userid) {
+exports.sycn_update_roomid_of_userid = function(roomid, userid) {
     return new Promise(resolve => {
         var sql =
             'update nv_users set roomid = "' +
@@ -125,7 +119,7 @@ exports.sycn_update_roomid_of_userid = async function(roomid, userid) {
 }
 
 /** 获取用户当前的房卡数量 **/
-exports.sycn_get_card_of_account = async function(userid) {
+exports.sycn_get_card_of_account = function(userid) {
     return new Promise(resolve => {
         if (userid == null || userid == '') {
             resolve(0)

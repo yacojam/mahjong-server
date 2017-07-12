@@ -36,28 +36,25 @@ function generateSeatInfo(roomInfo) {
 }
 
 async function dissolveRoom(rpid) {
-    return new Promise(resolve => {
-        var roomInfo = roomManager[rpid]
-        roomInfo.seats.forEach(seat => {
-            if (seat.userid > 0) {
-                let socket = connectionManager.get(seat.userid)
-                if (socket != null) {
-                    socket.emit('room_dissoved', {})
-                }
-                roomManager.delUid(seat.userid)
-                roomManager.delRoom(rpid)
-                connectionManager.del(seat.userid)
-                //更新数据库信息, 加await
-                userDao.sycn_update_roomid_of_userid('', seat.userid)
-                socket.disconnect()
+    var roomInfo = roomManager[rpid]
+    for (let seat of roomInfo.seats) {
+        if (seat.userid > 0) {
+            let socket = connectionManager.get(seat.userid)
+            if (socket != null) {
+                socket.emit('room_dissoved', {})
             }
-        })
-        resolve()
-    })
+            roomManager.delUid(seat.userid)
+            roomManager.delRoom(rpid)
+            connectionManager.del(seat.userid)
+            //更新数据库信息, 加await
+            await userDao.sycn_update_roomid_of_userid('', seat.userid)
+            socket.disconnect()
+        }
+    }
 }
 
 function bind(socket) {
-    socket.on('user_join', async userData => {
+    socket.on('user_join', userData => {
         if (socket.userid != null) {
             return
         }
@@ -147,7 +144,7 @@ function bind(socket) {
         index = roomManager[rpid].getUserIndex(userid)
         roomManager[rpid].seat[index] = { userid: 0, index: -1 }
         //更新数据库用户信息,加await
-        userDao.sycn_update_roomid_of_userid('', userid)
+        await userDao.sycn_update_roomid_of_userid('', userid)
         //清除信息
         roomManager.delUid(userid)
         connectionManager.del(userid)
