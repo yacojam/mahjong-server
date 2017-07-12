@@ -12,6 +12,10 @@ function del(userid) {
 	}
 }
 
+function get(userid) {
+	return userConnections[userid] || null
+}
+
 function sendMessage(userid, message, data) {
 	if (!!userConnections[userid]) {
 		userConnections[userid].emit(message, data)
@@ -19,6 +23,7 @@ function sendMessage(userid, message, data) {
 }
 
 module.exports = {
+	get,
 	bind,
 	del,
 	sendMessage

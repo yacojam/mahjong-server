@@ -30,14 +30,16 @@ class roomInfo {
         this.rule = rule
         this.conf = conf
         this.ruleType = 'hxdz'
-        this.dealerIndex = -1
+        this.dealerIndex = 0
         this.seats = []
         for (var i = 0; i < 4; i++) {
             var seat = {}
             seat.userid = 0
+            seat.index = -1
             this.seats.push(seat)
         }
         this.sign = ''
+        this.result = [0, 0, 0, 0]
     }
 
     getUserIndex(userid) {
