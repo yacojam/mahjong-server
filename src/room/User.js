@@ -4,6 +4,7 @@ import Action from '../hxaction'
 import DingQueAction from './actions/DingQueAction'
 import PengAction from './actions/PengAction'
 import HuAction from './actions/HuAction'
+import WanGangAction from './actions/WanGangAction'
 
 class User extends Component {
   render() {
@@ -53,6 +54,9 @@ class User extends Component {
                   a.pAction === Action.ACTION_ZIMO
                 ) {
                   return <HuAction type={a.pAction} pai={a.pai} key="hu" />
+                }
+                if (a.pAction === Action.ACTION_WGANG) {
+                  return <WanGangAction pai={a.pai} key="wangang" />
                 }
               })
             : ''}
