@@ -1,23 +1,14 @@
 const HXMJManager = require('../HxmjRules/HxmjManager')
 const Action = require('../HxmjRules/hxaction')
 const utils = require('./utils')
-require('colors')
 
-async function chupai(action) {
+async function wangang(action) {
   const { user, room, pai } = action
   const users = room.users
-  const currentIndex = users.findIndex(u => u.uid === user.uid)
-  const currentUser = users[currentIndex]
-  currentUser.chuPais.push(pai)
-
-  // remove pai from shou pai
-  const paiIndex = currentUser.shouPais.findIndex(p => p === pai)
-  currentUser.shouPais.splice(paiIndex, 1)
-  currentUser.shouPais.sort((a, b) => a - b)
-
-  // clear user actions
+  user.gangPais.push(pai)
+  user.pengPais = utils.removePai(user.pengPais, pai)
+  // check others' ACTION_HU state
   users.forEach(u => (u.actions = []))
-
   let hasAction = false
   users.forEach(u => {
     if (u.uid === user.uid) {
@@ -26,7 +17,7 @@ async function chupai(action) {
     u.actions = HXMJManager.getActions(
       u.shouPais,
       u.pengPais,
-      action.type,
+      Action.ACTION_GMO,
       pai,
       u.que
     )
@@ -34,10 +25,10 @@ async function chupai(action) {
   })
 
   if (!hasAction) {
-    // other users have not actions, next user mopai
+    const currentIndex = users.findIndex(u => u.uid === user.uid)
     utils.nextUser(room, currentIndex)
   }
   return room
 }
 
-module.exports = chupai
+module.exports = wangang

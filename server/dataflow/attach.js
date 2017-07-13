@@ -23,7 +23,7 @@ async function attach(action) {
     actions: []
   }
   action.room = room
-  action.user = user
+  action.user = (room && room.users.find(u => u.uid === uid)) || user
   // console.log('ATTACH'.green, JSON.stringify(action), '\n')
   return action
 }

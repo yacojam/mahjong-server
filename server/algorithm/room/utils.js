@@ -1,4 +1,5 @@
 const Action = require('../HxmjRules/hxaction')
+const HXMJManager = require('../HxmjRules/HxmjManager')
 
 const actionPriority = {
   [Action.ACTION_PENG]: 1,
@@ -23,8 +24,26 @@ function filterUserAction(room) {
       actionPriority[u.pendingAction.pAction] === maxPriority
     ) {
       u.validAction = u.pendingAction
+    } else {
+      u.validAction = null
     }
   })
+}
+
+function nextUser(room, currentIndex) {
+  const nextUser = room.users[(currentIndex + 1) % room.users.length]
+  const moPai = room.leftPais.shift()
+  nextUser.actions = HXMJManager.getActions(
+    nextUser.shouPais,
+    nextUser.pengPais,
+    Action.ACTION_MO,
+    moPai
+  )
+  nextUser.shouPais.push(moPai)
+  if (nextUser.actions.length === 0) {
+    nextUser.actions = [Action.makeupAction(Action.ACTION_CHU, 0)]
+  }
+  return room
 }
 
 function removePai(pais, pai, count = 1) {
@@ -40,5 +59,6 @@ function removePai(pais, pai, count = 1) {
 
 module.exports = {
   filterUserAction,
-  removePai
+  removePai,
+  nextUser
 }
