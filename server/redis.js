@@ -43,7 +43,9 @@ const redis = {
         try {
           Object.assign(mem, JSON.parse(data.toString()))
           console.log(`redis loaded...`)
-        } catch (e) {}
+        } catch (e) {
+          console.error(e)
+        }
         resolve()
       })
     })
