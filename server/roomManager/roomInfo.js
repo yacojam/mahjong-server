@@ -45,7 +45,7 @@ class roomInfo {
     getUserIndex(userid) {
         var index = -1
         for (var i = 0; i < this.seats.length; i++) {
-            if (roomInfo.seats[i].userid == userid) {
+            if (this.seats[i].userid == userid) {
                 index = i
                 break
             }
@@ -56,7 +56,7 @@ class roomInfo {
     getEmptyIndex() {
         var index = -1
         for (var i = 0; i < this.seats.length; i++) {
-            if (roomInfo.seats[i].userid == 0) {
+            if (this.seats[i].userid == 0) {
                 index = i
                 break
             }

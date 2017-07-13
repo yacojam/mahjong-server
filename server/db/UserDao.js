@@ -21,6 +21,7 @@ exports.sync_create_account = function(account, wxid, name, sex, headimg) {
         DBBase.query(sql, function(err, rows, fields) {
             //console.log(rows);
             if (err) {
+                console.log(err)
                 resolve(0)
             } else {
                 resolve(rows.insertId)

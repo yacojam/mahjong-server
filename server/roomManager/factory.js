@@ -14,15 +14,13 @@ function generateRandomId() {
 }
 
 async function createRoom(userid, userCardNum, userConfigs) {
-	return new Promise(resolve => {
-		var ret = {}
-		var roomCard = roomUtil.getCardOfRule(userConfigs)
-		if (userCardNum < roomCard) {
-			ret.success = false
-			ret.code = 1 //房卡不够
-			resolve(ret)
-		}
-
+	var ret = {}
+	var roomCard = roomUtil.getCardOfRule(userConfigs)
+	if (userCardNum < roomCard) {
+		ret.success = false
+		ret.code = 1 //房卡不够
+		return ret
+	} else {
 		var ensureRoomValid = function() {
 			var rid = generateRandomId()
 			if (roomManager.isRoomValid(rid)) {
@@ -39,10 +37,11 @@ async function createRoom(userid, userCardNum, userConfigs) {
 			Date.now(),
 			JSON.stringify(roomRule)
 		)
+
 		if (roomid == 0) {
 			ret.success = false
 			ret.code = 2 //创建房间失败
-			resolve(ret)
+			return ret
 		} else {
 			var roomConf = roomUtil.getRoomConfig(userConfigs)
 			var room = new RoomInfo(
@@ -56,48 +55,40 @@ async function createRoom(userid, userCardNum, userConfigs) {
 			room.seats[0].userid = userid
 			ret.success = true
 			ret.code = 0
-			ret.data = { rid: roomPresentId, sign: room.sign }
+			ret.data = { rpid: roomPresentId, sign: room.sign }
 			roomManager.setRoom(roomPresentId, room)
 			//更新数据库用户信息,加await
 			await userDao.sycn_update_roomid_of_userid(roomPresentId, userid)
-			resolve(ret)
+			return ret
 		}
-	})
+	}
 }
 
 async function enterRoom(userid, rpid) {
-	return new Promise(resolve => {
-		var ret = {}
-		if (roomManager.isRoomValid(rid)) {
-			ret.success = false
-			ret.code = 1 //房间不存在
-			resolve(ret)
-		}
-		//判断是否已经在房间内
-		if (roomManager[rpid].getUserIndex(userid) >= 0) {
-			ret.success = true
-			ret.code = 0
-			ret.type = 'reconnect'
-			ret.data = { rid: rpid, sign: roomManager[rpid].sign }
-			resolve(ret)
-		}
-
-		//判断房间有没有满
-		var emptyIndex = roomManager[rpid].getEmptyIndex()
-		if (emptyIndex >= 0) {
-			roomManager[rpid].seat[emptyIndex].userid = userid
-			ret.success = true
-			ret.code = 0
-			ret.type = 'connect'
-			ret.data = { rid: rpid, sign: roomManager[rpid].sign }
-			//更新数据库用户信息,加await
-			await userDao.sycn_update_roomid_of_userid(roomPresentId, userid)
-			resolve(ret)
-		}
+	var ret = {}
+	if (!roomManager.isRoomValid(rpid)) {
 		ret.success = false
-		ret.code = 2 //房间已满
-		resolve(ret)
-	})
+		ret.code = 1 //房间不存在
+		return ret
+	} else {
+		//判断房间有没有满
+		let room = roomManager.getRoom(rpid)
+		var emptyIndex = room.getEmptyIndex()
+		console.log(emptyIndex)
+		if (emptyIndex >= 0) {
+			room.seats[emptyIndex].userid = userid
+			ret.success = true
+			ret.code = 0
+			ret.data = { rpid: rpid, sign: room.sign }
+			//更新数据库用户信息,加await
+			await userDao.sycn_update_roomid_of_userid(rpid, userid)
+			return ret
+		} else {
+			ret.success = false
+			ret.code = 2 //房间已满
+			return ret
+		}
+	}
 }
 
 module.exports = {

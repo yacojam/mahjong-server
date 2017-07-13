@@ -52,23 +52,20 @@ var rules = [rule1, rule2, rule3, rule4]
 module.exports.rules = rules
 
 module.exports.getCardOfRule = function(selectArray) {
-	var index =
-		typeof selectArray[0] === 'array' ? selectArray[0][0] : selectArray[0]
+	var index = selectArray[0][0]
 	return cardRules[index]
 }
 
 module.exports.getRoomConfig = function(selectArray) {
 	var confs = []
-	var index1 =
-		typeof selectArray[0] === 'array' ? selectArray[0][0] : selectArray[0]
+	var index1 = selectArray[0][0]
 	var config1 = {
 		title: '房间设置',
 		contents: cardRulesDescs[index1]
 	}
 	confs.push(config1)
 
-	var index2 =
-		typeof selectArray[1] === 'array' ? selectArray[1][0] : selectArray[1]
+	var index2 = selectArray[1][0]
 	var config2 = {
 		title: '刀子底分',
 		contents: difengDescs[index2]
@@ -103,13 +100,11 @@ module.exports.getRoomConfig = function(selectArray) {
 
 module.exports.getRoomRule = function(selectArray) {
 	var rule = roomRule.generateEmptyRule()
-	var index1 =
-		typeof selectArray[0] === 'array' ? selectArray[0][0] : selectArray[0]
+	var index1 = selectArray[0][0]
 	rule.numOfJu = cardRules[index1]
 
-	var index2 =
-		typeof selectArray[1] === 'array' ? selectArray[1][0] : selectArray[1]
-	rule.dfOfJu = difengs[index]
+	var index2 = selectArray[1][0]
+	rule.dfOfJu = difengs[index2]
 
 	if (selectArray.length > 2 && selectArray[2].length > 0) {
 		selectArray[2].forEach(index => {

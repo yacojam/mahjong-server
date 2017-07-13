@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS nv_rooms;
 CREATE TABLE nv_rooms (
   id int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '房间id',
   presentid varchar(8) NOT NULL COMMENT '对外6位随机数字',
-  baseinfo varchar(16) NOT NULL,
+  baseinfo varchar(256) NOT NULL,
   createuserid int(11) NOT NULL,
   createtime varchar(16) NOT NULL,
   userid0 int(11),
@@ -46,7 +46,7 @@ CREATE TABLE nv_rooms (
   userid2 int(11),
   userid3 int(11),
   gameids varchar(16) DEFAULT NULL,
-  roomresult varchar(8) DEFAULT NULL COMMENT '房间结算'
+  roomresult varchar(8) DEFAULT NULL COMMENT '房间结算',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
