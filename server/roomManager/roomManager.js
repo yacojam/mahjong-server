@@ -34,6 +34,7 @@ function delUid(uid) {
 }
 
 module.exports = {
+	isRoomValid,
 	setRoom,
 	getRoom,
 	delRoom,
