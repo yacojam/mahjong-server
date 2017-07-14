@@ -1,6 +1,12 @@
 const fty = require('./factory')
 const roomDao = require('../db/RoomDao')
 
+const roombind = require('../socket/ioroom')
+const roomManager = require('./roomManager')
+const Koa = require('koa')
+
+var io = null
+
 async function test() {
 	var userConfigs = [[0], [0], [1, 3, 5]]
 	var ret = await fty.createRoom(100001, 9, userConfigs)
@@ -20,4 +26,14 @@ test().then(async ret => {
 
 	let ret4 = await fty.enterRoom(100005, ret.data.rpid)
 	console.log(ret4)
+
+	var app = new Koa()
+	var server = require('http').createServer(app.callback())
+	var io = require('socket.io')(server)
+	io.on('connection', socket => {
+		console.log('user connected')
+		roombind(socket)
+	})
+	server.listen(9000)
 })
+

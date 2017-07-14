@@ -96,13 +96,3 @@ module.exports = {
 	enterRoom
 }
 
-// async function dissolveRoom(userid, rpid) {
-// 	return new Promise(resolve => {
-// 		var ret = {}
-// 		if (!roomManager[rpid].isCreator(userid)) {
-// 			ret.success = false
-// 			ret.code = 1 //非房主不能解散房间
-// 		}
-
-// 	})
-// }

@@ -20,7 +20,7 @@ function generateSeatInfo(roomInfo) {
                 index,
                 ready
             } = seat
-            online = connectionManager.get(uid) != null
+            online = connectionManager.get(userid) != null
             return {
                 userid,
                 username,
@@ -33,6 +33,7 @@ function generateSeatInfo(roomInfo) {
                 online
             }
         })
+    return seats
 }
 
 async function dissolveRoom(rpid) {
@@ -61,10 +62,12 @@ function bind(socket) {
         var ret = {}
         var userid = userData.userid
         //检测房间数据
-        var roomPresentId = userData.roomid
-        var roomSign = userData.roomsign
+        var roomPresentId = userData.rpid
+        var roomSign = userData.sign
         var roomInfo = roomManager.getRoom(roomPresentId)
+        console.log(roomInfo)
         if (roomInfo == null || roomInfo.sign != roomSign) {
+            console.log('aaaa')
             ret.success = false
             ret.error = Error.ParamsNotVavidError
             socket.emit('user_join_result', ret)
@@ -74,6 +77,7 @@ function bind(socket) {
         var index = roomInfo.getUserIndex(userid)
         //没找到对应的位置
         if (index == -1) {
+            console.log('bbbb')
             ret.success = false
             ret.error = Error.ParamsNotVavidError
             socket.emit('user_join_result', ret)
@@ -82,7 +86,7 @@ function bind(socket) {
         }
         //找到座位,根据seat.index == -1来判断是新加入还是重新连
         var isCreator = roomInfo.isCreator(userid)
-        var seat = roomManager.seats[index]
+        var seat = roomInfo.seats[index]
         var isNewUser = seat.index === -1
         if (isNewUser) {
             seat.userid = userid
@@ -103,6 +107,7 @@ function bind(socket) {
         ret.success = true
         ret.data = {
             roomid: roomPresentId,
+            isCreator: isCreator,
             conf: roomInfo.conf,
             seats: generateSeatInfo(roomInfo)
         }
@@ -130,19 +135,20 @@ function bind(socket) {
         if (rpid == null) {
             return
         }
-        if (roomManager[rpid].isCreator(userid)) {
+        var roomInfo = roomManager.getRoom(rpid)
+        if (roomInfo.isCreator(userid)) {
             return
         }
         //通知其他玩家有人退出房间
         broadcast.broadcastInRoom(
-            'user_exit',
+            'user_exit_room',
             { userid: userid },
             userid,
             false
         )
 
-        index = roomManager[rpid].getUserIndex(userid)
-        roomManager[rpid].seat[index] = { userid: 0, index: -1 }
+        index = roomInfo.getUserIndex(userid)
+        roomInfo.seat[index] = { userid: 0, index: -1 }
         //更新数据库用户信息,加await
         await userDao.sycn_update_roomid_of_userid('', userid)
         //清除信息
@@ -153,37 +159,56 @@ function bind(socket) {
     })
 
     //解散房间
-    socket.on('dissolve_room', async userData => {
-        var userid = socket.userid
+    socket.on('user_dissolve', async userData => {
+        let userid = socket.userid
         if (userid == null || userid !== userData.userid) {
             return
         }
-        var rpid = roomManager.getRidForUid(userid)
+        let rpid = roomManager.getRidForUid(userid)
         if (rpid == null) {
             return
         }
         //非房主不能解散房间
-        if (!roomManager[rpid].isCreator(userid)) {
+        if (!roomManager.getRoom(rpid).isCreator(userid)) {
             return
         }
         //
         await dissolveRoom(rpid)
     })
 
-    socket.on('user_ready', async userData => {})
+    socket.on('user_ready', async userData => {
+        let userid = socket.userid
+        if (userid == null) {
+            return
+        }
+        let rpid = roomManager.getRidForUid(userid)
+        if (rpid == null) {
+            return
+        }
+
+        let roomInfo = roomManager.getRoom(rpid)
+        let index = roomInfo.getUserIndex(userid)
+        if (index == -1 && roomInfo.seats[index].index == -1) {
+            return
+        }
+        roomInfo.seats[index].ready = true
+        socket.emit('ready_success')
+        let data = { userid: userid, ready: true }
+        broadcast.broadcastInRoom('user_state_changed', data, userid, false)
+    })
 
     socket.on('disconnect', async () => {
-        userid = socket.userid
+        let userid = socket.userid
         if (userid == null) {
             return
         }
         //通知其他玩家该玩家离线
-        var data = { userid: userid, online: false }
-        broadcast.broadcastInRoom('user_disconnect', data, userid, false)
+        let data = { userid: userid, online: false }
+        broadcast.broadcastInRoom('user_state_changed', data, userid, false)
 
         //清除该玩家的连接信息
         connectionManager.del(userid)
     })
 }
 
-modules.exports = bind
+module.exports = bind
