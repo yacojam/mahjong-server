@@ -3,7 +3,9 @@ import User from './User'
 
 class Winner extends Component {
   onClick = () => {
-    //
+    window.socket.emit('action', {
+      type: 'ACTION_NEW_GAME'
+    })
   }
   render() {
     const { name, score } = this.props.user

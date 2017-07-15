@@ -10,6 +10,7 @@ const actionPeng = require('./actionPeng')
 const actionHu = require('./actionHu')
 const actionWanGang = require('./actionWanGang')
 const actionGang = require('./actionGang')
+const actionNewGame = require('./actionNewGame')
 
 function create(id) {
   return {
@@ -28,6 +29,10 @@ async function reducer(room, action) {
       name: action._uid
     }
     room = await actionUserJoin(room, user)
+  }
+
+  if (action.type === 'ACTION_NEW_GAME') {
+    room = await actionNewGame(action)
   }
 
   if (action.type === paiAction.ACTION_DINGQUE) {

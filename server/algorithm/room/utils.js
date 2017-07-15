@@ -57,8 +57,27 @@ function removePai(pais, pai, count = 1) {
   return rets
 }
 
+async function startGame(room) {
+  const pais = HXMJManager.getRandomPais()
+  const userPais = HXMJManager.getUserPais(pais)
+  room.users.forEach((user, idx) => {
+    user.shouPais = userPais[idx]
+    user.chuPais = []
+    user.pengPais = []
+    user.gangPais = []
+    user.anGangPais = []
+    user.score = null
+    user.que = null
+    user.actions = [Action.makeupAction(Action.ACTION_DINGQUE, 0)]
+  })
+  room.state = null
+  room.leftPais = pais
+  return room
+}
+
 module.exports = {
   filterUserAction,
   removePai,
-  nextUser
+  nextUser,
+  startGame
 }
