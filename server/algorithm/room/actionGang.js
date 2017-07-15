@@ -2,11 +2,15 @@ const HXMJManager = require('../HxmjRules/HxmjManager')
 const Action = require('../HxmjRules/hxaction')
 const utils = require('./utils')
 
-async function gang(action) {
+async function gang(action, anGang = false) {
   const { user, room, pai } = action
   user.actions = []
-  user.gangPais.push(pai)
-  const moPai = room.leftPais.unshift()
+  if (anGang) {
+    user.anGangPais.push(pai)
+  } else {
+    user.gangPais.push(pai)
+  }
+  const moPai = room.leftPais.shift()
   const actions = HXMJManager.getActions(
     user.shouPais,
     user.pengPais,

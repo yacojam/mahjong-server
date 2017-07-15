@@ -10,7 +10,6 @@ const actionPeng = require('./actionPeng')
 const actionHu = require('./actionHu')
 const actionWanGang = require('./actionWanGang')
 const actionGang = require('./actionGang')
-const actionAnGang = require('./actionAnGang')
 
 function create(id) {
   return {
@@ -54,12 +53,11 @@ async function reducer(room, action) {
     room = await actionWanGang(action)
   }
 
-  if (action.type === paiAction.ACTION_PGANG) {
-    room = await actionGang(action)
-  }
-
-  if (action.type === paiAction.ACTION_ANGANG) {
-    room = await actionAnGang(action)
+  if (
+    action.type === paiAction.ACTION_PGANG ||
+    action.type === paiAction.ACTION_ANGANG
+  ) {
+    room = await actionGang(action, action.type === paiAction.ACTION_ANGANG)
   }
 
   return room
