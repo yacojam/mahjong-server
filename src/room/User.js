@@ -7,6 +7,7 @@ import HuAction from './actions/HuAction'
 import WanGangAction from './actions/WanGangAction'
 import GangAction from './actions/GangAction'
 import AnGangAction from './actions/AnGangAction'
+import GangShangHuaAction from './actions/GangShangHuaAction'
 
 class User extends Component {
   render() {
@@ -65,6 +66,10 @@ class User extends Component {
                 }
                 if (a.pAction === Action.ACTION_ANGANG) {
                   return <AnGangAction pai={a.pai} key="angang" />
+                }
+
+                if (a.pAction === Action.ACTION_GSHUA) {
+                  return <GangShangHuaAction pai={a.pai} key="gangshanghua" />
                 }
               })
             : ''}
