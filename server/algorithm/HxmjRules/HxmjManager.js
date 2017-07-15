@@ -157,79 +157,64 @@ exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
       } else if (num == 2) {
         actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
       }
-      return actions
-      break
-    //别人弯杠的牌，只能产生抢杠胡
+      break //别人弯杠的牌，只能产生抢杠胡
     case Action.ACTION_WGANG:
       if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
         actions.push(Action.makeupAction(Action.ACTION_QGHU, desPai))
       }
-      return actions
-      break
-    //自己摸的牌，只能产生，自摸，暗杠，弯杠
-    case Action.ACTION_MO:
-      //自摸检测
+      break //自己摸的牌，只能产生，自摸，暗杠，弯杠
+    case Action.ACTION_MO: //自摸检测
       if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
         actions.push(Action.makeupAction(Action.ACTION_ZIMO, desPai))
-      }
-      //弯杠检测
+      } //弯杠检测
       var wgpais = CommonRules.getWanGangPais(shouPais, desPai, pengPais)
       if (wgpais.length > 0) {
         wgpais.forEach(function(e) {
           actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
         })
-      }
-      //暗杠检测
+      } //暗杠检测
       var agpais = CommonRules.getAnGangPais(shouPais, desPai)
       if (agpais.length > 0) {
         agpais.forEach(function(e) {
           actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
         })
       }
-      return actions
-      break
-    //杠摸，只能产生，杠上花，暗杠，弯杠
+      break //杠摸，只能产生，杠上花，暗杠，弯杠
     case Action.ACTION_GMO:
       //自摸检测
       if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
         actions.push(Action.makeupAction(Action.ACTION_GSHUA, desPai))
-      }
-      //弯杠检测
+      } //弯杠检测
       var wgpais = CommonRules.getWanGangPais(shouPais, desPai, pengPais)
       if (wgpais.length > 0) {
         wgpais.forEach(function(e) {
           actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
         })
-      }
-      //暗杠检测
+      } //暗杠检测
       var agpais = CommonRules.getAnGangPais(shouPais, desPai)
       if (agpais.length > 0) {
         agpais.forEach(function(e) {
           actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
         })
       }
-      return actions
       break
-
     default:
       break
   }
-  if (actions.length > 0) {
-    // (shouPais, pengPais, action, desPai, QueType)
-    console.log(
-      shouPais.join(', '),
-      'P:',
-      pengPais.join(', '),
-      '&',
-      desPai,
-      '->',
-      actions
-    )
-  }
+  // (shouPais, pengPais, action, desPai, QueType)
+  console.log(
+    shouPais.join(', '),
+    'P:',
+    pengPais.join(', '),
+    '&',
+    desPai,
+    'Action:',
+    action,
+    '->',
+    actions
+  )
   return actions
-}
-
-//136张牌随机排列
+} //136张牌随机排列
 exports.getRandomPais = function() {
   var pais = paisArr.concat()
   var len = paisArr.length
@@ -240,9 +225,7 @@ exports.getRandomPais = function() {
     pais[len - i - 1] = temp
   }
   return pais
-}
-
-//根据排列好的牌，从庄家开始分配牌，4441的形式
+} //根据排列好的牌，从庄家开始分配牌，4441的形式
 exports.getUserPais = function(pais) {
   var usersPais = []
   var user0Pais = []
@@ -273,16 +256,13 @@ exports.getUserPais = function(pais) {
     user1Pais.sort()
     user2Pais.sort()
     user3Pais.sort()
-
     usersPais.push(user0Pais)
     usersPais.push(user1Pais)
     usersPais.push(user2Pais)
     usersPais.push(user3Pais)
   }
   return usersPais
-}
-
-//计算积分
+} //计算积分
 exports.getScore = function(
   pengPais,
   gangPais,
@@ -300,7 +280,6 @@ exports.getScore = function(
   var isKZY = CommonRules.isKZY(shouPais, pengPais, huPai, isZimo, allChupais)
   var isGSH = action == Action.ACTION_GSHUA
   var isQGH = action == Action.ACTION_QGHU
-
   var hxmjInfo = new HxmjUtils(
     pengPais,
     gangPais,
@@ -319,12 +298,4 @@ exports.getScore = function(
   result.push(hxmjInfo.calculate())
   result.push(hxmjInfo.getMotype())
   return result
-}
-
-// var shouPais = [11,11,11,12,13,14,15,16,17,18,19,19,19];
-// console.log(CommonRules.getTingPais(shouPais, []));
-//console.log(paisArr.length);
-// var pais = exports.getRandomPais();
-// var usersPais = exports.getUserPais(pais)
-// console.log(usersPais);
-//console.log(pais);
+} // var shouPais = [11,11,11,12,13,14,15,16,17,18,19,19,19]; // console.log(CommonRules.getTingPais(shouPais, [])); //console.log(paisArr.length); // var pais = exports.getRandomPais(); // var usersPais = exports.getUserPais(pais) // console.log(usersPais); //console.log(pais);
