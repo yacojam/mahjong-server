@@ -136,4 +136,20 @@ describe('HXMJManager', function() {
     equal(actions[0].pAction, Action.ACTION_PENG)
     equal(actions[1].pAction, Action.ACTION_PAOHU)
   })
+  it('gang shang hua', () => {
+    const shouPais = [11, 12, 13, 15, 16, 17, 21, 22, 23, 25]
+    const pengPais = []
+    const desPai = 25
+    const que = 3
+    const action = Action.ACTION_GMO
+    const actions = HXMJManager.getActions(
+      shouPais,
+      pengPais,
+      action,
+      desPai,
+      que
+    )
+    equal(actions.length, 1)
+    equal(actions[0].pAction, Action.ACTION_GSHUA)
+  })
 })
