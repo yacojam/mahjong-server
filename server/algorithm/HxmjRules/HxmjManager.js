@@ -200,12 +200,13 @@ exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
       break
     default:
       break
-  }
-  // (shouPais, pengPais, action, desPai, QueType)
+  } // (shouPais, pengPais, action, desPai, QueType)
   console.log(
     shouPais.join(', '),
     'P:',
     pengPais.join(', '),
+    'Que:',
+    QueType,
     '&',
     desPai,
     'Action:',
