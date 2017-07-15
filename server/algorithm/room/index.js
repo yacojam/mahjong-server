@@ -44,7 +44,9 @@ async function reducer(room, action) {
 
   if (
     action.type === paiAction.ACTION_PAOHU ||
-    action.type === paiAction.ACTION_ZIMO
+    action.type === paiAction.ACTION_ZIMO ||
+    action.type === paiAction.ACTION_GSHUA ||
+    action.type === paiAction.ACTION_QGHU
   ) {
     room = await actionHu(action)
   }
