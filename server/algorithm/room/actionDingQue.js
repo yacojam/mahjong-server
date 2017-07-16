@@ -6,6 +6,7 @@ async function dingque(action) {
   room.users.every(u => {
     if (u.uid === user.uid) {
       u.que = que
+      u.actions = []
       return false
     }
     return true
