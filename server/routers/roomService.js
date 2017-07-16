@@ -14,7 +14,7 @@ router.get('/get_rules', async (ctx, next) => {
   var token = ctx.query.token
   var isValid = true //await redis.isAccountValid(userid, deviceid, token);
   if (isValid) {
-    ctx.body = HxRulesUtils.rules
+    ctx.json = HxRulesUtils.rules
   } else {
     ctx.error = ErrorType.AccountValidError
   }
@@ -40,7 +40,7 @@ router.get('/create_private_room', async (ctx, next) => {
         ctx.error = ErrorType.RoomCreateError
       }
       if (ret.code == 0) {
-        ctx.body = ret.data
+        ctx.json = ret.data
       }
     }
   } else {
@@ -58,7 +58,7 @@ router.get('/join_private_room', async (ctx, next) => {
     var ret = await roomFactory.enterRoom(userid, rpid)
     console.log(ret)
     if (ret.code == 0) {
-      ctx.body = ret.data
+      ctx.json = ret.data
     }
     if (ret.code == 1) {
       ctx.error = ErrorType.RoomNotExistError
