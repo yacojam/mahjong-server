@@ -39,7 +39,7 @@ router.post('/login', async (ctx, next) => {
                 roomid: 0,
                 token: token
             }
-            ctx.body = ret
+            ctx.json = ret
         } else {
             ctx.error = ErrorType.RegisterError
         }
@@ -70,7 +70,7 @@ router.post('/login', async (ctx, next) => {
             }
         }
         console.log(ret)
-        ctx.body = ret
+        ctx.json = ret
     }
 })
 
@@ -105,7 +105,7 @@ router.get('/get_account_info', async (ctx, next) => {
                 }
             }
             console.log(ret)
-            ctx.body = ret
+            ctx.json = ret
         } else {
             ctx.error = ErrorType.AccountError
         }

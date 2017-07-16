@@ -108,6 +108,7 @@ function bind(socket) {
         ret.success = true
         ret.data = {
             roomId: roomPresentId,
+            dealerIndex: roomInfo.dealerIndex,
             isCreator: isCreator,
             conf: roomInfo.conf,
             seats: generateSeatInfo(roomInfo)
