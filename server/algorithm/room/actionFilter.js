@@ -6,12 +6,14 @@ const actionHu = require('./actionHu')
 const actionGang = require('./actionGang')
 
 async function filter(action) {
-  const { user, room, pai } = action
+  let { user, room, pai } = action
   if (action.type === Action.ACTION_CANCEL) {
     user.actions = []
     user.pendingAction = null
+  } else {
+    user.pendingAction = Action.makeupAction(action.type, pai)
+    user.actions = [user.pendingAction]
   }
-  user.pendingAction = Action.makeupAction(action.type, pai)
   // check if all user done
   const allDone = room.users.every(
     u => u.actions.length === 0 || u.pendingAction

@@ -73,6 +73,7 @@ async function startGame(room) {
     user.actions = [Action.makeupAction(Action.ACTION_DINGQUE, 0)]
   })
   room.state = null
+  room.index = 0
   room.leftPais = pais
   return room
 }
