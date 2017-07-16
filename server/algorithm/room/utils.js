@@ -37,7 +37,8 @@ function nextUser(room, currentIndex) {
     nextUser.shouPais,
     nextUser.pengPais,
     Action.ACTION_MO,
-    moPai
+    moPai,
+    nextUser.que
   )
   nextUser.shouPais.push(moPai)
   if (nextUser.actions.length === 0) {

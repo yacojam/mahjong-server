@@ -1,6 +1,6 @@
 const HXMJManager = require('../HxmjRules/HxmjManager')
 const Action = require('../HxmjRules/hxaction')
-const MAX_USER = 2 // just for test
+const MAX_USER = 4 // just for test
 async function userJoin(room, user) {
   if (room.users.length == MAX_USER) {
     throw 'room full'

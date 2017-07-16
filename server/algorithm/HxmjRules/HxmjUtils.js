@@ -41,33 +41,18 @@ var HxmjUtils = function(
   this.shNum = getSiHeNum(pengPais, shouPais, huPai)
   this.tongArray = getTongArr(pengPais, gangPais, shouPais, huPai)
   this.is8tong = has8tong(this.tongArray)
-
   console.log('hupai type', this.huPaiType)
   if (this.huPaiType == 3) {
     this.getAllCommonHuPaiInfos()
   } else {
     this.allCommonHuPaiInfos = []
-  }
-
-  //log
-  //console.log(this.huPaiType);
-  // console.log(this.allTypeNumArr);
-  // console.log(this.isQYS);
-  // console.log(this.isCYS);
-  // console.log(this.isMenqing);
-  // console.log(this.isYYH);
-  // console.log(this.shNum);
-  // console.log(this.tongArray);
-  // console.log(this.is8tong);
-}
-
-//分析有几个棒棒
+  } //log //console.log(this.huPaiType); // console.log(this.allTypeNumArr); // console.log(this.isQYS); // console.log(this.isCYS); // console.log(this.isMenqing); // console.log(this.isYYH); // console.log(this.shNum); // console.log(this.tongArray); // console.log(this.is8tong);
+} //分析有几个棒棒
 function getBBNumForSevenPairs(shouPais, huPai, isFengForThreeKan) {
   var num = 0
   var copyShouPais = shouPais.concat()
   copyShouPais.push(huPai)
   copyShouPais.sort()
-
   var singlePairs = []
   singlePairs.push(copyShouPais[0])
   singlePairs.push(copyShouPais[2])
@@ -76,7 +61,6 @@ function getBBNumForSevenPairs(shouPais, huPai, isFengForThreeKan) {
   singlePairs.push(copyShouPais[8])
   singlePairs.push(copyShouPais[10])
   singlePairs.push(copyShouPais[12])
-
   var copy = []
   for (var i = 0; i < singlePairs.length - 2; i++) {
     if (!CommonUtils.contains(copy, i)) {
@@ -104,7 +88,6 @@ function getBBNumForSevenPairs(shouPais, huPai, isFengForThreeKan) {
     }
   }
   num += copy.length / 3
-
   var dnxb = [0, 0, 0, 0]
   var sumDNXB = 0
   var zfb = [0, 0, 0]
@@ -144,8 +127,7 @@ function getBBNumForSevenPairs(shouPais, huPai, isFengForThreeKan) {
   })
   var filterZFB = zfb.filter(function(e) {
     return e > 0
-  })
-  //console.log(sumDNXB + ' ' + sumZFB);
+  }) //console.log(sumDNXB + ' ' + sumZFB);
   if (isFengForThreeKan) {
     if (filterDNXB.length + filterZFB.length > 2) {
       num += (sumDNXB + sumZFB) / 3
@@ -159,9 +141,7 @@ function getBBNumForSevenPairs(shouPais, huPai, isFengForThreeKan) {
     }
   }
   return parseInt(num)
-}
-
-//获取自摸的类型 1，平摸，2，Y摸，4，KZY摸
+} //获取自摸的类型 1，平摸，2，Y摸，4，KZY摸
 //杠后开花，摸子翻倍，清一色，KZY本上就算一个Y摸
 HxmjUtils.prototype.getMotype = function() {
   if (this.huPaiType == 1) {
@@ -229,21 +209,16 @@ HxmjUtils.prototype.getMotype = function() {
     }
     return num
   }
-}
-
-/***
+} /***
  ** 是时候计算一波积分了
  ** 如果返回9999，就是默认大拿
  **/
 HxmjUtils.prototype.calculate = function() {
-  /** ---- 判断基本大拿的牌型 ----**/
-  //乱分拿
+  /** ---- 判断基本大拿的牌型 ----**/ //乱分拿
   if (this.huPaiType == 1) {
     console.log('乱分拿')
     return 9999
-  }
-
-  //双四核拿
+  } //双四核拿
   if (this.shNum >= 2) {
     console.log('双四核拿')
     return 9999
@@ -252,20 +227,15 @@ HxmjUtils.prototype.calculate = function() {
   if (this.isMenqing && this.isQYS) {
     console.log('门清清一色拿')
     return 9999
-  }
-
-  //8通拿
+  } //8通拿
   if (this.is8tong) {
     console.log('8通拿')
     return 9999
-  }
-
-  //幺幺胡
+  } //幺幺胡
   if (this.isYYH) {
     console.log('幺幺胡拿')
     return 9999
   }
-
   var bbNumFor7P = 0
   //7对双棒棒
   if (this.huPaiType == 2) {
@@ -278,22 +248,18 @@ HxmjUtils.prototype.calculate = function() {
       console.log('7对双棒棒拿')
       return 9999
     }
-  }
-  //门清碰碰胡
+  } //门清碰碰胡
   if (this.huPaiType == 3) {
     if (this.isMenqing && this.isPPH()) {
       console.log('门清碰碰胡拿')
       return 9999
     }
-  }
-
-  /** ---- 判断极小概率大拿的牌型（4杠／3通／4大砍 / 清一色大跳车） ----**/
+  } /** ---- 判断极小概率大拿的牌型（4杠／3通／4大砍 / 清一色大跳车） ----**/
   if (this.gangPais.length == 4) {
     //4杠拿
     console.log('4杠拿')
     return 9999
   }
-
   if (this.tongArray.length > 2) {
     //3通拿
     console.log('3通拿')
@@ -310,48 +276,35 @@ HxmjUtils.prototype.calculate = function() {
     //清一色大跳车
     console.log('清一色大跳车拿')
     return 9999
-  }
-
-  /** ---- 判断自定义规则大拿的牌型 ----**/
-
-  //逢双就拿的情况，顺便把通的点数算一下
+  } /** ---- 判断自定义规则大拿的牌型 ----**/ //逢双就拿的情况，顺便把通的点数算一下
   var tongScore = getTongScore(this.tongArray, this.roomRules.isNaForDouble)
   if (tongScore == 9999) {
     console.log('双通拿')
     return 9999
-  }
-
-  //双8支情况，顺便把支子的点数算一下
+  } //双8支情况，顺便把支子的点数算一下
   var typeScore = getTypeScore(this.allTypeNumArr, this.roomRules.isNaForDouble)
   if (typeScore == 9999) {
     console.log('双8支拿')
     return 9999
-  }
-
-  //三杠拿不拿，顺便把杠的点数计算一下
+  } //三杠拿不拿，顺便把杠的点数计算一下
   var gangScore = getGangScore(this.gangPais, this.roomRules.isNaFor3Gang)
   if (gangScore == 9999) {
     console.log('三杠拿')
     return 9999
-  }
-
-  //清一色拿不拿
+  } //清一色拿不拿
   if (this.isQYS) {
     if (this.roomRules.isNaForQYS) {
       console.log('清一色拿')
       return 9999
     }
   }
-
   //大跳车自摸
   if (this.pengPais.length == 4 && this.roomRules.isNaForDTCZM) {
     if (this.isZimo) {
       console.log('大跳车自摸拿')
       return 9999
     }
-  }
-
-  //31点加10点
+  } //31点加10点
   if (this.roomRules.isNaFor31) {
     if (this.isQYS) {
       //四核
@@ -363,23 +316,16 @@ HxmjUtils.prototype.calculate = function() {
       if (this.isKZY) {
         console.log('清一色+枯枝呀拿')
         return 9999
-      }
-      //碰碰胡
+      } //碰碰胡
       if (this.isPPH()) {
         console.log('清一色+鹏鹏胡拿')
         return 9999
-      }
-      // 不需要判断清一色+一条龙，要么是门清，要么有四核
-      // if(hasDragon(allCommonHuPaiInfos)){
-      //     return 9999;
-      // }
-
+      } // 不需要判断清一色+一条龙，要么是门清，要么有四核 // if(hasDragon(allCommonHuPaiInfos)){ //     return 9999; // }
       if (this.getSanDKType() >= 3) {
         console.log('清一色+三大砍拿')
         return 9999
       }
-    }
-    //七对的情况
+    } //七对的情况
     if (this.huPaiType == 2) {
       if (this.shNum > 0) {
         console.log('七对+四核拿')
@@ -389,9 +335,7 @@ HxmjUtils.prototype.calculate = function() {
         console.log('七对+草一色拿')
         return 9999
       }
-    }
-
-    //大跳车
+    } //大跳车
     if (this.pengPais.length == 4) {
       if (this.isCYS) {
         console.log('大跳车+草一色拿')
@@ -402,33 +346,25 @@ HxmjUtils.prototype.calculate = function() {
         return 9999
       }
     }
-  }
-
-  //三大砍带头
+  } //三大砍带头
   if (this.roomRules.isNaForThreeKanAndTou) {
     if (this.getSanDKType() == 3.5 || this.getSanDKType() == 50.5) {
       console.log('三大砍+头拿')
+
       return 9999
     }
-  }
-
-  //中发白
+  } //中发白
   if (this.roomRules.isNaForZFB && this.getSanDKType() >= 50) {
     console.log('中发白拿')
     return 9999
-  }
-
-  //暗老小头
+  } //暗老小头
   if (this.roomRules.isNaForAnLXT) {
     var anLXTNum = this.getNumAnLXT()
     if (anLXTNum > 0) {
       console.log('安老小头拿')
       return 9999
     }
-  }
-
-  /** -------分析要计算的点数------- **/
-  //七对特殊的情况
+  } /** -------分析要计算的点数------- **/ //七对特殊的情况
   if (this.huPaiType == 2) {
     //计算点数
     var score = 31
@@ -451,7 +387,6 @@ HxmjUtils.prototype.calculate = function() {
     }
     return score
   }
-
   if (this.pengPais.length == 4) {
     var score = 31
     score = score + typeScore + tongScore + gangScore
@@ -460,8 +395,7 @@ HxmjUtils.prototype.calculate = function() {
     }
     if (this.getSanDKType() > 3) {
       score += 10
-    }
-    //判断碰的牌中的老小头积分
+    } //判断碰的牌中的老小头积分
     score += getLXTScoreWithPengPais(this.pengPais)
     score += this.isGSH ? 5 : 0
     if (this.roomRules.isNaFor50Point && score >= 50) {
@@ -472,11 +406,10 @@ HxmjUtils.prototype.calculate = function() {
       return score * 2
     }
     return score
-  }
-
-  //清一色不算支子点书
+  } //清一色不算支子点书
   if (this.isQYS) {
     var score = 31
+
     if (this.shNum > 0) {
       score += 10
     }
@@ -499,7 +432,6 @@ HxmjUtils.prototype.calculate = function() {
     }
     return score
   }
-
   var score = 4
   score = score + typeScore + tongScore + gangScore
   if (this.shNum > 0) {
@@ -529,9 +461,7 @@ HxmjUtils.prototype.calculate = function() {
     return score * 2
   }
   return score
-}
-
-/***
+} /***
  ** 分析出手牌+胡牌，可以组成的 将对+3张组合
  **/
 HxmjUtils.prototype.getAllCommonHuPaiInfos = function() {
@@ -547,11 +477,8 @@ HxmjUtils.prototype.getAllCommonHuPaiInfos = function() {
       copyAllPais.splice(i, 2)
       if (CommonRules.isMatchHuWithoutJiangDui(copyAllPais)) {
         //console.log('去除将对后，满足胡牌');
-        var threeInfos = getThreeInfosWithoutJiangDui(copyAllPais)
-        //console.log('3张的信息为：');
-        // threeInfos.forEach(function(e){
+        var threeInfos = getThreeInfosWithoutJiangDui(copyAllPais) //console.log('3张的信息为：'); // threeInfos.forEach(function(e){ // });
         //     console.log(e.isKanzi + ' ' + e.pai);
-        // });
         var commonHuPaiInfo = new HxCommonHuPaiInfo(
           this.shouPais,
           this.pengPais,
@@ -562,13 +489,12 @@ HxmjUtils.prototype.getAllCommonHuPaiInfos = function() {
           threeInfos,
           this.isZimo,
           this.tingOnly,
-          roomRules.isFengForThreeKan
+          this.roomRules.isFengForThreeKan
         )
         allCommonHuPaiInfos.push(commonHuPaiInfo)
       } else {
         //console.log('去除将对后，但是不可以胡牌');
-      }
-      //console.log('----------------');
+      } //console.log('----------------');
       var j = i + 2
       while (j < plength) {
         if (allPais[i] == allPais[j]) {
@@ -584,14 +510,12 @@ HxmjUtils.prototype.getAllCommonHuPaiInfos = function() {
   }
   this.allCommonHuPaiInfos = allCommonHuPaiInfos
 }
-
 function getThreeInfosWithoutJiangDui(shouPaisNoJD) {
   var threeInfos = []
   var copyShouPaisNoJD = shouPaisNoJD.concat()
   analyseThreeInfosWithoutJiangDui(copyShouPaisNoJD, threeInfos)
   return threeInfos
-}
-//
+} //
 function analyseThreeInfosWithoutJiangDui(shouPaisNoJD, threeInfos) {
   if (shouPaisNoJD.length == 0) {
     return
@@ -600,8 +524,7 @@ function analyseThreeInfosWithoutJiangDui(shouPaisNoJD, threeInfos) {
     shouPaisNoJD[0] == shouPaisNoJD[1] &&
     shouPaisNoJD[0] == shouPaisNoJD[2]
   ) {
-    var threeInfo = new ThreeInfo(true, shouPaisNoJD[0])
-    //console.log(threeInfo.isKanzi + threeInfo.pai);
+    var threeInfo = new ThreeInfo(true, shouPaisNoJD[0]) //console.log(threeInfo.isKanzi + threeInfo.pai);
     threeInfos.push(threeInfo)
     shouPaisNoJD.splice(0, 3)
     analyseThreeInfosWithoutJiangDui(shouPaisNoJD, threeInfos)
@@ -610,10 +533,8 @@ function analyseThreeInfosWithoutJiangDui(shouPaisNoJD, threeInfos) {
       CommonUtils.contains(shouPaisNoJD, shouPaisNoJD[0] + 1) &&
       CommonUtils.contains(shouPaisNoJD, shouPaisNoJD[0] + 2)
     ) {
-      var threeInfo = new ThreeInfo(false, shouPaisNoJD[0])
-      //console.log(threeInfo.isKanzi + ' ' + threeInfo.pai);
-      threeInfos.push(threeInfo)
-      //console.log(this.threeInfos.length);
+      var threeInfo = new ThreeInfo(false, shouPaisNoJD[0]) //console.log(threeInfo.isKanzi + ' ' + threeInfo.pai);
+      threeInfos.push(threeInfo) //console.log(this.threeInfos.length);
       CommonUtils.removeItem(shouPaisNoJD, shouPaisNoJD[0] + 1)
       CommonUtils.removeItem(shouPaisNoJD, shouPaisNoJD[0] + 2)
       CommonUtils.removeItem(shouPaisNoJD, shouPaisNoJD[0])
@@ -621,7 +542,6 @@ function analyseThreeInfosWithoutJiangDui(shouPaisNoJD, threeInfos) {
     }
   }
 }
-
 HxmjUtils.prototype.getNumAnLXT = function() {
   var type = 0
   for (var i = 0; i <= this.allCommonHuPaiInfos.length - 1; i++) {
@@ -632,7 +552,6 @@ HxmjUtils.prototype.getNumAnLXT = function() {
   }
   return type
 }
-
 HxmjUtils.prototype.hasDragon = function() {
   for (var i = 0; i <= this.allCommonHuPaiInfos.length - 1; i++) {
     if (allCommonHuPaiInfos[i].dragonSore == 20) {
@@ -641,7 +560,6 @@ HxmjUtils.prototype.hasDragon = function() {
   }
   return false
 }
-
 HxmjUtils.prototype.getSanDKType = function() {
   var type = 0
   for (var i = 0; i <= this.allCommonHuPaiInfos.length - 1; i++) {
@@ -652,7 +570,6 @@ HxmjUtils.prototype.getSanDKType = function() {
   }
   return type
 }
-
 HxmjUtils.prototype.canBigMo = function() {
   for (var i = 0; i <= this.allCommonHuPaiInfos.length - 1; i++) {
     if (this.allCommonHuPaiInfos[i].canBeBigMo) {
@@ -661,7 +578,6 @@ HxmjUtils.prototype.canBigMo = function() {
   }
   return false
 }
-
 HxmjUtils.prototype.isPPH = function() {
   for (var i = 0; i <= this.allCommonHuPaiInfos.length - 1; i++) {
     if (this.allCommonHuPaiInfos[i].isPPH) {
@@ -670,7 +586,6 @@ HxmjUtils.prototype.isPPH = function() {
   }
   return false
 }
-
 HxmjUtils.prototype.is4DK = function() {
   for (var i = 0; i <= this.allCommonHuPaiInfos.length - 1; i++) {
     if (this.allCommonHuPaiInfos[i].hasSiDK) {
@@ -679,7 +594,6 @@ HxmjUtils.prototype.is4DK = function() {
   }
   return false
 }
-
 HxmjUtils.prototype.getScore = function() {
   var highScore = 0
   for (var i = 0; i < this.allCommonHuPaiInfos.length; i++) {
@@ -696,14 +610,11 @@ HxmjUtils.prototype.getScore = function() {
     }
   }
   return highScore
-}
-
-/***检测是不是门清****/
+} /***检测是不是门清****/
 function isMenq(pengPais, anGangPais) {
   return pengPais.length == 0 || pengPais.length == anGangPais.length
 }
-/***判断牌组是不是幺幺胡****/
-function isYYH(pengPais, shouPais, huPai) {
+/***判断牌组是不是幺幺胡****/ function isYYH(pengPais, shouPais, huPai) {
   var pais = pengPais.concat(shouPais)
   pais.push(huPai)
   var isAll = true
@@ -726,9 +637,7 @@ function isYYH(pengPais, shouPais, huPai) {
     }
   }
   return isAll
-}
-
-/**
+} /**
  ** 分析出四核的数量
  **/
 function getSiHeNum(pengPais, shouPais, huPai) {
@@ -743,8 +652,7 @@ function getSiHeNum(pengPais, shouPais, huPai) {
   if (copyAllPais.length < 8) {
     return num
   }
-  copyAllPais.sort()
-  //console.log(copyAllPais);
+  copyAllPais.sort() //console.log(copyAllPais);
   for (var i = 0; i < copyAllPais.length - 3; ) {
     //console.log('... ' + i);
     var j = i + 1
@@ -762,9 +670,7 @@ function getSiHeNum(pengPais, shouPais, huPai) {
     i = j
   }
   return num
-}
-
-/**
+} /**
  ** 分析出现通的情况的数组
  **/
 function getTongArr(pengPais, gangPais, shouPais, huPai) {
@@ -791,19 +697,15 @@ function getTongArr(pengPais, gangPais, shouPais, huPai) {
   })
   return fiteA
 }
-
 function has8tong(fiteA) {
   var filterArr = fiteA.filter(function(e) {
     return e == 8
   })
   return filterArr.length != 0
-}
-
-/**
+} /**
  ** 获取所有类型牌的数量
  ** 可以根据这个结果，快速的分析出清一色和草一色
- **/
-//获取所有类型牌的数量，[a,b,c,d,e,f]里面的元素代表万，筒，条，中发白，东南西北；最后一个无用
+ **/ //获取所有类型牌的数量，[a,b,c,d,e,f]里面的元素代表万，筒，条，中发白，东南西北；最后一个无用
 function getAllTypeNum(pengPais, gangPais, shouPais, huPai) {
   var copyShouPais = shouPais.concat()
   copyShouPais.push(huPai)
@@ -822,7 +724,6 @@ function getAllTypeNum(pengPais, gangPais, shouPais, huPai) {
   })
   return typeNumArr
 }
-
 //分析是不是草一色
 function isCYSWithTypeArray(arr) {
   var arr1 = arr.filter(function(e, i, a) {
@@ -835,9 +736,7 @@ function isCYSWithTypeArray(arr) {
     return true
   }
   return false
-}
-
-//分析是不是清一色
+} //分析是不是清一色
 function isQYSWithTypeArray(arr) {
   var arr1 = arr.filter(function(e, i, a) {
     return e > 0 && i < 3
@@ -849,9 +748,7 @@ function isQYSWithTypeArray(arr) {
     return true
   }
   return false
-}
-
-//获取通的点数
+} //获取通的点数
 function getTongScore(tongArr, isNaForDouble) {
   if (tongArr.length > 1 && isNaForDouble) {
     return 9999
@@ -865,7 +762,6 @@ function getTongScore(tongArr, isNaForDouble) {
   }
   return tongScore
 }
-
 //获取支子点数
 function getTypeScore(arr, isNaForDouble) {
   var filterArr = arr.filter(function(e, i, arr) {
@@ -885,7 +781,6 @@ function getTypeScore(arr, isNaForDouble) {
     }
   }
 }
-
 //获取杠的点数
 function getGangScore(gangPais, isNaFor3Gang) {
   if (gangPais.length == 3) {
@@ -896,7 +791,6 @@ function getGangScore(gangPais, isNaFor3Gang) {
   }
   return 0
 }
-
 function getLXTScoreWithPengPais(pengPais) {
   var num = 0
   if (
@@ -919,5 +813,4 @@ function getLXTScoreWithPengPais(pengPais) {
   }
   return num == 0 ? 0 : num == 1 ? 5 : 15
 }
-
 module.exports = HxmjUtils
