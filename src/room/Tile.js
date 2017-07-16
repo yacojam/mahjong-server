@@ -40,16 +40,19 @@ class Tile extends Component {
     const { tile, chupai } = this.props
     const style = {
       padding: 1,
-      marginRight: 2
+      marginRight: 2,
+      fontSize: 30
     }
     if (!chupai) {
     } else {
       style.borderColor = 'red'
     }
+    /*
     const tileImg = (
       <img style={{ width: '40px' }} src={this.pai2img(tile)} alt={tile} />
     )
-    // const tileImg = tile
+    */
+    const tileImg = tile
     return (
       <button
         className="tile"
