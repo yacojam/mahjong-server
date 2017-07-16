@@ -50,7 +50,8 @@ router.get('/join_private_room', async (ctx, next) => {
   var rpid = ctx.query.roomid
   var isValid = await redis.isAccountValid(userid, deviceid, token)
   if (isValid) {
-    var ret = roomFactory.enterRoom(userid, rpid)
+    var ret = await roomFactory.enterRoom(userid, rpid)
+    console.log(ret)
     if (ret.code == 0) {
       ctx.body = ret.data
     }
