@@ -62,6 +62,7 @@ function bind(socket) {
         var ret = {}
         var userid = userData.userid
         //检测房间数据
+        console.log(userData)
         var roomPresentId = userData.rpid
         var roomSign = userData.sign
         var roomInfo = roomManager.getRoom(roomPresentId)
@@ -106,7 +107,7 @@ function bind(socket) {
         //返回数据给客户端
         ret.success = true
         ret.data = {
-            roomid: roomPresentId,
+            roomId: roomPresentId,
             isCreator: isCreator,
             conf: roomInfo.conf,
             seats: generateSeatInfo(roomInfo)

@@ -8,7 +8,7 @@ const crypto = require('../md5/cryptoHelper')
 function generateRandomId() {
 	var roomid = ''
 	for (var i = 0; i < 6; i++) {
-		roomid += Math.floor(Math.random() * 5)
+		roomid += Math.floor(Math.random() * 10)
 	}
 	return roomid
 }
@@ -17,7 +17,6 @@ async function createRoom(userid, userCardNum, userConfigs) {
 	var ret = {}
 	var roomCard = roomUtil.getCardOfRule(userConfigs)
 	if (userCardNum < roomCard) {
-		ret.success = false
 		ret.code = 1 //房卡不够
 		return ret
 	} else {
@@ -39,7 +38,6 @@ async function createRoom(userid, userCardNum, userConfigs) {
 		)
 
 		if (roomid == 0) {
-			ret.success = false
 			ret.code = 2 //创建房间失败
 			return ret
 		} else {
@@ -53,7 +51,6 @@ async function createRoom(userid, userCardNum, userConfigs) {
 			)
 			room.sign = crypto.md5(roomPresentId)
 			room.seats[0].userid = userid
-			ret.success = true
 			ret.code = 0
 			ret.data = { rpid: roomPresentId, sign: room.sign }
 			roomManager.setRoom(roomPresentId, room)
@@ -67,24 +64,28 @@ async function createRoom(userid, userCardNum, userConfigs) {
 async function enterRoom(userid, rpid) {
 	var ret = {}
 	if (!roomManager.isRoomValid(rpid)) {
-		ret.success = false
 		ret.code = 1 //房间不存在
 		return ret
 	} else {
 		//判断房间有没有满
 		let room = roomManager.getRoom(rpid)
+		let index = room.getUserIndex(userid)
+		if (index >= 0) {
+			//用户已经在房间里
+			ret.code = 0
+			ret.data = { rpid: rpid, sign: room.sign }
+			return ret
+		}
 		var emptyIndex = room.getEmptyIndex()
 		console.log(emptyIndex)
 		if (emptyIndex >= 0) {
 			room.seats[emptyIndex].userid = userid
-			ret.success = true
 			ret.code = 0
 			ret.data = { rpid: rpid, sign: room.sign }
 			//更新数据库用户信息,加await
 			await userDao.sycn_update_roomid_of_userid(rpid, userid)
 			return ret
 		} else {
-			ret.success = false
 			ret.code = 2 //房间已满
 			return ret
 		}
@@ -95,4 +96,3 @@ module.exports = {
 	createRoom,
 	enterRoom
 }
-

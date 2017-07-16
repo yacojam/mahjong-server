@@ -19,11 +19,17 @@ exports.AccountValidError = AccountValidError
 var AccountError = generateError(515, 'account is not existed')
 exports.AccountError = AccountError
 
-var CardNotEnoughError = generateError(516, 'your account not have enough card')
+var CardNotEnoughError = generateError(601, '房卡不够')
 exports.CardNotEnoughError = CardNotEnoughError
 
-var RoomHasFullError = generateError(601, '房间已满')
+var RoomCreateError = generateError(602, '创建房间失败')
+exports.CardNotEnoughError = CardNotEnoughError
+
+var RoomHasFullError = generateError(603, '房间已满')
 exports.RoomHasFullError = RoomHasFullError
 
-var ParamsNotVavidError = generateError(651, '参数错误')
+var RoomNotExistError = generateError(604, '房间不存在')
+exports.RoomNotExistError = RoomNotExistError
+
+var ParamsNotVavidError = generateError(651, '进入房间参数错误')
 exports.ParamsNotVavidError = ParamsNotVavidError

@@ -53,3 +53,5 @@ io.attach(server)
 process.on('unhandledRejection', error => {
   console.error('unhandledRejection', error)
 })
+//test socket
+const socketStart = require('./roomManager/test')

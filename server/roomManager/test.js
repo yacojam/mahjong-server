@@ -15,17 +15,17 @@ async function test() {
 
 test().then(async ret => {
 	console.log(ret)
-	let ret1 = await fty.enterRoom(100002, ret.data.rpid)
-	console.log(ret1)
+	// let ret1 = await fty.enterRoom(100002, ret.data.rpid)
+	// console.log(ret1)
 
-	let ret2 = await fty.enterRoom(100003, ret.data.rpid)
-	console.log(ret2)
+	// let ret2 = await fty.enterRoom(100003, ret.data.rpid)
+	// console.log(ret2)
 
-	let ret3 = await fty.enterRoom(100004, ret.data.rpid)
-	console.log(ret3)
+	// let ret3 = await fty.enterRoom(100004, ret.data.rpid)
+	// console.log(ret3)
 
-	let ret4 = await fty.enterRoom(100005, ret.data.rpid)
-	console.log(ret4)
+	// let ret4 = await fty.enterRoom(100005, ret.data.rpid)
+	// console.log(ret4)
 
 	var app = new Koa()
 	var server = require('http').createServer(app.callback())
