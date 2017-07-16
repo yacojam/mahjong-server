@@ -66,7 +66,7 @@ router.post('/login', async (ctx, next) => {
             var isroomValid = roomManager.isRoomValid(ret.roomid)
             if (!isroomValid) {
                 await UserDao.sycn_update_roomid_of_userid('', userData.userid)
-                ret.roomid = 0
+                ret.roomid = ''
             }
         }
         console.log(ret)
@@ -101,7 +101,7 @@ router.get('/get_account_info', async (ctx, next) => {
                         '',
                         userData.userid
                     )
-                    ret.roomid = 0
+                    ret.roomid = ''
                 }
             }
             console.log(ret)
