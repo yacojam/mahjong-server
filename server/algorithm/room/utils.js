@@ -31,7 +31,8 @@ function filterUserAction(room) {
 }
 
 function nextUser(room, currentIndex) {
-  const nextUser = room.users[(currentIndex + 1) % room.users.length]
+  const nextIndex = (room.index = (currentIndex + 1) % room.users.length)
+  const nextUser = room.users[nextIndex]
   const moPai = room.leftPais.shift()
   nextUser.actions = HXMJManager.getActions(
     nextUser.shouPais,
