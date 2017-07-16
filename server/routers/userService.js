@@ -2,6 +2,8 @@
 const UserDao = require('../db/UserDao')
 const RoomDao = require('../db/RoomDao')
 
+const roomManager = require('../roomManager/roomManager')
+
 const cryptoHelper = require('../md5/cryptoHelper')
 const redis = require('../redis/redisHelper')
 
@@ -60,13 +62,13 @@ router.post('/login', async (ctx, next) => {
             token: token
         }
         //做一层保护，如果当前用户处于某个房间中，判断当前房间是否valid
-        // if (ret.roomid > 0) {
-        //     var isroomValid = await RoomDao.sync_is_room_valid(ret.roomid)
-        //     if (!isroomValid) {
-        //         await UserDao.sycn_update_roomid_of_userid(0, userData.userid)
-        //         ret.roomid = 0
-        //     }
-        // }
+        if (ret.roomid > 0) {
+            var isroomValid = roomManager.isRoomValid(ret.roomid)
+            if (!isroomValid) {
+                await UserDao.sycn_update_roomid_of_userid('', userData.userid)
+                ret.roomid = 0
+            }
+        }
         console.log(ret)
         ctx.body = ret
     }
@@ -92,16 +94,16 @@ router.get('/get_account_info', async (ctx, next) => {
                 token: token
             }
             //做一层保护，如果当前用户处于某个房间中，判断当前房间是否valid
-            // if (ret.roomid > 0) {
-            //     var isroomValid = await RoomDao.sync_is_room_valid(ret.roomid)
-            //     if (!isroomValid) {
-            //         await UserDao.sycn_update_roomid_of_userid(
-            //             0,
-            //             userData.userid
-            //         )
-            //         ret.roomid = 0
-            //     }
-            // }
+            if (ret.roomid > 0) {
+                var isroomValid = roomManager.isRoomValid(ret.roomid)
+                if (!isroomValid) {
+                    await UserDao.sycn_update_roomid_of_userid(
+                        '',
+                        userData.userid
+                    )
+                    ret.roomid = 0
+                }
+            }
             console.log(ret)
             ctx.body = ret
         } else {
