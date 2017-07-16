@@ -26,6 +26,9 @@ router.get('/create_private_room', async (ctx, next) => {
   var deviceid = ctx.query.deviceid
   var token = ctx.query.token
   var roomConfigs = ctx.query.roomConfigs
+  if (typeof roomConfigs === 'string') {
+    roomConfigs = JSON.parse(roomConfigs)
+  }
   var isValid = await redis.isAccountValid(userid, deviceid, token)
   if (isValid) {
     var cardnum_of_user = await UserDao.sycn_get_card_of_account(userid)
