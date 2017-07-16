@@ -62,6 +62,7 @@ function bind(socket) {
         var ret = {}
         var userid = userData.userid
         //检测房间数据
+        console.log(userData)
         var roomPresentId = userData.rpid
         var roomSign = userData.sign
         var roomInfo = roomManager.getRoom(roomPresentId)
