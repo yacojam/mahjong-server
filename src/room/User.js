@@ -2,14 +2,62 @@ import React, { Component } from 'react'
 import Tiles from './Tiles'
 import Action from '../hxaction'
 import DingQueAction from './actions/DingQueAction'
-import PengAction from './actions/PengAction'
-import HuAction from './actions/HuAction'
-import WanGangAction from './actions/WanGangAction'
-import GangAction from './actions/GangAction'
-import AnGangAction from './actions/AnGangAction'
-import GangShangHuaAction from './actions/GangShangHuaAction'
+import PaiAction from './actions/PaiAction'
 
 class User extends Component {
+  renderActions = actions => {
+    const hasCancel =
+      actions.length > 0 && actions[0].pAction !== Action.ACTION_CHU
+    return (
+      <div>
+        {actions.map(a => {
+          const action = a.pAction
+          if (action === Action.ACTION_DINGQUE) {
+            return <DingQueAction key="dingque" />
+          }
+          if (action === Action.ACTION_PENG) {
+            return (
+              <PaiAction type={action} pai={a.pai} name="peng" key="peng" />
+            )
+          }
+          if (action === Action.ACTION_PAOHU || action === Action.ACTION_ZIMO) {
+            return <PaiAction type={action} pai={a.pai} name="hu" key="hu" />
+          }
+          if (action === Action.ACTION_WGANG) {
+            return (
+              <PaiAction
+                type={action}
+                pai={a.pai}
+                name="wangang"
+                key="wangang"
+              />
+            )
+          }
+          if (action === Action.ACTION_PGANG) {
+            return (
+              <PaiAction type={action} pai={a.pai} name="pgang" key="pgang" />
+            )
+          }
+          if (action === Action.ACTION_ANGANG) {
+            return (
+              <PaiAction type={action} pai={a.pai} name="angang" key="angang" />
+            )
+          }
+
+          if (action === Action.ACTION_GSHUA) {
+            return (
+              <PaiAction
+                type={action}
+                pai={a.pai}
+                name="gangshanghua"
+                key="gangshanghua"
+              />
+            )
+          }
+        })}
+      </div>
+    )
+  }
   render() {
     const { user } = this.props
     const isSelf = user.uid === window.uid
@@ -44,35 +92,7 @@ class User extends Component {
             : null}
         </div>
         <div className="userActions">
-          {isSelf
-            ? actions.map(a => {
-                if (a.pAction === Action.ACTION_DINGQUE) {
-                  return <DingQueAction key="dingque" />
-                }
-                if (a.pAction === Action.ACTION_PENG) {
-                  return <PengAction pai={a.pai} key="peng" />
-                }
-                if (
-                  a.pAction === Action.ACTION_PAOHU ||
-                  a.pAction === Action.ACTION_ZIMO
-                ) {
-                  return <HuAction type={a.pAction} pai={a.pai} key="hu" />
-                }
-                if (a.pAction === Action.ACTION_WGANG) {
-                  return <WanGangAction pai={a.pai} key="wangang" />
-                }
-                if (a.pAction === Action.ACTION_PGANG) {
-                  return <GangAction pai={a.pai} key="pgang" />
-                }
-                if (a.pAction === Action.ACTION_ANGANG) {
-                  return <AnGangAction pai={a.pai} key="angang" />
-                }
-
-                if (a.pAction === Action.ACTION_GSHUA) {
-                  return <GangShangHuaAction pai={a.pai} key="gangshanghua" />
-                }
-              })
-            : ''}
+          {isSelf ? this.renderActions(actions) : ''}
         </div>
       </div>
     )
