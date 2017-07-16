@@ -30,8 +30,8 @@ function filterUserAction(room) {
   })
 }
 
-function nextUser(room, currentIndex) {
-  const index = (room.index = (currentIndex + 1) % room.users.length)
+function nextUser(room) {
+  const index = (room.index = (room.index + 1) % room.users.length)
   const nextUser = room.users[index]
   const moPai = room.leftPais.shift()
   nextUser.actions = HXMJManager.getActions(
@@ -77,9 +77,33 @@ async function startGame(room) {
   return room
 }
 
+async function otherUserAction(room, pAction) {
+  const users = room.users
+  users.forEach(u => (u.actions = []))
+  let hasAction = false
+  users.forEach((u, index) => {
+    if (index === room.index) {
+      return
+    }
+    u.actions = HXMJManager.getActions(
+      u.shouPais,
+      u.pengPais,
+      pAction,
+      pai,
+      u.que
+    )
+    hasAction = hasAction || u.actions.length > 0
+  })
+
+  if (!hasAction) {
+    nextUser(room)
+  }
+}
+
 module.exports = {
   filterUserAction,
   removePai,
   nextUser,
-  startGame
+  startGame,
+  otherUserAction
 }

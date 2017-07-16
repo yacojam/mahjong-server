@@ -20,6 +20,7 @@ async function gang(action, anGang = false) {
   )
   if (actions.length === 0) {
     actions.push(Action.makeupAction(Action.ACTION_CHU, 0))
+    room.index = room.users.findIndex(u => u.uid === user.uid)
   }
   user.actions = actions
   user.shouPais = utils.removePai(user.shouPais, pai, 3)

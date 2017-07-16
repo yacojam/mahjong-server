@@ -42,8 +42,10 @@ async function filter(action) {
 
     // all user cancel action
     if (!hasAction) {
+      room = utils.nextUser(room)
     }
   }
+  return room
 }
 
 module.exports = filter

@@ -7,27 +7,7 @@ async function wangang(action) {
   const users = room.users
   user.gangPais.push(pai)
   user.pengPais = utils.removePai(user.pengPais, pai)
-  // check others' ACTION_HU state
-  users.forEach(u => (u.actions = []))
-  let hasAction = false
-  users.forEach(u => {
-    if (u.uid === user.uid) {
-      return
-    }
-    u.actions = HXMJManager.getActions(
-      u.shouPais,
-      u.pengPais,
-      Action.ACTION_GMO,
-      pai,
-      u.que
-    )
-    hasAction = hasAction || u.actions.length > 0
-  })
-
-  if (!hasAction) {
-    const currentIndex = users.findIndex(u => u.uid === user.uid)
-    utils.nextUser(room, currentIndex)
-  }
+  utils.otherUserAction(room, Action.ACTION_WGANG)
   return room
 }
 
