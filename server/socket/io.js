@@ -32,6 +32,7 @@ io.on('connection', socket => {
         console.log('HANDLE:', action)
         action._uid = uid
         try {
+          await redis.save(true)
           await attach(action)
           const room = await dispatch(action)
           await save(action)

@@ -49,3 +49,7 @@ app
 const server = http.createServer(app.callback())
 server.listen(8080)
 io.attach(server)
+
+process.on('unhandledRejection', error => {
+  console.error(error)
+})

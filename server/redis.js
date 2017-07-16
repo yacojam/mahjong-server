@@ -23,15 +23,19 @@ const redis = {
   getAll() {
     return mem
   },
-  save() {
+  save(prev = false) {
     return new Promise((resolve, reject) => {
-      fs.writeFile(cacheFile, JSON.stringify(mem, true, 2), error => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve()
+      fs.writeFile(
+        cacheFile + (prev ? '.prev' : ''),
+        JSON.stringify(mem, true, 2),
+        error => {
+          if (error) {
+            reject(error)
+          } else {
+            resolve()
+          }
         }
-      })
+      )
     })
   },
   load() {
