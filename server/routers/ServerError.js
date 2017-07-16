@@ -25,5 +25,8 @@ exports.CardNotEnoughError = CardNotEnoughError
 var RoomHasFullError = generateError(601, '房间已满')
 exports.RoomHasFullError = RoomHasFullError
 
-var ParamsNotVavidError = generateError(651, '参数错误')
+var RoomNotExistError = generateError(602, '房间不存在')
+exports.RoomNotExistError = RoomNotExistError
+
+var ParamsNotVavidError = generateError(651, '进入房间参数错误')
 exports.ParamsNotVavidError = ParamsNotVavidError

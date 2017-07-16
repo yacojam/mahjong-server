@@ -6,6 +6,7 @@ const ErrorType = require('./ServerError')
 const Router = require('koa-router')
 const router = new Router()
 const HxRulesUtils = require('../roomManager/roomRuleUtil/HxRulesUtils')
+const roomFactory = require('../roomManager/factory')
 
 router.get('/get_rules', async (ctx, next) => {
   var userid = ctx.query.userid
@@ -42,5 +43,25 @@ router.get('/create_private_room', async (ctx, next) => {
     ctx.error = ErrorType.AccountValidError
   }
 }) //进入房间
-router.get('/join_private_room', async (ctx, next) => {})
+router.get('/join_private_room', async (ctx, next) => {
+  var userid = ctx.query.userid
+  var deviceid = ctx.query.deviceid
+  var token = ctx.query.token
+  var rpid = ctx.query.roomid
+  var isValid = await redis.isAccountValid(userid, deviceid, token)
+  if (isValid) {
+    var ret = roomFactory.enterRoom(userid, rpid)
+    if (ret.code == 0) {
+      ctx.body = ret.data
+    }
+    if (ret.code == 1) {
+      ctx.error = ErrorType.RoomNotExistError
+    }
+    if (ret.code == 2) {
+      ctx.error = ErrorType.RoomHasFullError
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
 module.exports = router

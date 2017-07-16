@@ -67,7 +67,6 @@ async function createRoom(userid, userCardNum, userConfigs) {
 async function enterRoom(userid, rpid) {
 	var ret = {}
 	if (!roomManager.isRoomValid(rpid)) {
-		ret.success = false
 		ret.code = 1 //房间不存在
 		return ret
 	} else {
@@ -77,14 +76,12 @@ async function enterRoom(userid, rpid) {
 		console.log(emptyIndex)
 		if (emptyIndex >= 0) {
 			room.seats[emptyIndex].userid = userid
-			ret.success = true
 			ret.code = 0
 			ret.data = { rpid: rpid, sign: room.sign }
 			//更新数据库用户信息,加await
 			await userDao.sycn_update_roomid_of_userid(rpid, userid)
 			return ret
 		} else {
-			ret.success = false
 			ret.code = 2 //房间已满
 			return ret
 		}
