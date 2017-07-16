@@ -5,14 +5,14 @@ class PaiAction extends Component {
   onClick = () => {
     const { pai, type } = this.props
     window.socket.emit('action', {
-      type: Action.ACTION_PENG,
+      type,
       pai
     })
   }
   render() {
     const { pai, name } = this.props
     return (
-      <button onClick={this.onClick}>
+      <button style={{ zoom: '120%' }} onClick={this.onClick}>
         {name}:{pai}
       </button>
     )
