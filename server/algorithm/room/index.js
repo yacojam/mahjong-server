@@ -11,6 +11,7 @@ const actionHu = require('./actionHu')
 const actionWanGang = require('./actionWanGang')
 const actionGang = require('./actionGang')
 const actionNewGame = require('./actionNewGame')
+const actionFilter = require('./actionFilter')
 
 function create(id) {
   return {
@@ -43,15 +44,9 @@ async function reducer(room, action) {
     room = await actionChuPai(action)
   }
 
-  if (action.type === paiAction.ACTION_PENG) {
-    room = await actionPeng(action)
-  }
-
   if (
-    action.type === paiAction.ACTION_PAOHU ||
-    action.type === paiAction.ACTION_ZIMO ||
     action.type === paiAction.ACTION_GSHUA ||
-    action.type === paiAction.ACTION_QGHU
+    action.type === paiAction.ACTION_ZIMO
   ) {
     room = await actionHu(action)
   }
@@ -60,11 +55,18 @@ async function reducer(room, action) {
     room = await actionWanGang(action)
   }
 
+  if (action.type === paiAction.ACTION_ANGANG) {
+    room = await actionGang(action, true)
+  }
+
+  // other user chupai actions
   if (
+    action.type === paiAction.ACTION_PENG ||
     action.type === paiAction.ACTION_PGANG ||
-    action.type === paiAction.ACTION_ANGANG
+    action.type === paiAction.ACTION_PAOHU ||
+    action.type === paiAction.ACTION_QGHU
   ) {
-    room = await actionGang(action, action.type === paiAction.ACTION_ANGANG)
+    room = await actionFilter(action)
   }
 
   return room
