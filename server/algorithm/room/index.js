@@ -61,6 +61,7 @@ async function reducer(room, action) {
 
   // other user chupai actions
   if (
+    action.type === paiAction.ACTION_CANCEL ||
     action.type === paiAction.ACTION_PENG ||
     action.type === paiAction.ACTION_PGANG ||
     action.type === paiAction.ACTION_PAOHU ||
