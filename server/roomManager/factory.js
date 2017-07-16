@@ -8,7 +8,7 @@ const crypto = require('../md5/cryptoHelper')
 function generateRandomId() {
 	var roomid = ''
 	for (var i = 0; i < 6; i++) {
-		roomid += Math.floor(Math.random() * 5)
+		roomid += Math.floor(Math.random() * 10)
 	}
 	return roomid
 }
