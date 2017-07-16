@@ -201,6 +201,9 @@ exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
     default:
       break
   } // (shouPais, pengPais, action, desPai, QueType)
+  if (actions.length > 0) {
+    actions.push(Action.makeupAction(Action.ACTION_CANCEL, desPai))
+  }
   console.log(
     shouPais.join(', '),
     'P:',

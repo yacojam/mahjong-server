@@ -24,6 +24,9 @@ class User extends Component {
     if (action === Action.ACTION_ANGANG) {
       return <PaiAction type={action} pai={pai} name="angang" key="angang" />
     }
+    if (action === Action.ACTION_CANCEL) {
+      return <PaiAction type={action} pai={pai} name="cancel" key="cancel" />
+    }
 
     if (action === Action.ACTION_GSHUA) {
       return (
@@ -37,16 +40,9 @@ class User extends Component {
     }
   }
   renderActions = actions => {
-    const hasCancel =
-      actions.length > 0 &&
-      actions[0].pAction !== Action.ACTION_CHU &&
-      actions[0].pAction !== Action.ACTION_DINGQUE
     return (
       <div>
         {actions.map(a => this.renderAction(a.pAction, a.pai))}
-        {hasCancel
-          ? <PaiAction type={Action.ACTION_CANCEL} pai="-" name="cancel" />
-          : null}
       </div>
     )
   }
