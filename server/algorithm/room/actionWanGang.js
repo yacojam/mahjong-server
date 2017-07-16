@@ -7,7 +7,7 @@ async function wangang(action) {
   const users = room.users
   user.gangPais.push(pai)
   user.pengPais = utils.removePai(user.pengPais, pai)
-  utils.otherUserAction(room, Action.ACTION_WGANG)
+  await utils.otherUserAction(room, Action.ACTION_WGANG, pai)
   return room
 }
 

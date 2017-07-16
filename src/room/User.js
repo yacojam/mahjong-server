@@ -38,7 +38,9 @@ class User extends Component {
   }
   renderActions = actions => {
     const hasCancel =
-      actions.length > 0 && actions[0].pAction !== Action.ACTION_CHU
+      actions.length > 0 &&
+      actions[0].pAction !== Action.ACTION_CHU &&
+      actions[0].pAction !== Action.ACTION_DINGQUE
     return (
       <div>
         {actions.map(a => this.renderAction(a.pAction, a.pai))}

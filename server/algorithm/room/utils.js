@@ -77,7 +77,7 @@ async function startGame(room) {
   return room
 }
 
-async function otherUserAction(room, pAction) {
+async function otherUserAction(room, pAction, pai) {
   const users = room.users
   users.forEach(u => (u.actions = []))
   let hasAction = false

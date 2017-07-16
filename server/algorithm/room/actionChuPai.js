@@ -12,7 +12,7 @@ async function chupai(action) {
   user.shouPais = utils.removePai(user.shouPais, pai, 1)
   user.shouPais.sort((a, b) => a - b)
 
-  utils.otherUserAction(room, Action.ACTION_CHU)
+  await utils.otherUserAction(room, Action.ACTION_CHU, pai)
   return room
 }
 
