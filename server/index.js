@@ -49,3 +49,6 @@ app
 const server = http.createServer(app.callback())
 server.listen(8080)
 io.attach(server)
+
+//test socket
+const socketStart = require('./roomManager/test')
