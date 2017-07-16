@@ -67,6 +67,17 @@ class roomInfo {
     isCreator(userid) {
         return this.createUid === userid
     }
+
+    canStart() {
+        let ret = true
+        for (let seat of this.seats) {
+            if (seat.userid == 0 || seat.index == -1 || !seat.ready) {
+                ret = false
+                break
+            }
+        }
+        return false
+    }
 }
 
 module.exports = roomInfo
