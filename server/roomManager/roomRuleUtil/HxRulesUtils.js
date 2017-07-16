@@ -61,14 +61,14 @@ module.exports.getRoomConfig = function(selectArray) {
 	var index1 = selectArray[0][0]
 	var config1 = {
 		title: '房间设置',
-		contents: cardRulesDescs[index1]
+		contents: [cardRulesDescs[index1]]
 	}
 	confs.push(config1)
 
 	var index2 = selectArray[1][0]
 	var config2 = {
 		title: '刀子底分',
-		contents: difengDescs[index2]
+		contents: [difengDescs[index2]]
 	}
 	confs.push(config2)
 

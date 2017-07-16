@@ -107,7 +107,7 @@ function bind(socket) {
         //返回数据给客户端
         ret.success = true
         ret.data = {
-            roomid: roomPresentId,
+            roomId: roomPresentId,
             isCreator: isCreator,
             conf: roomInfo.conf,
             seats: generateSeatInfo(roomInfo)
