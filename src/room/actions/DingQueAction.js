@@ -10,11 +10,14 @@ class DingQueAction extends Component {
     })
   }
   render() {
+    const style = {
+      zoom: 2
+    }
     return (
       <div>
-        <button data-type="1" onClick={this.onClick}>w</button>
-        <button data-type="2" onClick={this.onClick}>b</button>
-        <button data-type="3" onClick={this.onClick}>t</button>
+        <button style={style} data-type="1" onClick={this.onClick}>w</button>
+        <button style={style} data-type="2" onClick={this.onClick}>b</button>
+        <button style={style} data-type="3" onClick={this.onClick}>t</button>
       </div>
     )
   }

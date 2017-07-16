@@ -10,13 +10,46 @@ class Tile extends Component {
       pai: tile
     })
   }
+  pai2img = pai => {
+    let name
+    if (pai >= 11 && pai <= 19) {
+      // wan
+      name = 'character_' + pai % 10
+    }
+    if (pai >= 21 && pai <= 29) {
+      name = 'ball_' + pai % 10
+    }
+    if (pai >= 31 && pai <= 39) {
+      name = 'bamboo_' + pai % 10
+    }
+    if (pai >= 41 && pai <= 55) {
+      const map = {
+        41: 'wind_east',
+        43: 'wind_south',
+        45: 'wind_west',
+        47: 'wind_north',
+        51: 'dragon_red',
+        53: 'dragon_green',
+        55: 'dragon_white'
+      }
+      name = map[pai]
+    }
+    return `/images/${name}.png`
+  }
   render() {
     const { tile, chupai } = this.props
     const style = {
-      padding: 5
+      padding: 1,
+      marginRight: 2
     }
-    // const tileImg = Game.render(tile) + '(' + tile + ')'
-    const tileImg = tile
+    if (!chupai) {
+    } else {
+      style.borderColor = 'red'
+    }
+    const tileImg = (
+      <img style={{ width: '40px' }} src={this.pai2img(tile)} alt={tile} />
+    )
+    // const tileImg = tile
     return (
       <button
         className="tile"
