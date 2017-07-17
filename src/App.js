@@ -69,7 +69,11 @@ class App extends Component {
       })
       this.setState({ messages })
 
-      if (!data.error && data.data) {
+      if (data.error) {
+        alert(data.error)
+        return
+      }
+      if (data.data) {
         const room = data.data
         const user = room.users.find(u => u.uid === window.uid)
         if (user.exit) {

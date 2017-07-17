@@ -21,6 +21,7 @@ class GangTiles extends Component {
             border: '1px solid #ccc',
             position: 'absolute',
             top: 0,
+            padding: 0,
             left: 0
           }}
           tile={angang ? '' : pai}
@@ -33,6 +34,7 @@ class GangTiles extends Component {
             border: '1px solid #ccc',
             position: 'absolute',
             top: 0,
+            padding: 0,
             left: window.pWidth + 2
           }}
           tile={angang ? '' : pai}
@@ -45,6 +47,7 @@ class GangTiles extends Component {
             border: '1px solid #ccc',
             position: 'absolute',
             top: 0,
+            padding: 0,
             left: (window.pWidth + 2) * 2
           }}
           tile={angang ? '' : pai}
@@ -59,6 +62,7 @@ class GangTiles extends Component {
             position: 'absolute',
             transform: 'rotate(90deg)',
             top: 0,
+            padding: 0,
             left: window.pWidth
           }}
           tile={pai}

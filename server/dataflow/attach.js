@@ -25,6 +25,16 @@ async function attach(action) {
   action.room = room
   action.user = (room && room.users.find(u => u.uid === uid)) || user
   // console.log('ATTACH'.green, JSON.stringify(action), '\n')
+  // check action valid
+  if (
+    (action.type == 1 &&
+      room.index !== room.users.findIndex(u => u.uid === user.uid)) ||
+    (action.type >= 2 &&
+      action.type <= 11 &&
+      action.user.actions.findIndex(a => a.pAction === action.type) === -1)
+  ) {
+    throw `invalid actions ${JSON.stringify(action.user)}, action: ${action.type}`
+  }
   return action
 }
 

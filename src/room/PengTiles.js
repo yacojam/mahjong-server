@@ -21,7 +21,8 @@ class PengTiles extends Component {
             border: '1px solid #ccc',
             position: 'absolute',
             top: 0,
-            left: 0
+            left: 0,
+            padding: 0
           }}
           tile={pai}
         />
@@ -32,6 +33,7 @@ class PengTiles extends Component {
             margin: 1,
             border: '1px solid #ccc',
             position: 'absolute',
+            padding: 0,
             top: 0,
             left: window.pWidth + 2
           }}
@@ -45,6 +47,7 @@ class PengTiles extends Component {
             border: '1px solid #ccc',
             position: 'absolute',
             transform: 'rotate(90deg)',
+            padding: 0,
             top: 0,
             left: window.pWidth / 2
           }}

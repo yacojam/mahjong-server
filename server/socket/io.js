@@ -40,7 +40,7 @@ io.on('connection', socket => {
           await redis.save()
         } catch (e) {
           console.log('action error', e)
-          socket.emit({
+          socket.emit('data', {
             error: e.message || e.toString()
           })
         }
