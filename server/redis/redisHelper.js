@@ -6,14 +6,11 @@ var redis = new Redis({
   password: 'Njnova211'
 })
 
-exports.set = async function(a, b) {
-  return new Promise(resolve => {
-    redis.set(a, b)
-    resolve()
-  })
+function set(a, b) {
+  redis.set(a, b)
 }
 
-exports.get = async function(a) {
+function get(a) {
   return new Promise(resolve => {
     redis.get(a, function(err, data) {
       if (err) {
@@ -24,19 +21,37 @@ exports.get = async function(a) {
   })
 }
 
-exports.isAccountValid = async function(userid, deviceid, uToken) {
+function del(a) {
+  redis.del(a)
+}
+
+function sadd(a, b) {
+  redis.sadd(a, b)
+}
+
+function srem(a, b) {
+  redis.srem(a, b)
+}
+
+function smembers(a) {
   return new Promise(resolve => {
-    redis.get(userid + deviceid + 'token', function(err, data) {
-      if (err || data == '') {
-        resolve(true)
+    redis.smembers(a, function(err, data) {
+      if (err) {
+        resolve(null)
+      } else {
+        resolve(data)
       }
-      if (data != uToken) {
-        resolve(true)
-      }
-      redis.get(userid + deviceid + 'validtime', function(err, validStamp) {
-        var nowStamp = Date.parse(new Date())
-        resolve(true)
-      })
     })
   })
 }
+
+module.exports = { set, get, del, sadd, srem, smembers }
+
+// sadd('a', 'b')
+// sadd('a', 'c')
+// redis.smembers('a', function(err, data) {
+//   console.log('data')
+//   console.log(data[0])
+//   console.log(data[1])
+//   console.log(typeof data)
+// })
