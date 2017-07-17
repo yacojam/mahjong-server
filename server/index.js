@@ -58,4 +58,12 @@ process.on('unhandledRejection', error => {
 const roomManager = require('./roomManager/roomManager')
 roomManager.start().then(() => {
   console.log(roomManager.data)
+  let app2 = new Koa()
+  let server2 = http.createServer(app2.callback())
+  var io2 = require('socket.io')(server2)
+  io2.on('connection', socket => {
+    console.log('user connected')
+    require('./socket/ioroom')(socket)
+  })
+  server2.listen(9000)
 })
