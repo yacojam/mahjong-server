@@ -9,8 +9,15 @@ class LeftUser extends Component {
     return (
       <div>
         <div>
-          ShouPais: {user.shouPais.length}<br />
-          Que:{user.que}
+          <span style={{ display: 'inline-block', marginRight: 10 }}>
+            {user.uid}
+          </span>
+          <span style={{ display: 'inline-block', marginRight: 10 }}>
+            ShouPais: {user.shouPais.length}<br />
+          </span>
+          <span style={{ display: 'inline-block', marginRight: 10 }}>
+            Que:{user.que}
+          </span>
         </div>
         <div>
           <Tiles tiles={user.chuPais} chupai={false} />

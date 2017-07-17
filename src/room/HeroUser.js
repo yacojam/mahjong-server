@@ -27,7 +27,7 @@ class HeroUser extends Component {
           <ActionBar actions={user.actions} />
         </div>
         <div>
-          Que: {user.que}
+          {user.uid} Que: {user.que}
         </div>
       </div>
     )
