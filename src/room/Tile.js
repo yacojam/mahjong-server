@@ -38,7 +38,7 @@ class Tile extends Component {
   }
   render() {
     const { tile, chupai } = this.props
-    const style = {
+    const style = this.props.style || {
       margin: 1,
       width: window.pWidth,
       height: window.pHeight,

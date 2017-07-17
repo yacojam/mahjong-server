@@ -99,6 +99,19 @@ class Board extends Component {
   }
   render() {
     const { room } = this.props
+    if (!room) {
+      return (
+        <div>
+          room not exists
+        </div>
+      )
+    }
+    const heroIndex = room.users.findIndex(u => u.uid === window.uid)
+    const cnt = room.users.length
+    const heroUser = room.users[heroIndex]
+    const rightUser = room.users[(heroIndex + 1) % cnt]
+    const topUser = room.users[(heroIndex + 2) % cnt]
+    const leftUser = room.users[(heroIndex + 3) % cnt]
     return (
       <div className="App">
         <div id="left">
@@ -114,7 +127,7 @@ class Board extends Component {
           </div>
           <div id="bottom">
             {room && room.users.length > 0
-              ? <HeroUser user={room.users[0]} />
+              ? <HeroUser user={heroUser} />
               : null}
           </div>
         </div>

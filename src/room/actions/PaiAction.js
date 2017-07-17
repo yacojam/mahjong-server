@@ -12,7 +12,10 @@ class PaiAction extends Component {
   render() {
     const { pai, name } = this.props
     return (
-      <button style={{ zoom: '120%' }} onClick={this.onClick}>
+      <button
+        style={{ zoom: '120%', backgroundColor: 'lightgray', margin: 5 }}
+        onClick={this.onClick}
+      >
         {name}:{pai}
       </button>
     )

@@ -7,9 +7,10 @@ class PengTiles extends Component {
     return (
       <div
         style={{
-          width: 2 * window.pWidth,
+          width: 2 * window.pWidth + 4,
           height: window.pHeight,
-          position: 'relative'
+          position: 'relative',
+          display: 'inline-block'
         }}
       >
         <Tile
@@ -32,7 +33,7 @@ class PengTiles extends Component {
             border: '1px solid #ccc',
             position: 'absolute',
             top: 0,
-            left: window.pWidth - 2
+            left: window.pWidth + 2
           }}
           tile={pai}
         />
@@ -53,3 +54,5 @@ class PengTiles extends Component {
     )
   }
 }
+
+export default PengTiles
