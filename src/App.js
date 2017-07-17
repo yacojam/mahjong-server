@@ -7,6 +7,7 @@ import AddRoom from './AddRoom'
 import Rooms from './Rooms'
 import Messages from './Messages'
 import Room from './room/Room'
+import Board from './Board'
 
 injectTapEventPlugin()
 class App extends Component {
@@ -66,6 +67,7 @@ class App extends Component {
     })
   }
   render() {
+    return <Board room={this.state.room} />
     return (
       <MuiThemeProvider>
         <VBox>

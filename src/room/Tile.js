@@ -39,9 +39,11 @@ class Tile extends Component {
   render() {
     const { tile, chupai } = this.props
     const style = {
-      padding: 1,
-      marginRight: 2,
-      fontSize: 30
+      margin: 1,
+      width: window.pWidth,
+      height: window.pHeight,
+      margin: 1,
+      border: '1px solid #ccc'
     }
     if (!chupai) {
     } else {
