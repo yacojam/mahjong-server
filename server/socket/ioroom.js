@@ -55,7 +55,7 @@ async function dissolveRoom(rpid) {
 }
 
 function bind(socket) {
-    socket.on('user_join', userData => {
+    socket.on('user_join', async userData => {
         if (socket.userid != null) {
             return
         }
