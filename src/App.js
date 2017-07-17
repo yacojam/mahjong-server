@@ -29,12 +29,20 @@ class App extends Component {
         alert(ret.message)
         return
       }
-      const room = ret.data.find(room => {
-        return !room.users.every(user => user.uid !== window.uid)
+      const rooms = ret.data || []
+      let room = null
+      rooms.every(r => {
+        if (
+          r.users.findIndex(u => u.uid === window.uid && u.exit !== true) != -1
+        ) {
+          room = r
+          return false
+        }
+        return true
       })
       this.setState({
         room,
-        rooms: ret.data || []
+        rooms
       })
     })
   }
@@ -62,12 +70,20 @@ class App extends Component {
       this.setState({ messages })
 
       if (!data.error && data.data) {
-        this.setState({ room: data.data })
+        const room = data.data
+        const user = room.users.find(u => u.uid === window.uid)
+        if (user.exit) {
+          this.setState({ room: null })
+        } else {
+          this.setState({ room })
+        }
       }
     })
   }
   render() {
-    return <Board room={this.state.room} />
+    if (this.state.room) {
+      return <Board room={this.state.room} />
+    }
     return (
       <MuiThemeProvider>
         <VBox>

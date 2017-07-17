@@ -36,10 +36,13 @@ io.on('connection', socket => {
           await attach(action)
           const room = await dispatch(action)
           await save(action)
-          await publish(null, room, action)
+          await publish(null, uid, room, action)
           await redis.save()
         } catch (e) {
-          await publish(e, null, action)
+          console.log('action error', e)
+          socket.emit({
+            error: e.message || e.toString()
+          })
         }
       } catch (e) {
         console.log(e)

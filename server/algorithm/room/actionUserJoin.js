@@ -13,7 +13,8 @@ async function userJoin(room, user) {
     chuPais: [],
     pengPais: [],
     gangPais: [],
-    anGangPais: []
+    anGangPais: [],
+    exit: false
   })
   room.users.push(user)
   console.log(`user ${user} join room ${room}`)

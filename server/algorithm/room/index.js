@@ -32,6 +32,11 @@ async function reducer(room, action) {
     room = await actionUserJoin(room, user)
   }
 
+  if (action.type === 'ACTION_USER_EXIT_ROOM') {
+    const user = action.user
+    user.exit = true
+  }
+
   if (action.type === 'ACTION_NEW_GAME') {
     room = await actionNewGame(action)
   }

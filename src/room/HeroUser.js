@@ -6,6 +6,11 @@ import ActionBar from './ActionBar'
 import Action from '../hxaction'
 
 class HeroUser extends Component {
+  onExitClick = () => {
+    window.socket.emit('action', {
+      type: 'ACTION_USER_EXIT_ROOM'
+    })
+  }
   render() {
     const { user } = this.props
     const chupai =
@@ -32,6 +37,15 @@ class HeroUser extends Component {
         <div>
           {user.uid} Que: {user.que}
         </div>
+        <div>
+          <button
+            onClick={this.onExitClick}
+            style={{ background: 'lightgray' }}
+          >
+            exit
+          </button>
+        </div>
+
       </div>
     )
   }
