@@ -99,6 +99,7 @@ module.exports.getRoomConfig = function(selectArray) {
 }
 
 module.exports.getRoomRule = function(selectArray) {
+	console.log('selectArray' + selectArray)
 	var rule = roomRule.generateEmptyRule()
 	var index1 = selectArray[0][0]
 	rule.numOfJu = cardRules[index1]
@@ -107,6 +108,7 @@ module.exports.getRoomRule = function(selectArray) {
 	rule.dfOfJu = difengs[index2]
 
 	if (selectArray.length > 2 && selectArray[2].length > 0) {
+		console.log(selectArray[2])
 		selectArray[2].forEach(index => {
 			if (index == 0) {
 				rule.isNaForDouble = true

@@ -23,8 +23,8 @@ const CONFIG = {
 
 const router = new Router()
 router.use('/dynamicjs', require('./routers/contentScript').routes())
-router.use('/users', require('./routers/userService').routes())
-router.use('/rooms', require('./routers/roomService').routes())
+router.use('/user', require('./routers/userService').routes())
+router.use('/room', require('./routers/roomService').routes())
 router.use('*', require('./routers/index').routes())
 
 app
@@ -53,5 +53,17 @@ io.attach(server)
 process.on('unhandledRejection', error => {
   console.error('unhandledRejection', error)
 })
+
 //test socket
-const socketStart = require('./roomManager/test')
+const roomManager = require('./roomManager/roomManager')
+roomManager.start().then(() => {
+  console.log(roomManager.data)
+  let app2 = new Koa()
+  let server2 = http.createServer(app2.callback())
+  var io2 = require('socket.io')(server2)
+  io2.on('connection', socket => {
+    console.log('user connected')
+    require('./socket/ioroom')(socket)
+  })
+  server2.listen(9000)
+})
