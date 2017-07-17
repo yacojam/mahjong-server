@@ -90,9 +90,10 @@ function bind(socket) {
         var seat = roomInfo.seats[index]
         var isNewUser = seat.index === -1
         if (isNewUser) {
+            let dbData = await userDao.sync_get_account_info_by_userid(userid)
             seat.userid = userid
-            seat.username = ''
-            seat.headimg = ''
+            seat.username = dbData.name
+            seat.headimg = dbData.headimg
             seat.score = 50
             seat.moMoney = 0
             seat.sip = socket.handshake.address
