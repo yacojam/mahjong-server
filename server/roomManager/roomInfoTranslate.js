@@ -8,11 +8,11 @@ function transform(roomStruct) {
 		roomStruct.rule,
 		roomStruct.conf
 	)
-	this.ruleType = roomStruct.ruleType
-	this.dealerIndex = roomStruct.dealerIndex
-	this.seats = roomStruct.seats
-	this.sign = roomStruct.sign
-	this.result = roomStruct.result
+	roomInfo.ruleType = roomStruct.ruleType
+	roomInfo.dealerIndex = roomStruct.dealerIndex
+	roomInfo.seats = roomStruct.seats
+	roomInfo.sign = roomStruct.sign
+	roomInfo.result = roomStruct.result
 	return roomInfo
 }
 
