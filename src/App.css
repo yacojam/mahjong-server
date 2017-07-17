@@ -6,6 +6,10 @@ html, body, #root, .App {
   overflow: hidden;
 }
 
+button {
+  background: lightgray;
+}
+
 .App {
   display: flex;
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import HeroUser from './room/HeroUser'
 import LeftUser from './room/LeftUser'
+import Winner from './room/Winner'
 
 class Board extends Component {
   state = {
@@ -28,74 +29,9 @@ class Board extends Component {
       height
     })
   }
-  renderPengs = i => {
-    console.log('width', window.pWidth)
-    return (
-      <div
-        style={{
-          width: 2 * window.pWidth,
-          height: window.pHeight,
-          position: 'relative'
-        }}
-      >
-        <button
-          style={{
-            width: this.state.width,
-            height: this.state.height,
-            margin: 1,
-            border: '1px solid #ccc',
-            position: 'absolute',
-            top: 0,
-            left: 0
-          }}
-        >
-          {i}
-        </button>
-        <button
-          style={{
-            width: this.state.width,
-            height: this.state.height,
-            margin: 1,
-            border: '1px solid #ccc',
-            position: 'absolute',
-            top: 0,
-            left: window.pWidth - 2
-          }}
-        >
-          {i}
-        </button>
-        <button
-          style={{
-            width: this.state.width,
-            height: this.state.height,
-            margin: 1,
-            border: '1px solid #ccc',
-            position: 'absolute',
-            transform: 'rotate(90deg)',
-            top: 0,
-            left: window.pWidth / 2
-          }}
-        >
-          {i}
-        </button>
-      </div>
-    )
-  }
-  renderCards = () => {
-    return new Array(15).fill(0).map((_, i) => {
-      return (
-        <button
-          style={{
-            width: this.state.width,
-            height: this.state.height,
-            margin: 1,
-            border: '1px solid #ccc'
-          }}
-          key={i}
-        >
-          {i}
-        </button>
-      )
+  onNewGameClick = () => {
+    window.socket.emit('action', {
+      type: 'ACTION_NEW_GAME'
     })
   }
   render() {
@@ -124,6 +60,21 @@ class Board extends Component {
           </div>
           <div id="center">
             left: {room.leftPais.length}
+            {room.state === 'DONE'
+              ? room.users.map(user => {
+                  return user.score
+                    ? <Winner key={user.uid} user={user} />
+                    : null
+                })
+              : null}
+            {room.state === 'DONE'
+              ? <button
+                  style={{ zoom: 1.5, background: 'lightgray' }}
+                  onClick={this.onNewGameClick}
+                >
+                  new game
+                </button>
+              : null}
           </div>
           <div id="bottom">
             {room && room.users.length > 0
