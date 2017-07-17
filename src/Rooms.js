@@ -17,15 +17,25 @@ class Rooms extends React.Component {
 
     return (
       <div>
-        {rooms.map(room => (
-          <RaisedButton
-            style={style}
-            key={room.id}
-            label={'join: ' + room.id + ' (' + room.users.length + ' users)'}
-            primary={true}
-            onClick={this.joinRoom.bind(this, room.id)}
-          />
-        ))}
+        {rooms.map(room => {
+          const inRoom = room.users.findIndex(u => u.uid === window.uid) !== -1
+          return (
+            <RaisedButton
+              style={style}
+              key={room.id}
+              label={
+                (inRoom ? 're' : '') +
+                  'join: ' +
+                  room.id +
+                  ' (' +
+                  room.users.length +
+                  ' users)'
+              }
+              primary={true}
+              onClick={this.joinRoom.bind(this, room.id)}
+            />
+          )
+        })}
       </div>
     )
   }
