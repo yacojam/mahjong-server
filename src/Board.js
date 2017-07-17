@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import HeroUser from './room/HeroUser'
+import LeftUser from './room/LeftUser'
 
 class Board extends Component {
   state = {
@@ -115,15 +116,14 @@ class Board extends Component {
     return (
       <div className="App">
         <div id="left">
-          {this.renderCards()}
-          {this.renderPengs('x')}
+          <LeftUser user={leftUser} />
         </div>
         <div id="middle">
           <div id="top">
-            top
+            <LeftUser user={topUser} />
           </div>
           <div id="center">
-            center
+            left: {room.leftPais.length}
           </div>
           <div id="bottom">
             {room && room.users.length > 0
@@ -132,7 +132,7 @@ class Board extends Component {
           </div>
         </div>
         <div id="right">
-          right
+          <LeftUser user={rightUser} />
         </div>
 
       </div>

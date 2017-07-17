@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Tiles from './Tiles'
 import PengTiles from './PengTiles'
+import GangTiles from './GangTiles'
 import ActionBar from './ActionBar'
 import Action from '../hxaction'
 
@@ -16,10 +17,17 @@ class HeroUser extends Component {
         </div>
         <div className="hero-shoupais">
           {user.pengPais.map(pai => <PengTiles key={pai} pai={pai} />)}
+          {user.gangPais.map(pai => <GangTiles key={pai} pai={pai} />)}
+          {user.anGangPais.map(pai => (
+            <GangTiles key={pai} pai={pai} angang={true} />
+          ))}
           <Tiles tiles={user.shouPais} chupai={chupai} />
         </div>
         <div className="hero-actions">
           <ActionBar actions={user.actions} />
+        </div>
+        <div>
+          Que: {user.que}
         </div>
       </div>
     )
