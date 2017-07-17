@@ -37,24 +37,23 @@ class Tile extends Component {
     return `/images/${name}.png`
   }
   render() {
+    const userImg = window.location.search === '?img'
     const { tile, chupai } = this.props
     const style = this.props.style || {
       margin: 1,
       width: window.pWidth,
       height: window.pHeight,
       margin: 1,
-      border: '1px solid #ccc'
+      border: '1px solid #ccc',
+      padding: 0
     }
     if (!chupai) {
     } else {
       style.borderColor = 'red'
     }
-    /*
-    const tileImg = (
-      <img style={{ width: '40px' }} src={this.pai2img(tile)} alt={tile} />
-    )
-    */
-    const tileImg = tile
+    const tileImg = userImg
+      ? <img style={{ width: '100%' }} src={this.pai2img(tile)} alt={tile} />
+      : tile
     return (
       <button
         className="tile"

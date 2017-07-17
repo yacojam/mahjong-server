@@ -34,6 +34,13 @@ class Board extends Component {
       type: 'ACTION_NEW_GAME'
     })
   }
+  onChangeViewClick = () => {
+    if (window.location.search !== '?img') {
+      window.location.search = '?img'
+    } else {
+      window.location.search = ''
+    }
+  }
   render() {
     const { room } = this.props
     if (!room) {
@@ -59,6 +66,7 @@ class Board extends Component {
             {topUser ? <LeftUser user={topUser} /> : null}
           </div>
           <div id="center">
+            <button onClick={this.onChangeViewClick}>num/img</button>
             left: {room.leftPais && room.leftPais.length}
             {room.state === 'DONE'
               ? room.users.map(user => {
