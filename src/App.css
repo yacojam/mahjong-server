@@ -1,4 +1,37 @@
+html, body, #root, .App {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 .App {
+  display: flex;
+}
+
+#left, #right {
+  width: 100px;
+  outline: 1px solid red;
+}
+
+#middle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#top {
+  height: 100px;
+  outline: 1px solid green;
+}
+#center {
+  flex: 1;
+}
+
+#bottom {
+  height: 180px;
+  outline: 1px solid yellow;
   text-align: center;
 }
 
