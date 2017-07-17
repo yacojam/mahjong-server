@@ -19,7 +19,7 @@ class LeftUser extends Component {
             Que:{user.que}
           </span>
         </div>
-        <div>
+        <div style={{ zoom: '80%' }}>
           <Tiles tiles={user.chuPais} chupai={false} />
           {user.pengPais.map(pai => <PengTiles key={pai} pai={pai} />)}
           {user.gangPais.map(pai => <GangTiles key={pai} pai={pai} />)}

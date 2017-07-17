@@ -12,7 +12,10 @@ class HeroUser extends Component {
       user.actions.findIndex(a => a.pAction === Action.ACTION_CHU) != -1
     return (
       <div>
-        <div className="hero-chupais" style={{ height: window.pHeight + 5 }}>
+        <div
+          className="hero-chupais"
+          style={{ height: window.pHeight + 5, zoom: '80%' }}
+        >
           <Tiles tiles={user.chuPais} chupai={false} />
         </div>
         <div className="hero-shoupais">
