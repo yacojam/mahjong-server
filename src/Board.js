@@ -67,7 +67,7 @@ class Board extends Component {
                     : null
                 })
               : null}
-            {room.state === 'DONE'
+            {room.state === 'DONE' && heroUser.state !== 'STATE_USER_START'
               ? <button
                   style={{ zoom: 1.5, background: 'lightgray' }}
                   onClick={this.onNewGameClick}

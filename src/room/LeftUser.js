@@ -26,7 +26,9 @@ class LeftUser extends Component {
           {user.anGangPais.map(pai => (
             <GangTiles key={pai} pai={pai} angang={true} />
           ))}
-
+          {user.state === 'STATE_USER_START'
+            ? <div>new game ready</div>
+            : <div>waiting ... </div>}
         </div>
       </div>
     )

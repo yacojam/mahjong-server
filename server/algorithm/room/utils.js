@@ -71,6 +71,7 @@ async function startGame(room) {
     user.score = null
     user.que = null
     user.actions = [Action.makeupAction(Action.ACTION_DINGQUE, 0)]
+    user.state = null
   })
   room.state = null
   room.index = 0
