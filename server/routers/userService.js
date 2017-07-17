@@ -1,12 +1,8 @@
 //const co = require('co');
 const UserDao = require('../db/UserDao')
 const RoomDao = require('../db/RoomDao')
-
+const tokenManager = require('../redis/tokenRedisDao')
 const roomManager = require('../roomManager/roomManager')
-
-const cryptoHelper = require('../md5/cryptoHelper')
-const redis = require('../redis/redisHelper')
-
 const ErrorType = require('./ServerError')
 
 const Router = require('koa-router')
@@ -16,23 +12,18 @@ router.post('/login', async (ctx, next) => {
     var account = ctx.request.body.account
     var deviceid = ctx.request.body.deviceid
     var userData = await UserDao.sync_get_account_info(account)
-    console.log(userData)
     if (userData == null) {
         //数据库没有该用户，为该手机号码创建账户
-        var userid = await UserDao.sync_create_account(account, '', '赌棍', 1, '')
+        var userid = await UserDao.sync_create_account(account, '', '小白', 1, '')
         if (userid > 0) {
             //生成token
-            var token = cryptoHelper.md5(userid + deviceid)
-            var date = new Date()
-            date.setDate(date.getDate() + 60)
-            var validStamp = Date.parse(date)
-            await redis.set(userid + deviceid + 'token', token)
-            await redis.set(userid + deviceid + 'validtime', validStamp)
+            let token = tokenManager.generateToken(userid, deviceid)
             var ret = {
+                isNew: true,
                 userid: userid,
                 account: account,
                 wxid: '',
-                name: '赌棍',
+                name: '小白',
                 sex: 1,
                 headimg: '',
                 card: 9,
@@ -44,13 +35,9 @@ router.post('/login', async (ctx, next) => {
             ctx.error = ErrorType.RegisterError
         }
     } else {
-        var token = cryptoHelper.md5(userData.userid + deviceid)
-        var date = new Date()
-        date.setDate(date.getDate() + 60)
-        var validStamp = Date.parse(date)
-        await redis.set(userData.userid + deviceid + 'token', token)
-        await redis.set(userData.userid + deviceid + 'validtime', validStamp)
+        let token = tokenManager.generateToken(userData.userid, deviceid)
         var ret = {
+            isNew: false,
             userid: userData.userid,
             account: userData.account,
             wxid: userData.wxid,
@@ -69,6 +56,7 @@ router.post('/login', async (ctx, next) => {
                 ret.roomid = ''
             }
         }
+        console.log('login result : ')
         console.log(ret)
         ctx.json = ret
     }
@@ -76,9 +64,8 @@ router.post('/login', async (ctx, next) => {
 
 router.get('/get_account_info', async (ctx, next) => {
     var userid = ctx.query.userid
-    var deviceid = ctx.query.deviceid
     var token = ctx.query.token
-    var isValid = await redis.isAccountValid(userid, deviceid, token)
+    var isValid = await tokenManager.isAccountValid(userid, token)
     if (isValid) {
         var userData = await UserDao.sync_get_account_info_by_userid(userid)
         if (userData) {
@@ -104,6 +91,7 @@ router.get('/get_account_info', async (ctx, next) => {
                     ret.roomid = ''
                 }
             }
+            console.log('get account result : ')
             console.log(ret)
             ctx.json = ret
         } else {

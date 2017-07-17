@@ -1,5 +1,26 @@
+const roomRedisDao = require('../redis/roomRedisDao')
+const translator = require('./roomInfoTranslate')
+
 var manager = {}
 var ids = new Set()
+var user2ids = {}
+
+async function start() {
+	cacheRooms = await roomRedisDao.recoverRoom()
+	if (cacheRooms == null) {
+		return
+	}
+	for (let rpid in cacheRooms) {
+		let roomInfo = translator.transform(cacheRooms[rpid])
+		manager[rpid] = roomInfo
+		ids.add(rpid)
+		roomInfo.seats.forEach(seat => {
+			if (seat.userid > 0) {
+				user2ids[seat.userid] = rpid
+			}
+		})
+	}
+}
 
 function isRoomValid(roomPresentId) {
 	return ids.has(roomPresentId) && !!manager[roomPresentId]
@@ -8,18 +29,27 @@ function isRoomValid(roomPresentId) {
 function setRoom(roomPresentId, roomInfo) {
 	manager[roomPresentId] = roomInfo
 	ids.add(roomPresentId)
+	roomRedisDao.saveRoom(roomPresentId, roomInfo)
 }
 
 function getRoom(roomPresentId) {
 	return manager[roomPresentId] || null
 }
 
+function updateRoom(roomPresentId) {
+	let roomInfo = getRoom(roomPresentId)
+	if (roomInfo == null) {
+		roomRedisDao.deleteRoom(rpid)
+	} else {
+		roomRedisDao.saveRoom(roomPresentId, roomInfo)
+	}
+}
+
 function delRoom(roomPresentId) {
 	delete manager[roomPresentId]
 	ids.delete(roomPresentId)
+	roomRedisDao.deleteRoom(rpid)
 }
-
-var user2ids = {}
 
 function setRidForUid(rpid, uid) {
 	user2ids[uid] = rpid
@@ -34,11 +64,13 @@ function delUid(uid) {
 }
 
 module.exports = {
+	start,
 	isRoomValid,
 	setRoom,
 	getRoom,
 	delRoom,
 	setRidForUid,
 	getRidForUid,
-	delUid
+	delUid,
+	data: manager
 }
