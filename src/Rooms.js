@@ -29,7 +29,9 @@ class Rooms extends React.Component {
                   room.id +
                   ' (' +
                   room.users.length +
-                  ' users)'
+                  '/' +
+                  room.players +
+                  ')'
               }
               primary={true}
               onClick={this.joinRoom.bind(this, room.id)}

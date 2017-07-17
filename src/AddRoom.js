@@ -3,7 +3,8 @@ import RaisedButton from 'material-ui/RaisedButton'
 
 class AddRoom extends React.Component {
   onClick = () => {
-    window.socket.emit('createroom', roomid => {
+    const players = window.prompt('players: 2-4')
+    window.socket.emit('createroom', players, roomid => {
       this.props.onRoomCreate && this.props.onRoomCreate()
     })
   }

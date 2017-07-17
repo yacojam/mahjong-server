@@ -7,11 +7,8 @@ async function userJoin(room, user) {
     user.exit = false
     return room
   }
-  if (room.users.length == MAX_USER) {
+  if (room.users.length == room.players) {
     throw 'room full'
-  }
-  if (room.users.findIndex(u => user.uid == u.uid) != -1) {
-    throw 'user alreay in room'
   }
   Object.assign(user, {
     shouPais: [],
@@ -22,9 +19,9 @@ async function userJoin(room, user) {
     exit: false
   })
   room.users.push(user)
-  console.log(`user ${user} join room ${room}`)
+  console.log(`user ${JSON.stringify(user)} join room ${JSON.stringify(room)}`)
   if (
-    room.users.length == MAX_USER
+    room.users.length == room.players
     // && room.users.every(user => user.state === states.STATE_USER_START) // todo
   ) {
     room = await startGame(room)

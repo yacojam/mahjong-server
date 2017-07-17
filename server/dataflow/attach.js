@@ -6,7 +6,7 @@ async function attach(action) {
   const uid = action._uid
   const userRoom = await store.getUserRoom(uid)
   if (userRoom && rid && rid != userRoom) {
-    throw `user ${uid}'s room is ${userRoom}, but action room is ${rid}`
+    //  throw `user ${uid}'s room is ${userRoom}, but action room is ${rid}`
   } else if (userRoom) {
     rid = userRoom
   }

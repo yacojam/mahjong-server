@@ -10,8 +10,9 @@ function bind(socket) {
     user2ws.setUserConnection(user.uid, socket)
     fn(user)
   })
-  socket.on('createroom', async fn => {
+  socket.on('createroom', async (players, fn) => {
     const room = Room.create('Room' + new Date().getTime())
+    room.players = players
     await redis.set('ROOM_' + room.id, room)
     const rooms = (await redis.get('rooms')) || []
     rooms.push(room.id)

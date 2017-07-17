@@ -47,19 +47,19 @@ class Board extends Component {
     const cnt = room.users.length
     const heroUser = room.users[heroIndex]
     const rightUser = room.users[(heroIndex + 1) % cnt]
-    const topUser = room.users[(heroIndex + 2) % cnt]
-    const leftUser = room.users[(heroIndex + 3) % cnt]
+    const topUser = room.players > 2 && room.users[(heroIndex + 2) % cnt]
+    const leftUser = room.players > 3 && room.users[(heroIndex + 3) % cnt]
     return (
       <div className="App">
         <div id="left">
-          <LeftUser user={leftUser} />
+          {leftUser ? <LeftUser user={leftUser} /> : null}
         </div>
         <div id="middle">
           <div id="top">
-            <LeftUser user={topUser} />
+            {topUser ? <LeftUser user={topUser} /> : null}
           </div>
           <div id="center">
-            left: {room.leftPais.length}
+            left: {room.leftPais && room.leftPais.length}
             {room.state === 'DONE'
               ? room.users.map(user => {
                   return user.score
