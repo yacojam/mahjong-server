@@ -68,6 +68,7 @@ module.exports = {
 	isRoomValid,
 	setRoom,
 	getRoom,
+	updateRoom,
 	delRoom,
 	setRidForUid,
 	getRidForUid,
