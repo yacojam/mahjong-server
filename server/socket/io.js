@@ -8,8 +8,9 @@ const save = require('../dataflow/save')
 const publish = require('../dataflow/publish')
 const iomock = require('../socket/iomock')
 const redis = require('../redis')
+const store = require('../dataflow/store')
 
-io.on('connection', socket => {
+io.on('connection', async socket => {
   let uid = 0
   try {
     const sess = cookie.parse(socket.request.headers.cookie)['koa:sess']
@@ -27,6 +28,16 @@ io.on('connection', socket => {
       console.log(`user ${uid} leave ${reason}`)
       user2ws.setUserConnection(uid, null)
     })
+
+    // send data
+    const rid = await store.getUserRoom(uid)
+      if (rid) {
+        const room = await store.getRoom(rid)
+          socket.emit('data', {
+            data: room
+          })
+      } 
+
     socket.on('action', async action => {
       try {
         console.log('HANDLE:', action)
