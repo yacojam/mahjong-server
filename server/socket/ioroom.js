@@ -200,6 +200,14 @@ function bind(socket) {
         broadcast.broadcastInRoom('user_state_changed', data, userid, false)
     })
 
+    socket.on('game_ping', () => {
+        let userid = socket.userid
+        if (userid == null) {
+            return
+        }
+        socket.emit('game_pong')
+    })
+
     socket.on('disconnect', async () => {
         let userid = socket.userid
         if (userid == null) {
