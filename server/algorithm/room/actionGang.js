@@ -6,9 +6,12 @@ async function gang(action, anGang = false) {
   const { user, room, pai } = action
   user.actions = []
   if (anGang) {
+    user.shouPais = utils.removePai(user.shouPais, pai, 4)
     user.anGangPais.push(pai)
   } else {
+    user.shouPais = utils.removePai(user.shouPais, pai, 3)
     user.gangPais.push(pai)
+    room.users[room.index].chuPais.pop()
   }
   const moPai = room.leftPais.shift()
   const actions = HXMJManager.getActions(
@@ -23,7 +26,6 @@ async function gang(action, anGang = false) {
     room.index = room.users.findIndex(u => u.uid === user.uid)
   }
   user.actions = actions
-  user.shouPais = utils.removePai(user.shouPais, pai, 3)
   user.shouPais.push(moPai)
   return room
 }
