@@ -1,0 +1,6 @@
+module.exports = {
+	PENDING_TYPE_NULL: 1,
+	PENDING_TYPE_MO: 2,
+	PENDING_TYPE_CHU: 3,
+	PENDING_TYPE_WGANG: 4
+}

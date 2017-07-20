@@ -1,5 +1,6 @@
 const HXMJManager = require('../HxmjRules/HxmjManager')
 const Action = require('../HxmjRules/hxaction')
+const Pend = require('../HxmjRules/pendingtype')
 
 function hu(action) {
   const { user, pai, room } = action
@@ -19,7 +20,7 @@ function hu(action) {
     {},
     que
   )
-
+  room.pendingType = Pend.PENDING_TYPE_NULL
   room.users.forEach(u => (u.actions = []))
   currentUser.score = score
   room.state = 'DONE'

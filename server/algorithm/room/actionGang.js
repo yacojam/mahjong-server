@@ -1,6 +1,7 @@
 const HXMJManager = require('../HxmjRules/HxmjManager')
 const Action = require('../HxmjRules/hxaction')
 const utils = require('./utils')
+const Pend = require('../HxmjRules/pendingtype')
 
 async function gang(action, anGang = false) {
   const { user, room, pai } = action
@@ -13,20 +14,9 @@ async function gang(action, anGang = false) {
     user.gangPais.push(pai)
     room.users[room.index].chuPais.pop()
   }
-  const moPai = room.leftPais.shift()
-  const actions = HXMJManager.getActions(
-    user.shouPais,
-    user.pengPais,
-    Action.ACTION_GMO,
-    moPai,
-    user.que
-  )
-  if (actions.length === 0) {
-    actions.push(Action.makeupAction(Action.ACTION_CHU, 0))
-    room.index = room.users.findIndex(u => u.uid === user.uid)
-  }
-  user.actions = actions
-  user.shouPais.push(moPai)
+  room.index = room.users.findIndex(u => u.uid === user.uid)
+  room.pendingType = Pend.PENDING_TYPE_NULL
+  await utils.moAction(room, Action.ACTION_GMO)
   return room
 }
 

@@ -1,5 +1,6 @@
 const Action = require('../HxmjRules/hxaction')
 const HXMJManager = require('../HxmjRules/HxmjManager')
+const Pend = require('../HxmjRules/pendingtype')
 
 const actionPriority = {
   [Action.ACTION_PENG]: 1,
@@ -30,21 +31,10 @@ function filterUserAction(room) {
   })
 }
 
-function nextUser(room) {
+async function nextUser(room) {
   const index = (room.index = (room.index + 1) % room.users.length)
-  const nextUser = room.users[index]
-  const moPai = room.leftPais.shift()
-  nextUser.actions = HXMJManager.getActions(
-    nextUser.shouPais,
-    nextUser.pengPais,
-    Action.ACTION_MO,
-    moPai,
-    nextUser.que
-  )
-  nextUser.shouPais.push(moPai)
-  if (nextUser.actions.length === 0) {
-    nextUser.actions = [Action.makeupAction(Action.ACTION_CHU, 0)]
-  }
+  room.index = index
+  await moAction(room, Action.ACTION_MO)
   return room
 }
 
@@ -76,10 +66,30 @@ async function startGame(room) {
   room.state = null
   room.index = 0
   room.leftPais = pais
+  room.pendingType = Pend.PENDING_TYPE_NULL
   return room
 }
 
-async function otherUserAction(room, pAction, pai) {
+async function moAction(room, pAction) {
+  let user = room.users[room.index]
+  let moPai = room.leftPais.shift()
+  let actions = HXMJManager.getActions(
+    user.shouPais,
+    user.pengPais,
+    pAction,
+    moPai,
+    user.que
+  )
+  if (actions.length === 0) {
+    actions.push(Action.makeupAction(Action.ACTION_CHU, 0))
+  } else {
+    room.pendingType = Pend.PENDING_TYPE_MO
+  }
+  user.actions = actions
+  user.shouPais.push(moPai)
+}
+
+async function otherUserAction(room, pAction, pai, wanGang = false) {
   const users = room.users
   users.forEach(u => (u.actions = []))
   let hasAction = false
@@ -98,11 +108,22 @@ async function otherUserAction(room, pAction, pai) {
   })
 
   if (!hasAction) {
-    nextUser(room)
+    if (wanGang) {
+      await moAction(room, Action.ACTION_GMO)
+    } else {
+      await nextUser(room)
+    }
+  } else {
+    if (wanGang) {
+      room.pendingType = Pend.PENDING_TYPE_WGANG
+    } else {
+      room.pendingType = Pend.PENDING_TYPE_CHU
+    }
   }
 }
 
 module.exports = {
+  moAction,
   filterUserAction,
   removePai,
   nextUser,

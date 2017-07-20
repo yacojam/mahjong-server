@@ -14,11 +14,11 @@ Action.ACTION_GMO = 11 //杠之后摸的牌
 Action.ACTION_DINGQUE = 12
 Action.ACTION_CANCEL = -1
 Action.actionDetail = function(action, pai) {
-  this.pAction = action
-  this.pai = pai
+	this.pAction = action
+	this.pai = pai
 }
 Action.makeupAction = function(action, pai) {
-  var detailAction = new Action.actionDetail(action, pai)
-  return detailAction
+	var detailAction = new Action.actionDetail(action, pai)
+	return detailAction
 }
 module.exports = Action
