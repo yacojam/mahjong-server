@@ -1,27 +1,3 @@
-// roomInfo = {
-//  roomId : 2001,//数据库Id
-//     presentId : '172627',//6位展示Id
-//     createUserId : 1000009,
-//     ruleType : 'hxdz', //rule的类型，用于之后的扩展
-//     difeng : ,//一局多少money
-//     roomRule : //具体的rule对象
-//     roomManager : //manager对象，根据ruleType来设置的
-//     seats : [seat1, seat2, seat3, seat4], //每个房间4个位置，位置记录的信息随Type而定
-//     dealerIndex : 0, //庄位
-//     roomResult : []
-// };
-
-// Seat = {
-//  userid : ,//用户id
-//     score : , //用户当前积分
-
-//     name : , //用户昵称
-//     seatIndex : //座位index
-//     moMoney : ,//自摸奖励
-//     ready : true, //是否已准备
-//     ip : ,//用户ip
-//     online : true, //是否在线
-// };
 class roomInfo {
     constructor(roomId, roomPresentId, createUid, rule, conf) {
         this.roomId = roomId
@@ -40,43 +16,13 @@ class roomInfo {
         }
         this.sign = ''
         this.result = [0, 0, 0, 0]
-    }
-
-    getUserIndex(userid) {
-        var index = -1
-        for (var i = 0; i < this.seats.length; i++) {
-            if (this.seats[i].userid == userid) {
-                index = i
-                break
-            }
-        }
-        return index
-    }
-
-    getEmptyIndex() {
-        var index = -1
-        for (var i = 0; i < this.seats.length; i++) {
-            if (this.seats[i].userid == 0) {
-                index = i
-                break
-            }
-        }
-        return index
-    }
-
-    isCreator(userid) {
-        return this.createUid === userid
-    }
-
-    canStart() {
-        let ret = true
-        for (let seat of this.seats) {
-            if (seat.userid == 0 || seat.index == -1 || !seat.ready) {
-                ret = false
-                break
-            }
-        }
-        return false
+        this.gameRecord = []
+        this.state = null
+        this.index = 0
+        this.leftPais = []
+        this.pendingType = null
+        this.currentJu = 0
+        this.currentGame = 0
     }
 }
 

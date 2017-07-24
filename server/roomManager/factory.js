@@ -1,6 +1,7 @@
 const roomManager = require('./roomManager')
-const roomUtil = require('./roomRuleUtil/HxRulesUtils')
+const ruleUtil = require('./roomRuleUtil/HxRulesUtils')
 const RoomInfo = require('./roomInfo')
+const roomUtils = require('./roomInfoUtils')
 const roomDao = require('../db/RoomDao')
 const userDao = require('../db/UserDao')
 const crypto = require('../md5/cryptoHelper')
@@ -15,7 +16,7 @@ function generateRandomId() {
 
 async function createRoom(userid, userCardNum, userConfigs) {
 	var ret = {}
-	var roomCard = roomUtil.getCardOfRule(userConfigs)
+	var roomCard = ruleUtil.getCardOfRule(userConfigs)
 	if (userCardNum < roomCard) {
 		ret.code = 1 //房卡不够
 		return ret
@@ -28,7 +29,7 @@ async function createRoom(userid, userCardNum, userConfigs) {
 			return rid
 		}
 		var roomPresentId = ensureRoomValid()
-		var roomRule = roomUtil.getRoomRule(userConfigs)
+		var roomRule = ruleUtil.getRoomRule(userConfigs)
 		//加await
 		var roomid = await roomDao.sync_create_room(
 			userid,
@@ -41,7 +42,7 @@ async function createRoom(userid, userCardNum, userConfigs) {
 			ret.code = 2 //创建房间失败
 			return ret
 		} else {
-			var roomConf = roomUtil.getRoomConfig(userConfigs)
+			var roomConf = ruleUtil.getRoomConfig(userConfigs)
 			var room = new RoomInfo(
 				roomid,
 				roomPresentId,
@@ -69,14 +70,14 @@ async function enterRoom(userid, rpid) {
 	} else {
 		//判断房间有没有满
 		let room = roomManager.getRoom(rpid)
-		let index = room.getUserIndex(userid)
+		let index = roomUtils.getUserIndex(room, userid)
 		if (index >= 0) {
 			//用户已经在房间里
 			ret.code = 0
 			ret.data = { rpid: rpid, sign: room.sign }
 			return ret
 		}
-		var emptyIndex = room.getEmptyIndex()
+		var emptyIndex = roomUtils.getEmptyIndex(room)
 		console.log(emptyIndex)
 		if (emptyIndex >= 0) {
 			room.seats[emptyIndex].userid = userid

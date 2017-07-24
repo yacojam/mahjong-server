@@ -1,11 +1,13 @@
 const roomManager = require('../roomManager/roomManager')
+const roomUtils = require('../roomManager/roomInfoUtils')
 const Error = require('../routers/ServerError')
 const connectionManager = require('./connectionManager')
 const broadcast = require('./broadcast')
 const userDao = require('../db/UserDao')
+const publish = require('./dataflow/publish')
 
-function generateSeatInfo(roomInfo) {
-    var seats = roomInfo.seats
+function generateSeats(room, uid) {
+    let seats = room.seats
         .filter(seat => {
             return seat.userid > 0 && seat.index >= 0
         })
@@ -18,9 +20,24 @@ function generateSeatInfo(roomInfo) {
                 moMomey,
                 sip,
                 index,
-                ready
+                ready,
+                chuPais,
+                pengPais,
+                gangPais,
+                anGangPais,
+                score,
+                moMoney,
+                que,
+                pendingAction
             } = seat
-            online = connectionManager.get(userid) != null
+            let online = connectionManager.get(userid) != null
+            let shouPaisNum = seat.shouPais.length
+            let shouPais = []
+            let actions = []
+            if (userid == uid) {
+                shouPais = seat.shouPais
+                actions = seat.actions
+            }
             return {
                 userid,
                 username,
@@ -30,15 +47,25 @@ function generateSeatInfo(roomInfo) {
                 sip,
                 index,
                 ready,
-                online
+                chuPais,
+                pengPais,
+                gangPais,
+                anGangPais,
+                score,
+                moMoney,
+                que,
+                online,
+                shouPaisNum,
+                shouPais,
+                actions
             }
         })
     return seats
 }
 
 async function dissolveRoom(rpid) {
-    var roomInfo = roomManager[rpid]
-    for (let seat of roomInfo.seats) {
+    var room = roomManager.getRoom(rpid)
+    for (let seat of room.seats) {
         if (seat.userid > 0) {
             let socket = connectionManager.get(seat.userid)
             if (socket != null) {
@@ -62,12 +89,10 @@ function bind(socket) {
         var ret = {}
         var userid = userData.userid
         //检测房间数据
-        console.log(userData)
         var roomPresentId = userData.rpid
         var roomSign = userData.sign
-        var roomInfo = roomManager.getRoom(roomPresentId)
-        console.log(roomInfo)
-        if (roomInfo == null || roomInfo.sign != roomSign) {
+        var room = roomManager.getRoom(roomPresentId)
+        if (room == null || room.sign != roomSign) {
             console.log('aaaa')
             ret.success = false
             ret.error = Error.ParamsNotVavidError
@@ -75,7 +100,7 @@ function bind(socket) {
             socket.disconnect()
             return
         }
-        var index = roomInfo.getUserIndex(userid)
+        var index = roomUtils.getUserIndex(room, userid)
         //没找到对应的位置
         if (index == -1) {
             console.log('bbbb')
@@ -86,20 +111,28 @@ function bind(socket) {
             return
         }
         //找到座位,根据seat.index == -1来判断是新加入还是重新连
-        var isCreator = roomInfo.isCreator(userid)
-        var seat = roomInfo.seats[index]
+        var isCreator = roomUtils.isCreator(room, userid)
+        var seat = room.seats[index]
         var isNewUser = seat.index === -1
         if (isNewUser) {
             let dbData = await userDao.sync_get_account_info_by_userid(userid)
             seat.userid = userid
             seat.username = dbData.name
             seat.headimg = dbData.headimg
-            seat.score = 50
-            seat.moMoney = 0
             seat.sip = socket.handshake.address
             seat.online = true
             seat.ready = isCreator
             seat.index = index
+            seat.shouPais = userPais[idx]
+            seat.chuPais = []
+            seat.pengPais = []
+            seat.gangPais = []
+            seat.anGangPais = []
+            seat.score = 0
+            seat.moMoney = 0
+            seat.que = -1
+            seat.actions = []
+            seat.pendingAction = null
             roomManager.setRidForUid(roomPresentId, userid)
         } else {
         }
@@ -109,10 +142,10 @@ function bind(socket) {
         ret.success = true
         ret.data = {
             roomId: roomPresentId,
-            dealerIndex: roomInfo.dealerIndex,
+            dealerIndex: room.dealerIndex,
             isCreator: isCreator,
-            conf: roomInfo.conf,
-            seats: generateSeatInfo(roomInfo)
+            conf: room.conf,
+            seats: generateSeatInfo(room)
         }
         socket.emit('user_join_result', ret)
 
@@ -138,8 +171,8 @@ function bind(socket) {
         if (rpid == null) {
             return
         }
-        var roomInfo = roomManager.getRoom(rpid)
-        if (roomInfo.isCreator(userid)) {
+        var room = roomManager.getRoom(rpid)
+        if (roomUtils.isCreator(room, userid)) {
             return
         }
         //通知其他玩家有人退出房间
@@ -150,8 +183,8 @@ function bind(socket) {
             false
         )
 
-        index = roomInfo.getUserIndex(userid)
-        roomInfo.seat[index] = { userid: 0, index: -1 }
+        index = roomUtils.getUserIndex(room, userid)
+        room.seat[index] = { userid: 0, index: -1 }
         //更新数据库用户信息,加await
         await userDao.sycn_update_roomid_of_userid('', userid)
         //清除信息
@@ -172,7 +205,7 @@ function bind(socket) {
             return
         }
         //非房主不能解散房间
-        if (!roomManager.getRoom(rpid).isCreator(userid)) {
+        if (!roomUtils.isCreator(roomManager.getRoom(rpid), userid)) {
             return
         }
         //
@@ -189,15 +222,21 @@ function bind(socket) {
             return
         }
 
-        let roomInfo = roomManager.getRoom(rpid)
-        let index = roomInfo.getUserIndex(userid)
-        if (index == -1 && roomInfo.seats[index].index == -1) {
+        let room = roomManager.getRoom(rpid)
+        let index = roomUtils.getUserIndex(room, userid)
+        if (index == -1 && room.seats[index].index == -1) {
             return
         }
-        roomInfo.seats[index].ready = true
+        room.seats[index].ready = true
         socket.emit('ready_success')
         let data = { userid: userid, ready: true }
         broadcast.broadcastInRoom('user_state_changed', data, userid, false)
+
+        //game start
+        if (roomUtils.canStart(room)) {
+            roomUtils.start(room)
+        }
+        publish.publishDingQue(room)
     })
 
     socket.on('game_ping', () => {
