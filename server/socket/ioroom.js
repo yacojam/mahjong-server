@@ -5,6 +5,7 @@ const connectionManager = require('./connectionManager')
 const broadcast = require('./broadcast')
 const userDao = require('../db/UserDao')
 const publish = require('./dataflow/publish')
+const actionHandle = require('./handler/handler')
 
 function generateSeats(room, uid) {
     let seats = room.seats
@@ -237,6 +238,20 @@ function bind(socket) {
             roomUtils.start(room)
         }
         publish.publishDingQue(room)
+    })
+
+    socket.on('action', async action => {
+        let userid = socket.userid
+        if (userid == null) {
+            return
+        }
+        let rpid = roomManager.getRidForUid(userid)
+        if (rpid == null) {
+            return
+        }
+        let room = roomManager.getRoom(rpid)
+        let seat = room.seats.find(s => s.userid === userid)
+        actionHandle(room, seat, action)
     })
 
     socket.on('game_ping', () => {

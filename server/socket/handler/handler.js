@@ -234,3 +234,5 @@ function checkPendingDone(room, seat, action) {
   }
   return -1
 }
+
+module.exports = handle
