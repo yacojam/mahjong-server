@@ -54,13 +54,17 @@ async function handlePendingAction(room, seat, action) {
     action.pAction === paiAction.ACTION_DINGQUE &&
     room.pendingType === Pending.PENDING_TYPE_QUE
   ) {
-    seat.que = action.que
     seat.pendingAction = paiAction.makeupAction(
       paiAction.ACTION_DINGQUE,
       action.que
     )
     //all use dingque ok
-    if (room.seats.every(seat => seat.pendingAction != null)) {
+    if (room.seats.every(s => s.pendingAction != null)) {
+      room.seats.forEach(s => {
+        s.que = s.pendingAction.que
+        s.pendingAction = null
+        s.actions = []
+      })
       await Publish.publishDingqueResult(room)
       room.pendingType = Pending.PENDING_TYPE_NULL
       await Next.startAction(room)

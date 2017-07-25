@@ -1,11 +1,17 @@
 const connectionManager = require('../connectionManager')
 
 async function publishDingQue(room) {
+	let { currentJu, currentGame, dealerIndex } = room
 	room.seats.forEach(seat => {
-		let { actions, shouPais } = seat
+		let { actions, shouPais, score, moMoney } = seat
 		connectionManager.sendMessage(seat.userid, 'dingyue_action', {
 			actions,
-			shouPais
+			shouPais,
+			score,
+			moMoney,
+			currentJu,
+			currentGame,
+			dealerIndex
 		})
 	})
 }
