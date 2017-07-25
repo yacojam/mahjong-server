@@ -73,6 +73,7 @@ function bind(socket) {
 
         //返回数据给客户端
         ret = await Next.getRoomData(room, userid)
+        console.log(ret)
         socket.emit('user_join_result', ret)
 
         //通知其他客户端

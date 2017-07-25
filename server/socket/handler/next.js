@@ -2,6 +2,7 @@ const HXMJManager = require('../../algorithm/HxmjRules/HxmjManager')
 const Action = require('../../algorithm/HxmjRules/hxaction')
 const Publish = require('../dataflow/publish')
 const Pending = require('../../algorithm/HxmjRules/pendingtype')
+const connectionManager = require('../connectionManager')
 
 const RoomState = {
 	READY: 0,
