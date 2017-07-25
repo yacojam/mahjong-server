@@ -51,7 +51,7 @@ async function getRoomData(room, uid) {
 		return ret
 	}
 
-	let seatsData = room.seats
+	let seatsData = seats
 		.filter(seat => {
 			return seat.userid > 0 && seat.index >= 0
 		})
@@ -61,7 +61,7 @@ async function getRoomData(room, uid) {
 			let { score, moMoney, que, pendingAction, actions } = seat
 			let online = connectionManager.get(userid) != null
 			let shouPaisNum = seat.shouPais.length
-			if (userid !== uid) {
+			if (userid !== uid && state === RoomState.PLAY) {
 				shouPais = []
 				actions = []
 				pendingAction = null
@@ -71,7 +71,7 @@ async function getRoomData(room, uid) {
 				username,
 				headimg,
 				score,
-				moMomey,
+				moMoney,
 				sip,
 				index,
 				ready,
@@ -80,8 +80,6 @@ async function getRoomData(room, uid) {
 				pengPais,
 				gangPais,
 				anGangPais,
-				score,
-				moMoney,
 				que,
 				online,
 				shouPaisNum,
