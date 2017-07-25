@@ -15,9 +15,9 @@ class roomInfo {
             this.seats.push(seat)
         }
         this.sign = ''
-        this.result = [0, 0, 0, 0]
+        this.result = []
         this.gameRecord = []
-        this.state = null
+        this.state = 0
         this.index = 0
         this.leftPais = []
         this.pendingType = null

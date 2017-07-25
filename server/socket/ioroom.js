@@ -124,16 +124,6 @@ function bind(socket) {
             seat.online = true
             seat.ready = isCreator
             seat.index = index
-            seat.shouPais = userPais[idx]
-            seat.chuPais = []
-            seat.pengPais = []
-            seat.gangPais = []
-            seat.anGangPais = []
-            seat.score = 0
-            seat.moMoney = 0
-            seat.que = -1
-            seat.actions = []
-            seat.pendingAction = null
             roomManager.setRidForUid(roomPresentId, userid)
         } else {
         }

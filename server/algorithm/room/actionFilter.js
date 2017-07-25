@@ -26,7 +26,7 @@ function checkUserLeft(room, action) {
   while (nextIndex !== actionIndex) {
     let nextUser = room.users[nextIndex]
     if (nextUser.actions.length > 0) {
-      if (nextIndex.pendingAction == null) {
+      if (nextUser.pendingAction == null) {
         nextUser.actions.forEach(a => {
           if (getPriority(a.pAction) >= priority) {
             ret = false
@@ -53,7 +53,7 @@ function checkUserRight(room, action) {
   while (nextIndex !== index) {
     let nextUser = room.users[nextIndex]
     if (nextUser.actions.length > 0) {
-      if (nextIndex.pendingAction == null) {
+      if (nextUser.pendingAction == null) {
         nextUser.actions.forEach(a => {
           if (getPriority(a.pAction) > priority) {
             ret = false

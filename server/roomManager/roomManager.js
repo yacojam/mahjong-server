@@ -1,5 +1,5 @@
 const roomRedisDao = require('../redis/roomRedisDao')
-const translator = require('./roomInfoTranslate')
+//const translator = require('./roomInfoTranslate')
 
 var manager = {}
 var ids = new Set()
@@ -11,7 +11,7 @@ async function start() {
 		return
 	}
 	for (let rpid in cacheRooms) {
-		let roomInfo = translator.transform(cacheRooms[rpid])
+		let roomInfo = cacheRooms[rpid]
 		manager[rpid] = roomInfo
 		ids.add(rpid)
 		roomInfo.seats.forEach(seat => {

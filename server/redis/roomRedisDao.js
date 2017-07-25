@@ -14,6 +14,7 @@ function deleteRoom(rpid) {
 
 async function recoverRoom() {
 	let rpids = await redis.smembers(setName)
+	console.log(rpids)
 	if (rpids === null || rpids.length === 0) {
 		return null
 	}
