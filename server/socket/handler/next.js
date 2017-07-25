@@ -46,7 +46,7 @@ async function getRoomData(room, uid) {
 		ret.data = {
 			state,
 			conf,
-			seat: seatsData
+			seats: seatsData
 		}
 		return ret
 	}
@@ -98,7 +98,7 @@ async function getRoomData(room, uid) {
 		leftPais,
 		currentJu,
 		currentGame,
-		seat: seatsData
+		seats: seatsData
 	}
 	return ret
 }
