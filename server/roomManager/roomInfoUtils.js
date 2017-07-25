@@ -32,7 +32,7 @@ function canStart(room) {
             break
         }
     }
-    return false
+    return ret
 }
 
 module.exports = {
