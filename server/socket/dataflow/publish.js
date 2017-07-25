@@ -28,7 +28,7 @@ async function publishDingqueResult(room) {
 
 async function sendMoAction(room, seat) {
 	connectionManager.sendMessage(seat.userid, 'self_mo', {
-		actions: seat.actions
+		actions: seat.actions,
 		index: room.index
 	})
 }
