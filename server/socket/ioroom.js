@@ -147,6 +147,7 @@ function bind(socket) {
 
     socket.on('user_ready', async userData => {
         let userid = socket.userid
+        console.log('user ' + userid + 'send ready info')
         if (userid == null) {
             return
         }
