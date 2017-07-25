@@ -225,6 +225,7 @@ async function endGame(room, seat, scores, isHu = true) {
 }
 
 module.exports = {
+	getRoomData,
 	startRoom,
 	startGame,
 	startJu,
