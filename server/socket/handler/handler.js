@@ -88,7 +88,7 @@ async function handlePendingAction(room, seat, action) {
     if (action.pAction === paiAction.ACTION_CANCEL) {
       seats.actions = [paiAction.makeupAction(paiAction.ACTION_CHU, 0)]
       room.pendingType = Pend.PENDING_TYPE_NULL
-      await Publish.publishMoCancel(room, seat)
+      await Publish.sendMoCancel(room, seat)
     }
   }
 

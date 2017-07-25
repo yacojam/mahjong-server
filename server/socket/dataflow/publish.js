@@ -5,7 +5,7 @@ async function publishDingQue(room) {
 	room.seats.forEach(seat => {
 		let { actions, shouPais, score, moMoney } = seat
 		connectionManager.sendMessage(seat.userid, 'dingyue_action', {
-			actions,
+			//actions,
 			shouPais,
 			score,
 			moMoney,
@@ -26,8 +26,15 @@ async function publishDingqueResult(room) {
 	})
 }
 
-async function startGame(room, seat) {
-	connectionManager.sendMessage(seat.userid, 'dealer_start', {
+async function sendMoAction(room, seat) {
+	connectionManager.sendMessage(seat.userid, 'self_mo', {
+		actions: seat.actions
+		index: room.index
+	})
+}
+
+async function sendMoCancel(room, seat) {
+	connectionManager.sendMessage(seat.userid, 'self_mo_cancel', {
 		actions: seat.actions
 	})
 }
@@ -57,3 +64,11 @@ async function publishWanGangAction(room, seat) {}
 async function publishPGangAction(room, seat) {}
 
 async function publishHuAction(room, seat, action) {}
+
+module.exports = {
+	publishDingQue,
+	publishDingqueResult,
+	sendMoAction,
+	sendMoCancel,
+	publishMoAction
+}

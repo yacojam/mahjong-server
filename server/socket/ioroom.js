@@ -4,65 +4,8 @@ const Error = require('../routers/ServerError')
 const connectionManager = require('./connectionManager')
 const broadcast = require('./broadcast')
 const userDao = require('../db/UserDao')
-const publish = require('./dataflow/publish')
+const Next = require('./handler/next')
 const actionHandle = require('./handler/handler')
-
-function generateSeats(room, uid) {
-    let seats = room.seats
-        .filter(seat => {
-            return seat.userid > 0 && seat.index >= 0
-        })
-        .map(seat => {
-            let {
-                userid,
-                username,
-                headimg,
-                score,
-                moMomey,
-                sip,
-                index,
-                ready,
-                chuPais,
-                pengPais,
-                gangPais,
-                anGangPais,
-                score,
-                moMoney,
-                que,
-                pendingAction
-            } = seat
-            let online = connectionManager.get(userid) != null
-            let shouPaisNum = seat.shouPais.length
-            let shouPais = []
-            let actions = []
-            if (userid == uid) {
-                shouPais = seat.shouPais
-                actions = seat.actions
-            }
-            return {
-                userid,
-                username,
-                headimg,
-                score,
-                moMomey,
-                sip,
-                index,
-                ready,
-                chuPais,
-                pengPais,
-                gangPais,
-                anGangPais,
-                score,
-                moMoney,
-                que,
-                online,
-                shouPaisNum,
-                shouPais,
-                actions
-            }
-        })
-    return seats
-}
 
 async function dissolveRoom(rpid) {
     var room = roomManager.getRoom(rpid)
@@ -125,24 +68,22 @@ function bind(socket) {
             seat.ready = isCreator
             seat.index = index
             roomManager.setRidForUid(roomPresentId, userid)
-        } else {
         }
         connectionManager.bind(socket, userid)
 
         //返回数据给客户端
-        ret.success = true
-        ret.data = {
-            roomId: roomPresentId,
-            dealerIndex: room.dealerIndex,
-            isCreator: isCreator,
-            conf: room.conf,
-            seats: generateSeatInfo(room)
-        }
+        ret = await Next.getRoomData(room, userid)
         socket.emit('user_join_result', ret)
 
         //通知其他客户端
         if (isNewUser) {
-            broadcast.broadcastInRoom('new_user_come', seat, userid, false)
+            let { userid, username, headimg, sip, online, ready, index } = seat
+            broadcast.broadcastInRoom(
+                'new_user_come',
+                { userid, username, headimg, sip, online, ready, index },
+                userid,
+                false
+            )
         } else {
             broadcast.broadcastInRoom(
                 'user_state_changed',
@@ -225,9 +166,8 @@ function bind(socket) {
 
         //game start
         if (roomUtils.canStart(room)) {
-            roomUtils.start(room)
+            await Next.startRoom(room)
         }
-        publish.publishDingQue(room)
     })
 
     socket.on('action', async action => {
