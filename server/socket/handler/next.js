@@ -137,6 +137,7 @@ async function start(room, isRoom, isJu, isGame) {
 	}
 	room.leftPais = pais
 	room.index = startIndex
+	await Publish.publishGameStart(room)
 	room.pendingType = Pending.PENDING_TYPE_QUE
 	await Publish.publishDingQue(room)
 }
