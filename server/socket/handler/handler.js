@@ -63,7 +63,7 @@ async function handlePendingAction(room, seat, action) {
     if (room.seats.every(s => s.pendingAction != null)) {
       room.pendingType = Pending.PENDING_TYPE_NULL
       room.seats.forEach(s => {
-        s.que = s.pendingAction.que
+        s.que = s.pendingAction.pai
         s.pendingAction = null
         s.actions = []
       })
