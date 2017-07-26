@@ -6,6 +6,11 @@ const Action = require('../../../algorithm/HxmjRules/hxaction')
 const Next = require('../next')
 
 async function hu(room, seat, action) {
+	room.pendingType = Pending.PENDING_TYPE_NULL
+	room.seats.forEach(seatItem => {
+		seatItem.actions = []
+		seatItem.pendingAction = null
+	})
 	const { pengPais, gangPais, anGangPais, shouPais, que } = seat
 	let allChupais = []
 	room.seats.forEach(u => {
@@ -27,9 +32,8 @@ async function hu(room, seat, action) {
 		room.rule,
 		que
 	)
-	room.pendingType = Pending.PENDING_TYPE_NULL
-	await Publish.publishHuAction(room, seat, action)
 
+	await Publish.publishHuAction(room, seat, action)
 	currentUser.score = score
 	room.state = 'DONE'
 }

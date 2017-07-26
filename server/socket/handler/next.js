@@ -93,7 +93,7 @@ async function getRoomData(room, uid) {
 		state,
 		conf,
 		dealerIndex,
-		leftPais,
+		leftNum: room.leftPais.length,
 		currentJu,
 		currentGame,
 		seats: seatsData
@@ -169,8 +169,8 @@ async function moAction(room, pAction, gang = false) {
 	}
 	user.actions = actions
 	user.shouPais.push(moPai)
-	await Publish.publishMoAction(room, seat)
-	await Publish.sendMoAction(room, seat)
+	await Publish.publishMoAction(room, seat, moPai)
+	await Publish.sendActions(room, seat)
 }
 
 async function startAction(room) {
@@ -191,7 +191,7 @@ async function startAction(room) {
 		room.pendingType = Pending.PENDING_TYPE_MO
 	}
 	seat.actions = actions
-	await Publish.sendMoAction(room, seat)
+	await Publish.sendActions(room, seat)
 }
 
 async function nextUser(room) {

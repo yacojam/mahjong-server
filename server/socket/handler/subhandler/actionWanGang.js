@@ -5,9 +5,14 @@ const Action = require('../../../algorithm/HxmjRules/hxaction')
 const Next = require('../next')
 
 async function wangang(room, seat, action) {
+	room.pendingType = Pending.PENDING_TYPE_NULL
+	room.seats.forEach(seatItem => {
+		seatItem.actions = []
+		seatItem.pendingAction = null
+	})
+
 	seat.gangPais.push(action.pai)
 	seat.shouPais = utils.removePai(seat.shouPais, pai)
-	room.pendingType = Pending.PENDING_TYPE_NULL
 	let hasAction = await otherWgUserAction(room, seat, action)
 	await Publish.publishWanGangAction(room, seat)
 	if (!hasAction) {
@@ -18,9 +23,6 @@ async function wangang(room, seat, action) {
 }
 
 async function otherWgUserAction(room, seat, action) {
-	room.seats.forEach(seatItem => {
-		seat.actions = []
-	})
 	let hasAction = false
 	room.seats.forEach((seatItem, index) => {
 		if (index === room.index) {

@@ -15,7 +15,8 @@ async function publishGameStart(room) {
 			currentJu,
 			currentGame,
 			dealerIndex,
-			seatsData
+			seatsData,
+			leftNum: room.leftPais.length
 		})
 	})
 }
@@ -37,32 +38,29 @@ async function publishDingqueResult(room) {
 	})
 }
 
-async function sendMoAction(room, seat) {
-	connectionManager.sendMessage(seat.userid, 'self_mo', {
-		actions: seat.actions,
-		index: room.index
-	})
-}
-
-async function sendMoCancel(room, seat) {
-	connectionManager.sendMessage(seat.userid, 'self_mo_cancel', {
+async function sendActions(room, seat) {
+	connectionManager.sendMessage(seat.userid, 'game_actions', {
 		actions: seat.actions
 	})
 }
 
 async function publishChuAction(room, seat, action) {
 	room.seats.forEach(seatItem => {
-		connectionManager.sendMessage(seatItem.userid, 'user_chu', {
+		connectionManager.sendMessage(seatItem.userid, 'game_chu_push', {
+			index: room.index,
 			userid: seat.userid,
-			pai: action.pai,
-			actions: seatItem.actions
+			pai: action.pai
 		})
 	})
 }
 
-async function publishMoAction(room, seat) {
+async function publishMoAction(room, seat, moPai) {
 	room.seats.forEach(seatItem => {
-		connectionManager.sendMessage(seatItem.userid, 'user_mo', {})
+		let data = { index: room.index, userid: seat.userid }
+		if (seat.userid === seatItem.userid) {
+			data.pai = moPai
+		}
+		connectionManager.sendMessage(seatItem.userid, 'game_mo_push', data)
 	})
 }
 
@@ -80,7 +78,6 @@ module.exports = {
 	publishGameStart,
 	publishDingQue,
 	publishDingqueResult,
-	sendMoAction,
-	sendMoCancel,
+	sendActions,
 	publishMoAction
 }

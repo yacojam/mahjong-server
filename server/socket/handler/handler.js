@@ -6,6 +6,7 @@ const actionChu = require('./subhandler/actionChu')
 const actionGang = require('./subhandler/actionGang')
 const actionHu = require('./subhandler/actionHu')
 const actionWanGang = require('./subhandler/actionWanGang')
+const actionMoCancel = require('./subhandler/actionMoCancel')
 const CommonRules = require('../../algorithm/HxmjRules/CommonRules')
 
 function checkValidAction(room, seat, action) {
@@ -60,13 +61,13 @@ async function handlePendingAction(room, seat, action) {
     )
     //all use dingque ok
     if (room.seats.every(s => s.pendingAction != null)) {
+      room.pendingType = Pending.PENDING_TYPE_NULL
       room.seats.forEach(s => {
         s.que = s.pendingAction.que
         s.pendingAction = null
         s.actions = []
       })
       await Publish.publishDingqueResult(room)
-      room.pendingType = Pending.PENDING_TYPE_NULL
       await Next.startAction(room)
     }
   }
@@ -86,9 +87,7 @@ async function handlePendingAction(room, seat, action) {
       await actionWanGang(room, seat, action)
     }
     if (action.pAction === paiAction.ACTION_CANCEL) {
-      seats.actions = [paiAction.makeupAction(paiAction.ACTION_CHU, 0)]
-      room.pendingType = Pend.PENDING_TYPE_NULL
-      await Publish.sendMoCancel(room, seat)
+      await actionMoCancel(room, seat, action)
     }
   }
 

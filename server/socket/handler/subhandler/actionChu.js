@@ -6,23 +6,19 @@ const Action = require('../../../algorithm/HxmjRules/hxaction')
 const Next = require('../next')
 
 async function chu(room, seat, action) {
+	room.pendingType = Pending.PENDING_TYPE_NULL
+	room.seats.forEach(seatItem => {
+		seatItem.actions = []
+		seatItem.pendingAction = null
+	})
 	seat.chuPais.push(pai)
 	seat.shouPais = utils.removePai(seat.shouPais, pai, 1)
 	seat.shouPais.sort((a, b) => a - b)
-	room.pendingType = Pending.PENDING_TYPE_NULL
-	let hasAction = await otherChuUserAction(room, seat, action)
 	await Publish.publishChuAction(room)
-	if (!hasAction) {
-		await Next.nextUser(room)
-	} else {
-		room.pendingType = Pending.PENDING_TYPE_CHU
-	}
+	await otherChuUserAction(room, seat, action)
 }
 
 async function otherChuUserAction(room, seat, action) {
-	room.seats.forEach(seatItem => {
-		seat.actions = []
-	})
 	let hasAction = false
 	room.seats.forEach((seatItem, index) => {
 		if (index === room.index) {
@@ -35,9 +31,16 @@ async function otherChuUserAction(room, seat, action) {
 			action.pai,
 			seatItem.que
 		)
+		if (seatItem.actions.length > 0) {
+			Publish.sendActions(room, seatItem)
+		}
 		hasAction = hasAction || seatItem.actions.length > 0
 	})
-	return hasAction
+	if (!hasAction) {
+		await Next.nextUser(room)
+	} else {
+		room.pendingType = Pending.PENDING_TYPE_CHU
+	}
 }
 
 module.exports = chu

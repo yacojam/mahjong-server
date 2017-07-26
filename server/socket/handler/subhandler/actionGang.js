@@ -6,6 +6,11 @@ const Action = require('../../../algorithm/HxmjRules/hxaction')
 const Next = require('../next')
 
 async function gang(room, seat, action, anGang = false) {
+	room.pendingType = Pending.PENDING_TYPE_NULL
+	room.seats.forEach(seatItem => {
+		seatItem.actions = []
+		seatItem.pendingAction = null
+	})
 	let pai = action.pai
 	if (anGang) {
 		seat.shouPais = utils.removePai(seat.shouPais, pai, 4)
@@ -19,7 +24,6 @@ async function gang(room, seat, action, anGang = false) {
 		room.users[room.index].chuPais.pop()
 	}
 	room.index = room.seats.findIndex(u => u.userid === seat.userid)
-	room.pendingType = Pending.PENDING_TYPE_NULL
 	if (anGang) {
 		await Publish.publishAnGangAction(room, seat)
 	} else {
