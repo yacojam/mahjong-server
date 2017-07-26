@@ -10,6 +10,7 @@ const actionMoCancel = require('./subhandler/actionMoCancel')
 const CommonRules = require('../../algorithm/HxmjRules/CommonRules')
 
 function checkValidAction(room, seat, action) {
+  console.log(seat)
   let { pAction, pai } = action
   if (pAction === paiAction.ACTION_CHU) {
     let isExist =
