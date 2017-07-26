@@ -37,8 +37,7 @@ function checkValidAction(room, seat, action) {
   }
 }
 
-async function handle(room, uid, action) {
-  let seat = room.seats.find(s => s.userid === uid)
+async function handle(room, seat, action) {
   let actionValid = checkValidAction(room, seat, action)
   if (!actionValid) {
     return
