@@ -1,3 +1,4 @@
+const utils = require('../../../algorithm/room/utils')
 const Pending = require('../../../algorithm/HxmjRules/pendingtype')
 const Publish = require('../../dataflow/publish')
 const HXMJManager = require('../../../algorithm/HxmjRules/HxmjManager')
@@ -10,16 +11,12 @@ async function wangang(room, seat, action) {
 		seatItem.actions = []
 		seatItem.pendingAction = null
 	})
-
-	seat.gangPais.push(action.pai)
+	let pai = action.pai
+	seat.gangPais.push(pai)
 	seat.shouPais = utils.removePai(seat.shouPais, pai)
-	let hasAction = await otherWgUserAction(room, seat, action)
-	await Publish.publishWanGangAction(room, seat)
-	if (!hasAction) {
-		await Next.moAction(room, Action.ACTION_WGANG, true)
-	} else {
-		room.pendingType = Pending.PENDING_TYPE_WGANG
-	}
+	seat.shouPais.sort((a, b) => a - b)
+	await Publish.publishWanGangAction(room, seat, pai)
+	await otherWgUserAction(room, seat, action)
 }
 
 async function otherWgUserAction(room, seat, action) {
@@ -35,9 +32,16 @@ async function otherWgUserAction(room, seat, action) {
 			action.pai,
 			seatItem.que
 		)
+		if (seatItem.actions.length > 0) {
+			Publish.sendActions(room, seatItem)
+		}
 		hasAction = hasAction || seatItem.actions.length > 0
 	})
-	return hasAction
+	if (!hasAction) {
+		await Next.moAction(room, Action.ACTION_GMO, true)
+	} else {
+		room.pendingType = Pending.PENDING_TYPE_WGANG
+	}
 }
 
 module.exports = wangang

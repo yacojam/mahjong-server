@@ -20,6 +20,7 @@ async function getRoomData(room, uid) {
 		seats,
 		createUid,
 		dealerIndex,
+		index,
 		leftPais,
 		currentJu,
 		currentGame
@@ -93,7 +94,8 @@ async function getRoomData(room, uid) {
 		state,
 		conf,
 		dealerIndex,
-		leftNum: room.leftPais.length,
+		leftNum: leftPais.length,
+		index,
 		currentJu,
 		currentGame,
 		seats: seatsData

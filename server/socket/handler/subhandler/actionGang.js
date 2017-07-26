@@ -23,11 +23,12 @@ async function gang(room, seat, action, anGang = false) {
 		seat.gangPais.push(pai)
 		room.users[room.index].chuPais.pop()
 	}
+	seat.shouPais.sort((a, b) => a - b)
 	room.index = room.seats.findIndex(u => u.userid === seat.userid)
 	if (anGang) {
-		await Publish.publishAnGangAction(room, seat)
+		await Publish.publishAnGangAction(room, seat, pai)
 	} else {
-		await Publish.publishPGangAction(room, seat)
+		await Publish.publishPGangAction(room, seat, pai)
 	}
 	await Next.moAction(room, Action.ACTION_GMO, true)
 }

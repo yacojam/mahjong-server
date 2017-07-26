@@ -11,10 +11,11 @@ async function chu(room, seat, action) {
 		seatItem.actions = []
 		seatItem.pendingAction = null
 	})
+	let pai = action.pai
 	seat.chuPais.push(pai)
 	seat.shouPais = utils.removePai(seat.shouPais, pai, 1)
 	seat.shouPais.sort((a, b) => a - b)
-	await Publish.publishChuAction(room)
+	await Publish.publishChuAction(room, seat, pai)
 	await otherChuUserAction(room, seat, action)
 }
 
