@@ -99,7 +99,7 @@ async function getRoomData(room, uid) {
 		conf,
 		dealerIndex,
 		leftNum: leftPais.length,
-		index,
+		turn: room.index,
 		currentJu,
 		currentGame,
 		seats: seatsData
@@ -202,7 +202,7 @@ async function startAction(room) {
 }
 
 async function nextUser(room) {
-	const index = (room.index + 1) % room.users.length
+	const index = (room.index + 1) % room.seats.length
 	room.index = index
 	await moAction(room, Action.ACTION_MO)
 	return room

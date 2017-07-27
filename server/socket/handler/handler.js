@@ -39,6 +39,8 @@ function checkValidAction(room, seat, action) {
 
 async function handle(room, seat, action) {
   let actionValid = checkValidAction(room, seat, action)
+  console.log(action)
+  console.log(actionValid)
   if (!actionValid) {
     return
   }

@@ -48,7 +48,7 @@ async function sendActions(room, seat) {
 async function publishChuAction(room, seat, cPai) {
 	room.seats.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_chu_push', {
-			index: room.index,
+			turn: room.index,
 			userid: seat.userid,
 			pai: cPai
 		})
@@ -57,7 +57,7 @@ async function publishChuAction(room, seat, cPai) {
 
 async function publishMoAction(room, seat, moPai) {
 	room.seats.forEach(seatItem => {
-		let data = { index: room.index, userid: seat.userid }
+		let data = { turn: room.index, userid: seat.userid }
 		if (seat.userid === seatItem.userid) {
 			data.pai = moPai
 		}
@@ -68,7 +68,7 @@ async function publishMoAction(room, seat, moPai) {
 async function publishPengAction(room, seat, pPai) {
 	room.seat.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_peng_push', {
-			index: room.index,
+			turn: room.index,
 			userid: seat.userid,
 			pai: pPai
 		})
@@ -78,7 +78,7 @@ async function publishPengAction(room, seat, pPai) {
 async function publishAnGangAction(room, seat, gPai) {
 	room.seat.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_angang_push', {
-			index: room.index,
+			turn: room.index,
 			userid: seat.userid,
 			pai: gPai
 		})
@@ -88,7 +88,7 @@ async function publishAnGangAction(room, seat, gPai) {
 async function publishPGangAction(room, seat, gPai) {
 	room.seat.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_gang_push', {
-			index: room.index,
+			turn: room.index,
 			userid: seat.userid,
 			pai: gPai
 		})
@@ -98,7 +98,7 @@ async function publishPGangAction(room, seat, gPai) {
 async function publishWanGangAction(room, seat, gPai) {
 	room.seat.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_gang_push', {
-			index: room.index,
+			turn: room.index,
 			userid: seat.userid,
 			pai: gPai
 		})
