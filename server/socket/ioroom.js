@@ -67,6 +67,7 @@ function bind(socket) {
             seat.online = true
             seat.ready = isCreator
             seat.index = index
+            seat.isCreator = isCreator
             roomManager.setRidForUid(roomPresentId, userid)
         }
         connectionManager.bind(socket, userid)
@@ -162,9 +163,8 @@ function bind(socket) {
             return
         }
         room.seats[index].ready = true
-        socket.emit('ready_success')
         let data = { userid: userid, ready: true }
-        broadcast.broadcastInRoom('user_state_changed', data, userid, false)
+        broadcast.broadcastInRoom('user_state_changed', data, userid, true)
 
         //game start
         if (roomUtils.canStart(room)) {

@@ -8,7 +8,7 @@ async function publishGameStart(room) {
 		return { score, moMoney, index, userid }
 	})
 	room.seats.forEach(seat => {
-		let { actions, shouPais, score, moMoney } = seat
+		let { shouPais, score, moMoney } = seat
 		connectionManager.sendMessage(seat.userid, 'game_start_push', {
 			state,
 			shouPais,

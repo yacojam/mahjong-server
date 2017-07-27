@@ -18,7 +18,6 @@ async function getRoomData(room, uid) {
 		state,
 		conf,
 		seats,
-		createUid,
 		dealerIndex,
 		index,
 		leftPais,
@@ -31,7 +30,7 @@ async function getRoomData(room, uid) {
 			.map(seat => {
 				let { userid, username, headimg, sip, index, ready } = seat
 				let online = connectionManager.get(userid) != null
-				let isCreator = seat.userid === createUid
+				let isCreator = seat.isCreator
 				return {
 					userid,
 					username,
@@ -61,6 +60,7 @@ async function getRoomData(room, uid) {
 			let { shouPais, chuPais, pengPais, gangPais, anGangPais } = seat
 			let { score, moMoney, que, pendingAction, actions } = seat
 			let online = connectionManager.get(userid) != null
+			let isCreator = seat.isCreator
 			let shouPaisNum = seat.shouPais.length
 			if (userid !== uid && state === RoomState.PLAY) {
 				shouPais = []
@@ -76,6 +76,7 @@ async function getRoomData(room, uid) {
 				sip,
 				index,
 				ready,
+				isCreator,
 				shouPais,
 				chuPais,
 				pengPais,
@@ -84,7 +85,6 @@ async function getRoomData(room, uid) {
 				que,
 				online,
 				shouPaisNum,
-				shouPais,
 				actions,
 				pendingAction
 			}
@@ -206,22 +206,62 @@ async function nextUser(room) {
 async function endGame(room, seat, scores, isHu = true) {
 	//liuju
 	if (!isHu) {
+		room.state = RoomState.GAMEOVER
 	} else {
 		seat.moMoney = 3 * scores[1] * room.rule.dfOfJu / 5
 		let isOver = false
+		let isNa = true
 		room.seats.forEach(s => {
-			if (s.score > score[0]) {
-				seat.score += score[0]
-				s.score -= score[0]
-			} else {
-				seat.score += s.score
-				s.score = 0
-				isOver = true
+			if (s.userid !== seat.userid) {
+				if (s.score > score[0]) {
+					seat.score += score[0]
+					s.score -= score[0]
+					isNa = false
+				} else {
+					seat.score += s.score
+					s.score = 0
+					isOver = true
+				}
+				s.moMoney -= scores[1] * room.rule.dfOfJu / 5
 			}
-			s.moMoney -= scores[1] * room.rule.dfOfJu / 5
 		})
 
 		if (isOver) {
+			let JuRet = room.seats.map(s => {
+				let { userid, index, score, moMoney } = s
+				let isScoreWin = score - 50 > 0
+				let scoreMoney = Math.round(
+					Math.abs(score - 50) * room.rule.dfOfJu / 50.0
+				)
+				if (!isScoreWin) {
+					scoreMoney = 0 - scoreMoney
+				}
+				let naMoney = 0
+				if (isNa) {
+					if (room.currentGame == 1) {
+						if (s.userid === seat.userid) {
+							naMoney = dfOfJu * 3
+						} else {
+							naMoney = 0 - dfOfJu
+						}
+					} else {
+						if (s.userid === seat.userid) {
+							naMoney = dfOfJu * 3 / 5 * 3
+						} else {
+							naMoney = 0 - dfOfJu * 3 / 5
+						}
+					}
+				}
+				return { userid, index, score, moMoney, scoreMoney, naMoney }
+			})
+			room.result.push(JuRet)
+			if (room.currentJu === room.rule.numOfJu) {
+				room.state = RoomState.ROOMOVER
+			} else {
+				room.state = RoomState.JUOVER
+			}
+		} else {
+			room.state = RoomState.GAMEOVER
 		}
 	}
 }
