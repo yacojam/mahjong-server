@@ -6,10 +6,11 @@ const connectionManager = require('../connectionManager')
 
 const RoomState = {
 	READY: 0,
-	PLAY: 1,
-	GAMEOVER: 2,
-	JUOVER: 3,
-	ROOMOVER: 4
+	QINGQUE: 1,
+	PLAY: 2,
+	GAMEOVER: 3,
+	JUOVER: 4,
+	ROOMOVER: 5
 }
 
 async function getRoomData(room, uid) {
@@ -62,7 +63,10 @@ async function getRoomData(room, uid) {
 			let online = connectionManager.get(userid) != null
 			let isCreator = seat.isCreator
 			let shouPaisNum = seat.shouPais.length
-			if (userid !== uid && state === RoomState.PLAY) {
+			if (
+				userid !== uid &&
+				(state === RoomState.PLAY || state === RoomState.QINGQUE)
+			) {
 				shouPais = []
 				actions = []
 				pendingAction = null
@@ -104,7 +108,7 @@ async function getRoomData(room, uid) {
 }
 
 async function start(room, isRoom, isJu, isGame) {
-	room.state = RoomState.PLAY
+	room.state = RoomState.QINGQUE
 	let pais = HXMJManager.getRandomPais()
 	let shouPais = HXMJManager.getUserPais(pais)
 	let startIndex = room.dealerIndex
@@ -176,6 +180,7 @@ async function moAction(room, pAction, gang = false) {
 }
 
 async function startAction(room) {
+	room.state = RoomState.PLAY
 	let seat = room.seats[room.index]
 	let copyShouPais = seat.shouPais.concat()
 	let moPai = copyShouPais.pop()
