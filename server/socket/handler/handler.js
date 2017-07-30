@@ -46,7 +46,7 @@ async function handle(room, seat, action) {
     return
   }
   if (action.pAction === Action.ACTION_CANCEL) {
-    await Publish.sendCancel(roo, seat)
+    await Publish.sendCancel(room, seat)
   }
   if (action.pAction === Action.ACTION_CHU) {
     await actionChu(room, seat, action)

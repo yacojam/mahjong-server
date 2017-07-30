@@ -121,5 +121,6 @@ module.exports = {
 	publishMoAction,
 	publishPengAction,
 	publishAnGangAction,
-	publishPGangAction
+	publishPGangAction,
+	publishWanGangAction
 }
