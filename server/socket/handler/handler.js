@@ -1,4 +1,4 @@
-const paiAction = require('../../algorithm/HxmjRules/hxaction')
+const Action = require('../../algorithm/HxmjRules/hxaction')
 const Pending = require('../../algorithm/HxmjRules/pendingtype')
 const Publish = require('../dataflow/publish')
 const Next = require('./next')
@@ -12,10 +12,10 @@ const CommonRules = require('../../algorithm/HxmjRules/CommonRules')
 function checkValidAction(room, seat, action) {
   console.log(seat)
   let { pAction, pai } = action
-  if (pAction === paiAction.ACTION_CHU) {
+  if (pAction === Action.ACTION_CHU) {
     let isExist =
       seat.shouPais.some(p => p === pai) &&
-      seat.actions.some(a => a.pAction === paiAction.ACTION_CHU)
+      seat.actions.some(a => a.pAction === Action.ACTION_CHU)
     if (isExist) {
       if (
         CommonRules.getPaiType(pai) !== seat.que &&
@@ -28,8 +28,8 @@ function checkValidAction(room, seat, action) {
       return false
     }
   } else if (
-    pAction === paiAction.ACTION_CANCEL ||
-    pAction === paiAction.ACTION_DINGQUE
+    pAction === Action.ACTION_CANCEL ||
+    pAction === Action.ACTION_DINGQUE
   ) {
     return seat.actions.some(a => a.pAction === pAction)
   } else {
@@ -44,7 +44,7 @@ async function handle(room, seat, action) {
   if (!actionValid) {
     return
   }
-  if (action.pAction === paiAction.ACTION_CHU) {
+  if (action.pAction === Action.ACTION_CHU) {
     await actionChu(room, seat, action)
   } else {
     await handlePendingAction(room, seat, action)
@@ -54,11 +54,11 @@ async function handle(room, seat, action) {
 async function handlePendingAction(room, seat, action) {
   //dingque pending
   if (
-    action.pAction === paiAction.ACTION_DINGQUE &&
+    action.pAction === Action.ACTION_DINGQUE &&
     room.pendingType === Pending.PENDING_TYPE_QUE
   ) {
-    seat.pendingAction = paiAction.makeupAction(
-      paiAction.ACTION_DINGQUE,
+    seat.pendingAction = Action.makeupAction(
+      Action.ACTION_DINGQUE,
       action.que
     )
     //all use dingque ok
@@ -76,19 +76,19 @@ async function handlePendingAction(room, seat, action) {
 
   //mo pending
   if (room.pendingType === Pending.PENDING_TYPE_MO) {
-    if (action.pAction === paiAction.ACTION_ANGANG) {
+    if (action.pAction === Action.ACTION_ANGANG) {
       await actionGang(room, seat, action, true)
     }
     if (
-      action.pAction === paiAction.ACTION_GSHUA ||
-      action.pAction === paiAction.ACTION_ZIMO
+      action.pAction === Action.ACTION_GSHUA ||
+      action.pAction === Action.ACTION_ZIMO
     ) {
       await actionHu(room, seat, action)
     }
-    if (action.pAction === paiAction.ACTION_WGANG) {
+    if (action.pAction === Action.ACTION_WGANG) {
       await actionWanGang(room, seat, action)
     }
-    if (action.pAction === paiAction.ACTION_CANCEL) {
+    if (action.pAction === Action.ACTION_CANCEL) {
       await actionMoCancel(room, seat, action)
     }
   }
@@ -97,13 +97,13 @@ async function handlePendingAction(room, seat, action) {
   if (
     (room.pendingType === Pending.PENDING_TYPE_WGANG ||
       room.pendingType === Pending.PENDING_TYPE_CHU) &&
-    (action.pAction === paiAction.ACTION_CANCEL ||
-      action.pAction === paiAction.ACTION_PENG ||
-      action.pAction === paiAction.ACTION_PGANG ||
-      action.pAction === paiAction.ACTION_PAOHU ||
-      action.pAction === paiAction.ACTION_QGHU)
+    (action.pAction === Action.ACTION_CANCEL ||
+      action.pAction === Action.ACTION_PENG ||
+      action.pAction === Action.ACTION_PGANG ||
+      action.pAction === Action.ACTION_PAOHU ||
+      action.pAction === Action.ACTION_QGHU)
   ) {
-    seat.pendingAction = paiAction.makeupAction(action.pAction, action.pai)
+    seat.pendingAction = Action.makeupAction(action.pAction, action.pai)
     seat.actions = [seat.pendingAction]
 
     // check if all user done
