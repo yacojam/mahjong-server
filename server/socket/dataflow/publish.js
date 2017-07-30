@@ -45,6 +45,10 @@ async function sendActions(room, seat) {
 	})
 }
 
+async function sendCancel(room, seat) {
+	connectionManager.sendMessage(seat.userid, 'game_action_cancel', {})
+}
+
 async function publishChuAction(room, seat, cPai) {
 	room.seats.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_chu_push', {
@@ -112,6 +116,7 @@ module.exports = {
 	publishDingQue,
 	publishDingqueResult,
 	sendActions,
+	sendCancel,
 	publishChuAction,
 	publishMoAction,
 	publishPengAction,
