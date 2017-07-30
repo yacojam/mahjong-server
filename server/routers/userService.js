@@ -7,6 +7,8 @@ const ErrorType = require('./ServerError')
 const Router = require('koa-router')
 const router = new Router()
 
+const weixinService = require('../service/weixinService')
+
 router.post('/login', async (ctx, next) => {
   var account = ctx.request.body.account
   var deviceid = ctx.request.body.deviceid
