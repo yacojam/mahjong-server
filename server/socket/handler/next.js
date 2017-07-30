@@ -159,22 +159,22 @@ async function startJu(room) {
 }
 
 async function moAction(room, pAction, gang = false) {
-	let user = room.seats[room.index]
+	let seat = room.seats[room.index]
 	let moPai = gang ? room.leftPais.shift() : room.leftPais.pop()
 	let actions = HXMJManager.getActions(
-		user.shouPais,
-		user.pengPais,
+		seat.shouPais,
+		seat.pengPais,
 		pAction,
 		moPai,
-		user.que
+		seat.que
 	)
 	if (actions.length === 0) {
 		actions.push(Action.makeupAction(Action.ACTION_CHU, 0))
 	} else {
 		room.pendingType = Pending.PENDING_TYPE_MO
 	}
-	user.actions = actions
-	user.shouPais.push(moPai)
+	seat.actions = actions
+	seat.shouPais.push(moPai)
 	await Publish.publishMoAction(room, seat, moPai)
 	await Publish.sendActions(room, seat)
 }

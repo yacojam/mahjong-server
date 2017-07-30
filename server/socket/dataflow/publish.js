@@ -17,7 +17,7 @@ async function publishGameStart(room) {
 			dealerIndex,
 			seatsData,
 			leftNum: room.leftPais.length,
-			index
+			turn: index
 		})
 	})
 }
