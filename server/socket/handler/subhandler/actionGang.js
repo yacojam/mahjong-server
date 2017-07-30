@@ -21,7 +21,7 @@ async function gang(room, seat, action, anGang = false) {
 		seat.shouPais = utils.removePai(seat.shouPais, pai, 3)
 		seat.pengPais.push(pai)
 		seat.gangPais.push(pai)
-		room.users[room.index].chuPais.pop()
+		room.seats[room.index].chuPais.pop()
 	}
 	seat.shouPais.sort((a, b) => a - b)
 	room.index = room.seats.findIndex(u => u.userid === seat.userid)
