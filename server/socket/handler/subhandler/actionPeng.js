@@ -14,7 +14,7 @@ async function peng(room, seat, action) {
 	seat.actions = [Action.makeupAction(Action.ACTION_CHU, 0)]
 	seat.shouPais = utils.removePai(seat.shouPais, pai, 2)
 	room.seats[room.index].chuPais.pop()
-	room.index = room.seats.findIndex(u => u.userid === seat.uid)
+	room.index = room.seats.findIndex(u => u.userid === seat.userid)
 	await Publish.publishPengAction(room, seat, pai)
 	await Publish.sendActions(room, seat)
 }

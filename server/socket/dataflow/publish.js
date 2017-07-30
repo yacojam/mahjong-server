@@ -66,7 +66,7 @@ async function publishMoAction(room, seat, moPai) {
 }
 
 async function publishPengAction(room, seat, pPai) {
-	room.seat.forEach(seatItem => {
+	room.seats.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_peng_push', {
 			turn: room.index,
 			userid: seat.userid,
