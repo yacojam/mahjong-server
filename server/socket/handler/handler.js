@@ -45,6 +45,9 @@ async function handle(room, seat, action) {
   if (!actionValid) {
     return
   }
+  if (action.pAction === Action.ACTION_CANCEL) {
+    await Publish.sendCancel(room, seat)
+  }
   if (action.pAction === Action.ACTION_CHU) {
     await actionChu(room, seat, action)
   } else {
@@ -58,10 +61,7 @@ async function handlePendingAction(room, seat, action) {
     action.pAction === Action.ACTION_DINGQUE &&
     room.pendingType === Pending.PENDING_TYPE_QUE
   ) {
-    seat.pendingAction = Action.makeupAction(
-      Action.ACTION_DINGQUE,
-      action.que
-    )
+    seat.pendingAction = Action.makeupAction(Action.ACTION_DINGQUE, action.que)
     //all use dingque ok
     if (room.seats.every(s => s.pendingAction != null)) {
       room.pendingType = Pending.PENDING_TYPE_NULL
@@ -119,10 +119,10 @@ async function handlePendingAction(room, seat, action) {
         u.actions = []
         u.pendingAction = null
       })
-      if (room.pendingType === Pend.PENDING_TYPE_WGANG) {
+      if (room.pendingType === Pending.PENDING_TYPE_WGANG) {
         await Next.moAction(room, Action.ACTION_GMO, true)
       }
-      if (room.pendingType === Pend.PENDING_TYPE_CHU) {
+      if (room.pendingType === Pending.PENDING_TYPE_CHU) {
         await Next.nextUser(room)
       }
       return

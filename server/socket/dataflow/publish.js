@@ -45,6 +45,10 @@ async function sendActions(room, seat) {
 	})
 }
 
+async function sendCancel(room, seat) {
+	connectionManager.sendMessage(seat.userid, 'game_action_cancel', {})
+}
+
 async function publishChuAction(room, seat, cPai) {
 	room.seats.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_chu_push', {
@@ -76,7 +80,7 @@ async function publishPengAction(room, seat, pPai) {
 }
 
 async function publishAnGangAction(room, seat, gPai) {
-	room.seat.forEach(seatItem => {
+	room.seats.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_angang_push', {
 			turn: room.index,
 			userid: seat.userid,
@@ -86,7 +90,7 @@ async function publishAnGangAction(room, seat, gPai) {
 }
 
 async function publishPGangAction(room, seat, gPai) {
-	room.seat.forEach(seatItem => {
+	room.seats.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_penggang_push', {
 			turn: room.index,
 			userid: seat.userid,
@@ -96,7 +100,7 @@ async function publishPGangAction(room, seat, gPai) {
 }
 
 async function publishWanGangAction(room, seat, gPai) {
-	room.seat.forEach(seatItem => {
+	room.seats.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_wangang_push', {
 			turn: room.index,
 			userid: seat.userid,
@@ -112,9 +116,11 @@ module.exports = {
 	publishDingQue,
 	publishDingqueResult,
 	sendActions,
+	sendCancel,
 	publishChuAction,
 	publishMoAction,
 	publishPengAction,
 	publishAnGangAction,
-	publishPGangAction
+	publishPGangAction,
+	publishWanGangAction
 }
