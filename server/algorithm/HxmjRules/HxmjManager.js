@@ -142,59 +142,89 @@ const paisArr = [
   55
 ]
 
+//判断牌组是不是缺一门
+function isQueOK(shouPais, desPai, QueType) {
+  let pais = shouPais.concat()
+  pais.push(desPai)
+  return pais.every(e => CommonRules.getPaiType(e) !== QueType)
+}
+
 exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
   var actions = []
+  let desType = CommonRules.getPaiType(desPai)
+  let queOk = isQueOK(shouPais, desPai, QueType)
   switch (action) {
     //别人出的牌，只能产生，炮胡，碰，碰杠
     case Action.ACTION_CHU:
-      if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
-        actions.push(Action.makeupAction(Action.ACTION_PAOHU, desPai))
-      }
-      var num = CommonRules.getPaiNum(shouPais, desPai)
-      if (num == 3) {
-        actions.push(Action.makeupAction(Action.ACTION_PGANG, desPai))
-        actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
-      } else if (num == 2) {
-        actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
+      //出的花色是缺的花色，则不做处理
+      if (desType !== QueType) {
+        if (queOk) {
+          if (CommonRules.getHuType(pengPais, shouPais, desPai) > 0) {
+            actions.push(Action.makeupAction(Action.ACTION_PAOHU, desPai))
+          }
+        }
+        var num = CommonRules.getPaiNum(shouPais, desPai)
+        if (num == 3) {
+          actions.push(Action.makeupAction(Action.ACTION_PGANG, desPai))
+          actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
+        } else if (num == 2) {
+          actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
+        }
       }
       break //别人弯杠的牌，只能产生抢杠胡
     case Action.ACTION_WGANG:
-      if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
-        actions.push(Action.makeupAction(Action.ACTION_QGHU, desPai))
+      if (desType !== QueType && queOk) {
+        if (CommonRules.getHuType(pengPais, shouPais, desPai) > 0) {
+          actions.push(Action.makeupAction(Action.ACTION_QGHU, desPai))
+        }
       }
       break //自己摸的牌，只能产生，自摸，暗杠，弯杠
-    case Action.ACTION_MO: //自摸检测
-      if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
-        actions.push(Action.makeupAction(Action.ACTION_ZIMO, desPai))
-      } //弯杠检测
+    case Action.ACTION_MO:
+      //自摸检测
+      if (desType !== QueType && queOk) {
+        if (CommonRules.getHuType(pengPais, shouPais, desPai) > 0) {
+          actions.push(Action.makeupAction(Action.ACTION_ZIMO, desPai))
+        }
+      }
+      //弯杠检测
       var wgpais = CommonRules.getWanGangPais(shouPais, desPai, pengPais)
       if (wgpais.length > 0) {
         wgpais.forEach(function(e) {
-          actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
+          if (CommonRules.getPaiType(e) !== QueType) {
+            actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
+          }
         })
       } //暗杠检测
       var agpais = CommonRules.getAnGangPais(shouPais, desPai)
       if (agpais.length > 0) {
         agpais.forEach(function(e) {
-          actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
+          if (CommonRules.getPaiType(e) !== QueType) {
+            actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
+          }
         })
       }
       break //杠摸，只能产生，杠上花，暗杠，弯杠
     case Action.ACTION_GMO:
       //自摸检测
-      if (CommonRules.getHuType(pengPais, shouPais, desPai, QueType) > 0) {
-        actions.push(Action.makeupAction(Action.ACTION_GSHUA, desPai))
+      if (desType !== QueType && queOk) {
+        if (CommonRules.getHuType(pengPais, shouPais, desPai) > 0) {
+          actions.push(Action.makeupAction(Action.ACTION_GSHUA, desPai))
+        }
       } //弯杠检测
       var wgpais = CommonRules.getWanGangPais(shouPais, desPai, pengPais)
       if (wgpais.length > 0) {
         wgpais.forEach(function(e) {
-          actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
+          if (CommonRules.getPaiType(e) !== QueType) {
+            actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
+          }
         })
       } //暗杠检测
       var agpais = CommonRules.getAnGangPais(shouPais, desPai)
       if (agpais.length > 0) {
         agpais.forEach(function(e) {
-          actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
+          if (CommonRules.getPaiType(e) !== QueType) {
+            actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
+          }
         })
       }
       break
