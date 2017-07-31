@@ -13,6 +13,10 @@ function getAccessToken(code) {
         return reject(error)
       }
       console.log(body)
+      const json = JSON.stringify(body)
+      if (json.errcode != 0) {
+        throw json.errmsg
+      }
       resolve(body)
     })
   })
