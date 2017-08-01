@@ -109,7 +109,15 @@ async function publishWanGangAction(room, seat, gPai) {
 	})
 }
 
-async function publishHuAction(room, seat, action) {}
+async function publishHuAction(room, seat, ret) {
+	room.seats.forEach(seatItem => {
+		connectionManager.sendMessage(seatItem.userid, 'game_hu_push', {
+			turn: room.index,
+			userid: seat.userid,
+			ret: ret
+		})
+	})
+}
 
 module.exports = {
 	publishGameStart,
@@ -122,5 +130,6 @@ module.exports = {
 	publishPengAction,
 	publishAnGangAction,
 	publishPGangAction,
-	publishWanGangAction
+	publishWanGangAction,
+	publishHuAction
 }
