@@ -79,13 +79,7 @@ function bind(socket) {
 
         //通知其他客户端
         if (isNewUser) {
-            let { userid, username, headimg, sip, online, ready, index } = seat
-            broadcast.broadcastInRoom(
-                'new_user_come',
-                { userid, username, headimg, sip, online, ready, index },
-                userid,
-                false
-            )
+            broadcast.broadcastInRoom('new_user_come', seat, userid, false)
         } else {
             broadcast.broadcastInRoom(
                 'user_state_changed',

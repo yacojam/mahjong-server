@@ -2,15 +2,14 @@ const connectionManager = require('../connectionManager')
 
 async function publishGameStart(room) {
 	console.log('send game start info')
-	let { currentJu, currentGame, dealerIndex, state, index } = room
+	let { currentJu, currentGame, dealerIndex, index } = room
 	let seatsData = room.seats.map(s => {
 		let { score, moMoney, index, userid } = s
 		return { score, moMoney, index, userid }
 	})
 	room.seats.forEach(seat => {
-		let { shouPais, score, moMoney } = seat
+		let { shouPais } = seat
 		connectionManager.sendMessage(seat.userid, 'game_start_push', {
-			state,
 			shouPais,
 			currentJu,
 			currentGame,

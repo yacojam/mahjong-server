@@ -13,6 +13,7 @@ async function hu(room, seat, action) {
 		seatItem.pendingAction = null
 	})
 	room.index = room.seats.findIndex(u => u.userid === seat.userid)
+	room.dealerIndex = room.index
 	const { pengPais, gangPais, anGangPais, shouPais, que } = seat
 	let allChupais = []
 	room.seats.forEach(u => {
