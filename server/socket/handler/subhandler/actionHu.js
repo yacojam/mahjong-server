@@ -67,10 +67,8 @@ async function endGameWithHu(room, seat, scores, isZimo, pai) {
 	})
 
 	ret.gameRet = room.seats.map(s => {
-		let { userid, index, shouPais } = s
-		isWin = userid === seat.userid
-		deltaScore = scores[0]
-		return { userid, index, shouPais, isWin, deltaScore }
+		let { userid, index, shouPais, moMoney, score } = s
+		return { userid, index, shouPais, moMoney, score }
 	})
 	room.state = RoomState.GAMEOVER
 	if (isOver) {

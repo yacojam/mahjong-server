@@ -5,6 +5,7 @@ const connectionManager = require('./connectionManager')
 const broadcast = require('./broadcast')
 const userDao = require('../db/UserDao')
 const Next = require('./handler/next')
+const RoomState = Next.RoomState
 const actionHandle = require('./handler/handler')
 
 async function dissolveRoom(rpid) {
@@ -157,7 +158,14 @@ function bind(socket) {
             return
         }
         room.seats[index].ready = true
-        let data = { userid: userid, ready: true }
+        let continued = false
+        if (
+            room.state === RoomState.GAMEOVER ||
+            room.state === RoomState.JUOVER
+        ) {
+            continued = true
+        }
+        let data = { userid: userid, ready: true, continued }
         broadcast.broadcastInRoom('user_state_changed', data, userid, true)
 
         //game start
