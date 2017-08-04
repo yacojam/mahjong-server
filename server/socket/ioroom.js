@@ -38,7 +38,6 @@ function bind(socket) {
         var roomSign = userData.sign
         var room = roomManager.getRoom(roomPresentId)
         if (room == null || room.sign != roomSign) {
-            console.log('aaaa')
             ret.success = false
             ret.error = Error.ParamsNotVavidError
             socket.emit('user_join_result', ret)
@@ -48,7 +47,6 @@ function bind(socket) {
         var index = roomUtils.getUserIndex(room, userid)
         //没找到对应的位置
         if (index == -1) {
-            console.log('bbbb')
             ret.success = false
             ret.error = Error.ParamsNotVavidError
             socket.emit('user_join_result', ret)

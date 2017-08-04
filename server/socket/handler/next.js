@@ -25,32 +25,6 @@ async function getRoomData(room, uid) {
 		currentJu,
 		currentGame
 	} = room
-	if (room.state === RoomState.READY) {
-		let seatsData = seats
-			.filter(seat => seat.userid > 0 && seat.index >= 0)
-			.map(seat => {
-				let { userid, username, headimg, sip, index, ready } = seat
-				let online = connectionManager.get(userid) != null
-				let isCreator = seat.isCreator
-				return {
-					userid,
-					username,
-					headimg,
-					sip,
-					index,
-					ready,
-					online,
-					isCreator
-				}
-			})
-		ret.success = true
-		ret.data = {
-			state,
-			conf,
-			seats: seatsData
-		}
-		return ret
-	}
 
 	let seatsData = seats
 		.filter(seat => {
@@ -62,35 +36,35 @@ async function getRoomData(room, uid) {
 			let { score, moMoney, que, pendingAction, actions } = seat
 			let online = connectionManager.get(userid) != null
 			let isCreator = seat.isCreator
-			let shouPaisNum = seat.shouPais.length
-			if (
-				userid !== uid &&
-				(state === RoomState.PLAY || state === RoomState.QINGQUE)
-			) {
-				shouPais = []
+			console.log(shouPais)
+			let shouPaisNum = shouPais.length
+			if (userid !== uid) {
 				actions = []
 				pendingAction = null
+				if (state === RoomState.PLAY || state === RoomState.QINGQUE) {
+					shouPais = []
+				}
 			}
 			return {
 				userid,
 				username,
 				headimg,
-				score,
-				moMoney,
 				sip,
 				index,
 				ready,
 				isCreator,
+				online,
+				score,
+				moMoney,
 				shouPais,
 				chuPais,
 				pengPais,
 				gangPais,
 				anGangPais,
 				que,
-				online,
-				shouPaisNum,
 				actions,
-				pendingAction
+				pendingAction,
+				shouPaisNum
 			}
 		})
 	ret.success = true

@@ -10,9 +10,9 @@ function transform(roomStruct) {
 	)
 	roomInfo.ruleType = roomStruct.ruleType
 	roomInfo.dealerIndex = roomStruct.dealerIndex
-	roomInfo.seats = roomStruct.seats
+	//roomInfo.seats = roomStruct.seats
 	roomInfo.sign = roomStruct.sign
-	roomInfo.result = roomStruct.result
+	//roomInfo.result = roomStruct.result
 	return roomInfo
 }
 

@@ -5,7 +5,8 @@ async function publishGameStart(room) {
 	let { currentJu, currentGame, dealerIndex, index } = room
 	let seatsData = room.seats.map(s => {
 		let { score, moMoney, index, userid } = s
-		return { score, moMoney, index, userid }
+		let shouPaisNum = s.shouPais.length
+		return { score, moMoney, index, userid, shouPaisNum }
 	})
 	room.seats.forEach(seat => {
 		let { shouPais } = seat

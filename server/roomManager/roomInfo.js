@@ -12,13 +12,37 @@ class roomInfo {
             var seat = {}
             seat.userid = 0
             seat.index = -1
+            seat.username = null
+            seat.headimg = null
+            seat.sip = null
+            seat.online = false
+            seat.ready = false
+            seat.isCreator = false
+
+            //game info
+            seat.score = 0
+            seat.moMoney = 0
+            seat.shouPais = []
+            seat.chuPais = []
+            seat.pengPais = []
+            seat.gangPais = []
+            seat.anGangPais = []
+            seat.que = 0
+            seat.pendingAction = null
+            seat.actions = []
+
+            //result info
+            seat.gameResult = null
+            seat.juResult = null
+            seat.roomResult = null
+            seat.isJuSameWithRoom = rule.numOfJu === 1
             this.seats.push(seat)
         }
         this.sign = ''
         this.result = []
         this.gameRecord = []
         this.state = 0
-        this.index = 0
+        this.index = -1
         this.leftPais = []
         this.pendingType = null
         this.currentJu = 0
