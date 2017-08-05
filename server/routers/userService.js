@@ -57,8 +57,7 @@ router.post('/login', async (ctx, next) => {
         ret.roomid = ''
       }
     }
-    console.log('login result : ')
-    console.log(ret)
+    console.log('login result : ', ret)
     ctx.json = ret
   }
 })

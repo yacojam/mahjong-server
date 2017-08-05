@@ -31,6 +31,8 @@ function bind(socket) {
         if (socket.userid != null) {
             return
         }
+        userData = typeof userData === 'string' ?  JSON.parse(userData) : userData
+
         var ret = {}
         var userid = userData.userid
         //检测房间数据
@@ -90,6 +92,8 @@ function bind(socket) {
     })
 
     socket.on('user_exit', async userData => {
+        userData = typeof userData === 'string' ?  JSON.parse(userData) : userData
+
         var userid = socket.userid
         if (userid == null || userid !== userData.userid) {
             return
@@ -124,9 +128,11 @@ function bind(socket) {
     //解散房间
     socket.on('user_dissolve', async userData => {
         let userid = socket.userid
+        userData = typeof userData === 'string' ?  JSON.parse(userData) : userData
         if (userid == null || userid !== userData.userid) {
             return
         }
+
         let rpid = roomManager.getRidForUid(userid)
         if (rpid == null) {
             return
@@ -183,6 +189,8 @@ function bind(socket) {
         }
         let room = roomManager.getRoom(rpid)
         let seat = room.seats.find(s => s.userid === userid)
+
+        action = typeof action === 'string' ?  JSON.parse(action) : action
         actionHandle(room, seat, action)
     })
 
