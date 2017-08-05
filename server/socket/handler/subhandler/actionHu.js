@@ -43,37 +43,41 @@ async function hu(room, seat, action) {
 }
 
 async function endGameWithHu(room, seat, scores, isZimo, pai) {
-	let ret = {}
-	seat.moMoney = 3 * scores[1] * room.rule.dfOfJu / 5
 	if (!isZimo) {
 		seat.shouPais.push(pai)
 	}
 	let isOver = false
 	let isNa = true
+	let winScore = 0
 	room.seats.forEach(s => {
 		s.ready = false
+		s.gameResult = {}
+		s.gameResult.originScore = s.score
+		s.gameResult.originMo = s.moMoney
 		if (s.userid !== seat.userid) {
 			if (s.score > scores[0]) {
-				seat.score += scores[0]
+				winScore += scores[0]
 				s.score -= scores[0]
+				s.gameResult.deltaScore = '-' + scores[0]
 				isNa = false
 			} else {
-				seat.score += s.score
+				winScore += s.score
+				s.gameResult.deltaScore = '-' + s.score
 				s.score = 0
 				isOver = true
 			}
 			s.moMoney -= scores[1] * room.rule.dfOfJu / 5
+			s.gameResult.deltaMo = '-' + scores[1] * room.rule.dfOfJu / 5
 		}
 	})
+	seat.moMoney += 3 * scores[1] * room.rule.dfOfJu / 5
+	seat.gameResult.deltaScore = '+' + winScore
+	seat.gameResult.deltaMo = '+' + 3 * scores[1] * room.rule.dfOfJu / 5
 
-	ret.gameRet = room.seats.map(s => {
-		let { userid, index, shouPais, moMoney, score } = s
-		return { userid, index, shouPais, moMoney, score }
-	})
 	room.state = RoomState.GAMEOVER
 	if (isOver) {
-		ret.juRet = room.seats.map(s => {
-			let { userid, index, score, moMoney } = s
+		room.seats.forEach(s => {
+			let { score, moMoney } = s
 			let isScoreWin = score - 50 > 0
 			let scoreMoney = Math.round(
 				Math.abs(score - 50) * room.rule.dfOfJu / 50.0
@@ -98,19 +102,24 @@ async function endGameWithHu(room, seat, scores, isZimo, pai) {
 				}
 			}
 			let sum = moMoney + scoreMoney + naMoney
-			return { userid, index, score, moMoney, scoreMoney, naMoney }
+			s.juResult = { score, moMoney, naMoney, sum }
+			if (s.roomResult) {
+				s.roomResult.score += score
+				s.roomResult.moMoney += moMoney
+				s.roomResult.naMoney += naMoney
+				s.sum += sum
+			} else {
+				s.roomResult = s.juResult
+			}
 		})
-		room.result.push(JuRet)
+
 		if (room.currentJu === room.rule.numOfJu) {
 			room.state = RoomState.ROOMOVER
-			ret.roomRet = room.result
 		} else {
 			room.state = RoomState.JUOVER
 		}
 	}
-	ret.state = room.state
-
-	await Publish.publishHuAction(room, seat, ret)
+	await Publish.publishHuAction(room, seat)
 }
 
 module.exports = hu

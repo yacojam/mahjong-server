@@ -23,7 +23,8 @@ async function getRoomData(room, uid) {
 		index,
 		leftPais,
 		currentJu,
-		currentGame
+		currentGame,
+		isJuSameWithRoom
 	} = room
 
 	let seatsData = seats
@@ -34,6 +35,7 @@ async function getRoomData(room, uid) {
 			let { userid, username, headimg, sip, index, ready } = seat
 			let { shouPais, chuPais, pengPais, gangPais, anGangPais } = seat
 			let { score, moMoney, que, pendingAction, actions } = seat
+			let { gameResult, juResult, roomResult } = seat
 			let online = connectionManager.get(userid) != null
 			let isCreator = seat.isCreator
 			console.log(shouPais)
@@ -64,11 +66,15 @@ async function getRoomData(room, uid) {
 				que,
 				actions,
 				pendingAction,
-				shouPaisNum
+				shouPaisNum,
+				gameResult,
+				juResult,
+				roomResult
 			}
 		})
 	ret.success = true
 	ret.data = {
+		isJuSameWithRoom,
 		state,
 		conf,
 		dealerIndex,
