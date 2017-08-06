@@ -48,8 +48,7 @@ router.post('/login', async (ctx, next) => {
       card: userData.card,
       roomid: userData.roomid,
       token: token
-    }
-    //做一层保护，如果当前用户处于某个房间中，判断当前房间是否valid
+    } //做一层保护，如果当前用户处于某个房间中，判断当前房间是否valid
     if (ret.roomid > 0) {
       var isroomValid = roomManager.isRoomValid(ret.roomid)
       if (!isroomValid) {
@@ -61,11 +60,61 @@ router.post('/login', async (ctx, next) => {
     ctx.json = ret
   }
 })
-
 router.post('/weixin_login', async ctx => {
-  const AppSecret = 'a7aa5b67373af823277d447a770bc0c6'
+  const code = ctx.request.body.code
+  console.log(`login with code: ${code}`)
+  try {
+    const tokenInfo = await weixinService.getAccessToken(code)
+    console.log(`tokenInfo: ${tokenInfo}`)
+    const userinfo = await weixinService.getWeixinUserInfo(
+      tokenInfo.access_token,
+      tokenInfo.openid
+    )
+    const {
+      openid,
+      nickname,
+      sex,
+      city,
+      province,
+      country,
+      headimgurl,
+      unionid
+    } = userinfo
+    const weixinUser = {
+      openid,
+      nickname,
+      sex,
+      city,
+      province,
+      country,
+      headimgurl,
+      unionid
+    }
+    await weixinService.saveUser(weixinUser, openid) // check if user exists
+    let user = await weixinService.getUserInfo(openid)
+    if (!user) {
+      const uid = await UserDao.sync_create_account(
+        openid,
+        openid,
+        nickname,
+        sex,
+        headimgurl
+      )
+      if (uid == 0) {
+        throw `create user fail`
+      }
+      user = await UserDao.sync_get_account_info_by_userid(uid)
+    }
+    console.log('login user', user)
+    ctx.json = user
+  } catch (e) {
+    console.log(e)
+    ctx.error = {
+      code: -1,
+      message: e.message || e.toString
+    }
+  }
 })
-
 router.get('/get_account_info', async (ctx, next) => {
   var userid = ctx.query.userid
   var token = ctx.query.token
@@ -83,8 +132,7 @@ router.get('/get_account_info', async (ctx, next) => {
         card: userData.card,
         roomid: userData.roomid,
         token: token
-      }
-      //做一层保护，如果当前用户处于某个房间中，判断当前房间是否valid
+      } //做一层保护，如果当前用户处于某个房间中，判断当前房间是否valid
       if (ret.roomid > 0) {
         var isroomValid = roomManager.isRoomValid(ret.roomid)
         if (!isroomValid) {
@@ -102,5 +150,4 @@ router.get('/get_account_info', async (ctx, next) => {
     ctx.error = ErrorType.AccountValidError
   }
 })
-
 module.exports = router
