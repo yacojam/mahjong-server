@@ -127,15 +127,15 @@ async function start(room, isRoom, isJu, isGame) {
 }
 
 async function startRoom(room) {
-	await start(room, true, false, false)
-}
-
-async function startGame(room) {
-	await start(room, false, false, true)
-}
-
-async function startJu(room) {
-	await start(room, false, true, false)
+	if (room.state === RoomState.READY) {
+		await start(room, true, false, false)
+	}
+	if (room.state === RoomState.GAMEOVER) {
+		await start(room, false, false, true)
+	}
+	if (room.state === RoomState.JUOVER) {
+		await start(room, false, true, false)
+	}
 }
 
 async function moAction(room, pAction, gang = false) {
@@ -191,8 +191,6 @@ async function nextUser(room) {
 module.exports = {
 	getRoomData,
 	startRoom,
-	startGame,
-	startJu,
 	moAction,
 	startAction,
 	nextUser,
