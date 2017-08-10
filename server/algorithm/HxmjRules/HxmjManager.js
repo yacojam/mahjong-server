@@ -310,22 +310,16 @@ exports.getScore = function(
 ) {
   var huPaiType = CommonRules.getHuType(pengPais, shouPais, huPai, QueType)
   var tingPais = CommonRules.getTingPais(shouPais, pengPais)
-  var isZimo = action == Action.ACTION_ZIMO || action == Action.ACTION_GSHUA
-  var isKZY = CommonRules.isKZY(shouPais, pengPais, huPai, isZimo, allChupais)
-  var isGSH = action == Action.ACTION_GSHUA
-  var isQGH = action == Action.ACTION_QGHU
   var hxmjInfo = new HxmjUtils(
     pengPais,
     gangPais,
     anGangPais,
     shouPais,
+    allChupais,
     huPai,
     huPaiType,
     tingPais,
-    isKZY,
-    isZimo,
-    isGSH,
-    isQGH,
+    action,
     roomRules
   )
   var result = []

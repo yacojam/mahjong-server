@@ -1,35 +1,36 @@
-var CommonRules = require('./CommonRules')
-var CommonUtils = require('./CommonUtils')
-
-var ThreeInfo = require('./ThreeInfo')
-var HxCommonHuPaiInfo = require('./HxCommonHuPaiInfo')
+const CommonRules = require('./CommonRules')
+const CommonUtils = require('./CommonUtils')
+const ThreeInfo = require('./ThreeInfo')
+const HxCommonHuPaiInfo = require('./HxCommonHuPaiInfo')
+const Action = require('./hxaction')
 
 var HxmjUtils = function(
   pengPais,
   gangPais,
   anGangPais,
   shouPais,
+  allChuPais,
   huPai,
   huPaiType,
   tingPais,
-  isKZY,
-  isZimo,
-  isGSH,
-  isQGH,
+  action,
   roomRules
 ) {
   this.pengPais = pengPais
   this.gangPais = gangPais
   this.anGangPais = anGangPais
   this.shouPais = shouPais
+  this.allChuPais = allChuPais
   this.huPai = huPai
   this.huPaiType = huPaiType
   this.tingPais = tingPais
   this.tingOnly = tingPais.length == 1
-  this.isKZY = isKZY
-  this.isZimo = isZimo
-  this.isGSH = isGSH
-  this.isQGH = isQGH
+
+  this.isZimo = action == Action.ACTION_ZIMO || action == Action.ACTION_GSHUA
+  this.isGSH = action == Action.ACTION_GSHUA
+  this.isQGH = action == Action.ACTION_QGHU
+  this.isKZY =
+    this.tingOnly && (this.isQGH || isLast(this.huPai, this.isZimo, allChuPais))
   this.roomRules = roomRules
 
   //初始化后进行基本信息分析
@@ -717,7 +718,7 @@ function getAllTypeNum(pengPais, gangPais, shouPais, huPai) {
   gangPais.forEach(function(e) {
     copyShouPais.push(e)
   })
-  var typeNumArr = [0, 0, 0, 0, 0, 0]
+  var typeNumArr = [0, 0, 0, 0, 0]
   copyShouPais.forEach(function(e) {
     type = CommonRules.getPaiType(e)
     typeNumArr[type - 1]++
@@ -738,17 +739,10 @@ function isCYSWithTypeArray(arr) {
   return false
 } //分析是不是清一色
 function isQYSWithTypeArray(arr) {
-  var arr1 = arr.filter(function(e, i, a) {
-    return e > 0 && i < 3
-  })
-  var arr2 = arr.filter(function(e, i, a) {
-    return e > 0 && i > 2
-  })
-  if (arr1.length == 1 && arr2.length == 0) {
-    return true
-  }
-  return false
-} //获取通的点数
+  let arr1 = arr.filter(e => e > 0)
+  return arr1.length === 1 && arr.findIndex(arr1[0]) < 3
+}
+//获取通的点数
 function getTongScore(tongArr, isNaForDouble) {
   if (tongArr.length > 1 && isNaForDouble) {
     return 9999
@@ -764,13 +758,8 @@ function getTongScore(tongArr, isNaForDouble) {
 }
 //获取支子点数
 function getTypeScore(arr, isNaForDouble) {
-  var filterArr = arr.filter(function(e, i, arr) {
-    return i < 3
-  })
-  filterArr.push(arr[3] + arr[4])
-  var filterArr2 = filterArr.filter(function(e, i, arr) {
-    return e > 7
-  })
+  let filterArr = [arr[0], arr[1], arr[2], arr[3] + arr[4]]
+  let filterArr2 = filterArr.filter(e => e > 7)
   if (filterArr2.length == 0) {
     return 0
   } else {
@@ -791,26 +780,34 @@ function getGangScore(gangPais, isNaFor3Gang) {
   }
   return 0
 }
+
 function getLXTScoreWithPengPais(pengPais) {
-  var num = 0
-  if (
-    CommonUtils.contains(pengPais, 11) &&
-    CommonUtils.contains(pengPais, 19)
-  ) {
+  let num = 0
+  if (pengPais.findIndex(11) >= 0 && pengPais.findIndex(19) >= 0) {
     num++
   }
-  if (
-    CommonUtils.contains(pengPais, 21) &&
-    CommonUtils.contains(pengPais, 29)
-  ) {
+  if (pengPais.findIndex(21) >= 0 && pengPais.findIndex(29) >= 0) {
     num++
   }
-  if (
-    CommonUtils.contains(pengPais, 31) &&
-    CommonUtils.contains(pengPais, 39)
-  ) {
+  if (pengPais.findIndex(31) >= 0 && pengPais.findIndex(39) >= 0) {
     num++
   }
   return num == 0 ? 0 : num == 1 ? 5 : 15
 }
+
+/**
+  ** --- 绝Y检测 ---
+  ** 检测是不是枯枝丫
+  ** 当只听一张牌的时候，且是最后一张的时候
+  **/
+
+function isLast(huPai, isZimo, allChupais) {
+  var filterHupais = allChupais.filter(e => e === huPai)
+  if (isZimo) {
+    return filterHupais.length === 3
+  } else {
+    return filterHupais.length === 4
+  }
+}
+
 module.exports = HxmjUtils

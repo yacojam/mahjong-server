@@ -65,35 +65,6 @@ CommonRules.getPaiType = function(mj) {
 }
 
 /**
-  ** --- 绝Y检测 ---
-  ** 检测是不是枯枝丫
-  ** 当只听一张牌的时候，且是最后一张的时候
-  **/
-
-CommonRules.isKZY = function(shouPais, pengPais, huPai, isZimo, allChupais) {
-  var tingPais = CommonRules.getTingPais(shouPais, pengPais)
-  if (tingPais.length == 1) {
-    var copyAllChupais = allChupais.concat()
-    pengPais.forEach(e => {
-      copyAllChupais.push(e)
-      copyAllChupais.push(e)
-      copyAllChupais.push(e)
-    })
-    var filterHupais = copyAllChupais.filter(e => {
-      return e == huPai
-    })
-    if (
-      (isZimo && filterHupais.length == 3) ||
-      (!isZimo && filterHupais.length == 4)
-    ) {
-      return true
-    }
-    return false
-  }
-  return false
-}
-
-/**
   ** --- 听牌检测 ---
   ** 获取手牌的听牌
   **/
