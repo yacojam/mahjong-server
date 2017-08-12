@@ -6,10 +6,12 @@ const oauth_path = '/api/User/LoginOauth/'
 
 router.post('/anylogin', async (ctx, next) => {
   let data = ctx.request.body
+  console.log(ctx.request)
   userData = await checkLogin(data)
 })
 
 function checkLogin(postData) {
+  console.log(postData)
   let options = {
     host: oauth_host,
     path: oauth_path,
