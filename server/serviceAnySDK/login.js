@@ -1,4 +1,5 @@
 const http = require('http')
+const querystring = require('querystring')
 const Router = require('koa-router')
 const router = new Router()
 const oauth_host = 'oauth.anysdk.com'
@@ -6,19 +7,19 @@ const oauth_path = '/api/User/LoginOauth/'
 
 router.post('/anylogin', async (ctx, next) => {
   let data = ctx.request.body
-  console.log(ctx.request)
   userData = await checkLogin(data)
 })
 
 function checkLogin(postData) {
   console.log(postData)
+  let contents = querystring.stringify(postData)
   let options = {
     host: oauth_host,
     path: oauth_path,
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'Content-Length': postData.length
+      'Content-Length': contents.length
     }
   }
   return new Promise(resolve => {
@@ -33,7 +34,7 @@ function checkLogin(postData) {
         resolve(resJson)
       })
     })
-    reqToAnysdk.write(postData)
+    reqToAnysdk.write(contents)
     reqToAnysdk.end()
   })
 }
