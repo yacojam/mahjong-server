@@ -29,7 +29,7 @@ router.get('/create_private_room', async (ctx, next) => {
   }
   let isValid = await tokenManager.isAccountValid(userid, token)
   if (isValid) {
-    var cardnum_of_user = await UserDao.sycn_get_card_of_account(userid)
+    var cardnum_of_user = await UserDao.getCardNum(userid)
     if (cardnum_of_user == 0) {
       ctx.error = ErrorType.CardNotEnoughError
     } else {

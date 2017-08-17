@@ -15,7 +15,7 @@ async function isAccountValid(userid, uToken) {
 	return nowStamp < stamp
 }
 
-function generateToken(userid, deviceid) {
+function generateToken(userid, deviceid = 'device') {
 	let token = cryptoHelper.md5(userid + deviceid + Date.parse(Date.now()))
 	console.log(token)
 	let date = new Date()

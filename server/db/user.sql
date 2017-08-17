@@ -1,25 +1,27 @@
 DROP TABLE IF EXISTS nv_users;
 CREATE TABLE nv_users (
   userid int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  account varchar(64) NOT NULL COMMENT '手机账号',
+  account varchar(64) DEFAULT NULL COMMENT '手机账号',
   wxid varchar(64) DEFAULT NULL COMMENT '微信唯一标识',
   name varchar(32) NOT NULL COMMENT '用户昵称',
   sex int(1) DEFAULT 1,
   headimg varchar(256) DEFAULT NULL,
+  city varchar(64) DEFAULT NULL,
+  province varchar(64) DEFAULT NULL,
   card int(11) DEFAULT 9 COMMENT '房卡',
-  roomid varchar(8) DEFAULT NULL COMMENT '用户当前房间ID',
+  roomid varchar(8) DEFAULT '' COMMENT '用户当前房间ID',
   PRIMARY KEY (userid),
   UNIQUE KEY account (account)
 ) ENGINE=InnoDB AUTO_INCREMENT=100009 DEFAULT CHARSET=utf8;
 
-INSERT INTO `nv_users` VALUES ('100001', '13311111111', '', '小白1', '0', null, '9', '');
-INSERT INTO `nv_users` VALUES ('100002', '13311111112', '', '小白2', '0', null, '9', '');
-INSERT INTO `nv_users` VALUES ('100003', '13311111113', '', '小白3', '0', null, '9', '');
-INSERT INTO `nv_users` VALUES ('100004', '13311111114', '', '小白4', '0', null, '9', '');
-INSERT INTO `nv_users` VALUES ('100005', '13311111115', '', '小白5', '0', null, '9', '');
-INSERT INTO `nv_users` VALUES ('100006', '13311111116', '', '小白6', '0', null, '9', '');
-INSERT INTO `nv_users` VALUES ('100007', '13311111117', '', '小白7', '0', null, '9', '');
-INSERT INTO `nv_users` VALUES ('100008', '13311111118', '', '小白8', '1', null, '9', '');
+INSERT INTO `nv_users` VALUES ('100001', '13311111111', '', '小白1', '1', null, '', '', '9', '');
+INSERT INTO `nv_users` VALUES ('100002', '13311111112', '', '小白2', '1', null, '', '', '9', '');
+INSERT INTO `nv_users` VALUES ('100003', '13311111113', '', '小白3', '1', null, '', '', '9', '');
+INSERT INTO `nv_users` VALUES ('100004', '13311111114', '', '小白4', '1', null, '', '', '9', '');
+INSERT INTO `nv_users` VALUES ('100005', '13311111115', '', '小白5', '1', null, '', '', '9', '');
+INSERT INTO `nv_users` VALUES ('100006', '13311111116', '', '小白6', '1', null, '', '', '9', '');
+INSERT INTO `nv_users` VALUES ('100007', '13311111117', '', '小白7', '1', null, '', '', '9', '');
+INSERT INTO `nv_users` VALUES ('100008', '13311111118', '', '小白8', '1', null, '', '', '9', '');
 
 -- DROP TABLE IF EXISTS nv_cardrules;
 -- CREATE TABLE nv_cardrules (

@@ -2,12 +2,29 @@ const http = require('http')
 const querystring = require('querystring')
 const Router = require('koa-router')
 const router = new Router()
+const UserDao = require('../db/UserDao')
+const TokenManager = require('../redis/tokenRedisDao')
+const roomManager = require('../roomManager/roomManager')
 const oauth_host = 'oauth.anysdk.com'
 const oauth_path = '/api/User/LoginOauth/'
 
 router.post('/anylogin', async (ctx, next) => {
   let data = ctx.request.body
-  userData = await checkLogin(data)
+  let anySDKData = await checkLogin(data)
+  if (anySDKData.status == 'ok') {
+    let wxData = anySDKData.data
+    let user = await UserDao.updateOrCreateWXAccount(wxData)
+    let token = TokenManager.generateToken(user.userid)
+    if (user.roomid.length > 0) {
+      if (!roomManager.isRoomValid(user.roomid)) {
+        await UserDao.updateRoomID(user.userid, '')
+        user.roomid = ''
+      }
+    }
+    let ret = { ...user, token }
+    anySDKData.data = ret
+  }
+  ctx.json = anySDKData
 })
 
 function checkLogin(postData) {
@@ -28,9 +45,6 @@ function checkLogin(postData) {
       resFromAnysdk.on('data', data => {
         console.log('#return data:\n' + data)
         resJson = JSON.parse(data)
-        if (resJson && resJson.status == 'ok') {
-          resJson.ext = '登陆验证成功'
-        }
         resolve(resJson)
       })
     })

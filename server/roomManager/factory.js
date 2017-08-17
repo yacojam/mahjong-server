@@ -56,7 +56,7 @@ async function createRoom(userid, userCardNum, userConfigs) {
 			ret.data = { rpid: roomPresentId, sign: room.sign }
 			roomManager.setRoom(roomPresentId, room)
 			//更新数据库用户信息,加await
-			await userDao.sycn_update_roomid_of_userid(roomPresentId, userid)
+			await userDao.updateRoomID(userid, roomPresentId)
 			return ret
 		}
 	}
@@ -84,7 +84,7 @@ async function enterRoom(userid, rpid) {
 			ret.code = 0
 			ret.data = { rpid: rpid, sign: room.sign }
 			//更新数据库用户信息,加await
-			await userDao.sycn_update_roomid_of_userid(rpid, userid)
+			await userDao.updateRoomID(userid, rpid)
 			return ret
 		} else {
 			ret.code = 2 //房间已满

@@ -107,8 +107,34 @@ function insertOrUpdate(table, record, condition) {
   })
 }
 
+function select(table, condition, fields = []) {
+  return new Promise((resolve, reject) => {
+    if (!condition) {
+      reject(new Error('select condition not exists'))
+      return
+    }
+    let fieldSql = fields.length > 0 ? fields.join(',') : '*'
+    let sql = 'SELECT ' + fieldSql + ' FROM `' + table + '` WHERE ' + condition
+    query(sql, (error, results, fields) => {
+      if (results.length > 0) {
+        resolve(results[0])
+      } else {
+        resolve(null)
+      }
+    })
+  })
+}
+
+// async function test() {
+//   let ret = await select('nv_users', `account='13411111112'`)
+//   console.log(ret)
+// }
+
+// test()
+
 module.exports = {
   query,
+  select,
   insert,
   update,
   insertOrUpdate
