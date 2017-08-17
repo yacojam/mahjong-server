@@ -50,6 +50,10 @@ exports.updateRoomID = function(userid, roomid) {
   return DBBase.update('nv_users', { roomid }, `userid='${userid}'`)
 }
 
+exports.updateUserInfo = function(userid, record) {
+  return DBBase.update('nv_users', record, `userid='${userid}'`)
+}
+
 /** 获取用户当前的房卡数量 **/
 exports.getCardNum = async function(userid) {
   let ret = await DBBase.select('nv_users', `userid='${userid}'`, ['card'])

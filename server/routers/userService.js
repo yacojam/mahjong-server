@@ -67,14 +67,14 @@ router.get('/get_account_info', async (ctx, next) => {
   if (isValid) {
     var userData = await UserDao.getUserDataByUserid(userid)
     if (userData) {
-      var ret = { ...userData, token }
-      if (ret.roomid.length > 0) {
-        var isroomValid = roomManager.isRoomValid(ret.roomid)
+      if (userData.roomid.length > 0) {
+        var isroomValid = roomManager.isRoomValid(userData.roomid)
         if (!isroomValid) {
-          await UserDao.updateRoomID(user.userid, '')
-          ret.roomid = ''
+          await UserDao.updateRoomID(userData.userid, '')
+          userData.roomid = ''
         }
       }
+      var ret = { ...userData, token }
       console.log('get account result : ' + ret)
       ctx.json = ret
     } else {
@@ -84,4 +84,27 @@ router.get('/get_account_info', async (ctx, next) => {
     ctx.error = ErrorType.AccountValidError
   }
 })
+
+router.get('/update_account_info', async (ctx, next) => {
+  let userid = ctx.query.userid
+  let token = ctx.query.token
+  let record = ctx.query.fields
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    try {
+      await UserDao.updateUserInfo(userid, record)
+      let user = await UserDao.getUserDataByUserid(userid)
+      ctx.json = user
+    } catch (e) {
+      console.log(e)
+      ctx.error = {
+        code: -1,
+        message: e.message || e.toString
+      }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
 module.exports = router
