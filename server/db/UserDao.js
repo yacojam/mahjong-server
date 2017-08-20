@@ -19,7 +19,7 @@ exports.updateOrCreateWXAccount = async function(wxData) {
     await DBBase.update('nv_users', userData, `wxid='${unionid}'`)
   }
   user = DBBase.select('nv_users', `wxid='${wxid}'`)
-  return { ...user, isNew }
+  return Object.assign({}, user, { isNew }) //{ ...user, isNew }
 }
 
 exports.getOrCreateAccount = async function(account) {
@@ -31,7 +31,7 @@ exports.getOrCreateAccount = async function(account) {
     await DBBase.insert('nv_users', account)
     user = await DBBase.select('nv_users', `account='${account}'`)
   }
-  return { ...user, isNew }
+  return Object.assign({}, user, { isNew }) //{ ...user, isNew }
 }
 
 exports.getUserDataByWxid = function(wxid) {

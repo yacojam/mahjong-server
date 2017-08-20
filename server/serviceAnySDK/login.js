@@ -21,7 +21,7 @@ router.post('/anylogin', async (ctx, next) => {
         user.roomid = ''
       }
     }
-    let ret = { ...user, token }
+    let ret = Object.assign({}, user, { token }) //{ ...user, token }
     anySDKData.data = ret
   }
   ctx.json = anySDKData

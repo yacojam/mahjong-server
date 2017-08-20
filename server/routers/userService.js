@@ -10,16 +10,18 @@ const weixinService = require('../service/weixinService')
 router.post('/login', async (ctx, next) => {
   try {
     let account = ctx.request.body.account
-    let userData = await UserDao.getOrCreateAccount(account)
-    let token = tokenManager.generateToken(userid)
+    let user = await UserDao.getOrCreateAccount(account)
+    let token = tokenManager.generateToken(user.userid)
     if (user.roomid.length > 0) {
       if (!roomManager.isRoomValid(user.roomid)) {
         await UserDao.updateRoomID(user.userid, '')
         user.roomid = ''
       }
     }
+    let ret = Object.assign({}, user, { token })
     console.log('login result : ', ret)
-    ctx.json = { ...userData, token }
+    ctx.json = ret
+    //ctx.json = { ...userData, token }
   } catch (e) {
     console.log(e)
     ctx.error = {
@@ -47,7 +49,8 @@ router.post('/weixin_login', async ctx => {
         user.roomid = ''
       }
     }
-    let ret = { ...user, token }
+    let ret = Object.assign({}, user, { token })
+    //let ret = { ...user, token }
     console.log('login result : ', ret)
     await weixinService.saveUser(weixinUser, openid)
     ctx.json = ret
@@ -74,7 +77,8 @@ router.get('/get_account_info', async (ctx, next) => {
           userData.roomid = ''
         }
       }
-      var ret = { ...userData, token }
+      //var ret = { ...userData, token }
+      let ret = Object.assign({}, userData, { token })
       console.log('get account result : ' + ret)
       ctx.json = ret
     } else {

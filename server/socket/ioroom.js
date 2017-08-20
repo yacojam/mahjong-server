@@ -20,7 +20,7 @@ async function dissolveRoom(rpid) {
             roomManager.delRoom(rpid)
             connectionManager.del(seat.userid)
             //更新数据库信息, 加await
-            await userDao.sycn_update_roomid_of_userid('', seat.userid)
+            await userDao.updateRoomID(seat.userid, '')
             socket.disconnect()
         }
     }
@@ -31,7 +31,8 @@ function bind(socket) {
         if (socket.userid != null) {
             return
         }
-        userData = typeof userData === 'string' ?  JSON.parse(userData) : userData
+        userData =
+            typeof userData === 'string' ? JSON.parse(userData) : userData
 
         var ret = {}
         var userid = userData.userid
@@ -60,7 +61,7 @@ function bind(socket) {
         var seat = room.seats[index]
         var isNewUser = seat.index === -1
         if (isNewUser) {
-            let dbData = await userDao.sync_get_account_info_by_userid(userid)
+            let dbData = await userDao.getUserDataByUserid(userid)
             seat.userid = userid
             seat.username = dbData.name
             seat.headimg = dbData.headimg
@@ -92,7 +93,8 @@ function bind(socket) {
     })
 
     socket.on('user_exit', async userData => {
-        userData = typeof userData === 'string' ?  JSON.parse(userData) : userData
+        userData =
+            typeof userData === 'string' ? JSON.parse(userData) : userData
 
         var userid = socket.userid
         if (userid == null || userid !== userData.userid) {
@@ -117,7 +119,7 @@ function bind(socket) {
         index = roomUtils.getUserIndex(room, userid)
         room.seat[index] = { userid: 0, index: -1 }
         //更新数据库用户信息,加await
-        await userDao.sycn_update_roomid_of_userid('', userid)
+        await userDao.updateRoomID(userid, '')
         //清除信息
         roomManager.delUid(userid)
         connectionManager.del(userid)
@@ -128,7 +130,8 @@ function bind(socket) {
     //解散房间
     socket.on('user_dissolve', async userData => {
         let userid = socket.userid
-        userData = typeof userData === 'string' ?  JSON.parse(userData) : userData
+        userData =
+            typeof userData === 'string' ? JSON.parse(userData) : userData
         if (userid == null || userid !== userData.userid) {
             return
         }
@@ -190,7 +193,7 @@ function bind(socket) {
         let room = roomManager.getRoom(rpid)
         let seat = room.seats.find(s => s.userid === userid)
 
-        action = typeof action === 'string' ?  JSON.parse(action) : action
+        action = typeof action === 'string' ? JSON.parse(action) : action
         actionHandle(room, seat, action)
     })
 
