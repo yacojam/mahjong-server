@@ -41,9 +41,9 @@ router.post('/weixin_login', async ctx => {
       tokenInfo.access_token,
       tokenInfo.openid
     )
-    let user = await UserDao.updateOrCreateWXAccount(wxData)
+    let user = await UserDao.updateOrCreateWXAccount(userinfo)
     let token = tokenManager.generateToken(user.userid)
-    if (user.roomid.length > 0) {
+    if (user.roomid && user.roomid.length > 0) {
       if (!roomManager.isRoomValid(user.roomid)) {
         await UserDao.updateRoomID(user.userid, '')
         user.roomid = ''
@@ -52,7 +52,7 @@ router.post('/weixin_login', async ctx => {
     let ret = Object.assign({}, user, { token })
     //let ret = { ...user, token }
     console.log('login result : ', ret)
-    await weixinService.saveUser(weixinUser, openid)
+    // await weixinService.saveUser(userinfo, tokenInfo.openid)
     ctx.json = ret
   } catch (e) {
     console.log(e)

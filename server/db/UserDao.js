@@ -2,6 +2,7 @@ const DBBase = require('./DBBase')
 
 exports.updateOrCreateWXAccount = async function(wxData) {
   let { nickname, sex, city, province, headimgurl, unionid } = wxData
+  const wxid = unionid
   let userData = {
     wxid: unionid,
     name: nickname,
