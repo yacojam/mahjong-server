@@ -20,10 +20,10 @@ router.get('/get_rules', async (ctx, next) => {
 })
 
 //创建房间
-router.get('/create_private_room', async (ctx, next) => {
-  let userid = ctx.query.userid
-  let token = ctx.query.token
-  let roomConfigs = ctx.query.roomConfigs
+router.post('/create_private_room', async (ctx, next) => {
+  let userid = ctx.request.body.userid
+  let token = ctx.request.body.token
+  let roomConfigs = ctx.request.body.roomConfigs
   if (typeof roomConfigs === 'string') {
     roomConfigs = JSON.parse(roomConfigs)
   }
