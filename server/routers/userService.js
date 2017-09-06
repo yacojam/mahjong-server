@@ -63,23 +63,22 @@ router.post('/weixin_login', async ctx => {
   }
 })
 
-router.get('/get_account_info', async (ctx, next) => {
-  var userid = ctx.query.userid
-  var token = ctx.query.token
+router.post('/quick_login', async (ctx, next) => {
+  var userid = ctx.request.body.userid
+  var token = ctx.request.body.token
   var isValid = await tokenManager.isAccountValid(userid, token)
   if (isValid) {
-    var userData = await UserDao.getUserDataByUserid(userid)
-    if (userData) {
-      if (userData.roomid.length > 0) {
-        var isroomValid = roomManager.isRoomValid(userData.roomid)
-        if (!isroomValid) {
-          await UserDao.updateRoomID(userData.userid, '')
-          userData.roomid = ''
+    var user = await UserDao.getUserDataByUserid(userid)
+    if (user) {
+      if (user.roomid && user.roomid.length > 0) {
+        if (!roomManager.isRoomValid(user.roomid)) {
+          await UserDao.updateRoomID(user.userid, '')
+          user.roomid = ''
         }
       }
       //var ret = { ...userData, token }
-      let ret = Object.assign({}, userData, { token })
-      console.log('get account result : ' + ret)
+      let ret = Object.assign({}, user, { token })
+      console.log('login result : ' + ret)
       ctx.json = ret
     } else {
       ctx.error = ErrorType.AccountError
