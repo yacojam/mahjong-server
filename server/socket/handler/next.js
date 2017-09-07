@@ -16,6 +16,7 @@ const RoomState = {
 async function getRoomData(room, uid) {
 	let ret = {}
 	let {
+		roomPresentId,
 		state,
 		conf,
 		seats,
@@ -74,6 +75,7 @@ async function getRoomData(room, uid) {
 		})
 	ret.success = true
 	ret.data = {
+		roomId: roomPresentId,
 		isJuSameWithRoom,
 		state,
 		conf,
