@@ -29,7 +29,7 @@ exports.getOrCreateAccount = async function(account) {
   if (user == null) {
     isNew = true
     let record = { account, wxid: '', name: '小白', sex: 1, headimg: '' }
-    await DBBase.insert('nv_users', account)
+    await DBBase.insert('nv_users', record)
     user = await DBBase.select('nv_users', `account='${account}'`)
   }
   return Object.assign({}, user, { isNew }) //{ ...user, isNew }

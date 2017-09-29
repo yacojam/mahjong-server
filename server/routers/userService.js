@@ -12,7 +12,7 @@ router.post('/login', async (ctx, next) => {
     let account = ctx.request.body.account
     let user = await UserDao.getOrCreateAccount(account)
     let token = tokenManager.generateToken(user.userid)
-    if (user.roomid.length > 0) {
+    if (user.roomid && user.roomid.length > 0) {
       if (!roomManager.isRoomValid(user.roomid)) {
         await UserDao.updateRoomID(user.userid, '')
         user.roomid = ''
