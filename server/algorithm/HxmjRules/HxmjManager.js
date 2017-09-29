@@ -149,7 +149,8 @@ function isQueOK(shouPais, desPai, QueType) {
   return pais.every(e => CommonRules.getPaiType(e) !== QueType)
 }
 
-exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
+//ln为剩余牌的数量，当ln >= 4的时候才能碰；当ln > 4的时候才能杠
+exports.getActions = function(shouPais, pengPais, action, desPai, QueType, ln) {
   var actions = []
   let desType = CommonRules.getPaiType(desPai)
   let queOk = isQueOK(shouPais, desPai, QueType)
@@ -165,10 +166,16 @@ exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
         }
         var num = CommonRules.getPaiNum(shouPais, desPai)
         if (num == 3) {
-          actions.push(Action.makeupAction(Action.ACTION_PGANG, desPai))
-          actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
+          if (ln > 4) {
+            actions.push(Action.makeupAction(Action.ACTION_PGANG, desPai))
+          }
+          if (ln >= 4) {
+            actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
+          }
         } else if (num == 2) {
-          actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
+          if (ln >= 4) {
+            actions.push(Action.makeupAction(Action.ACTION_PENG, desPai))
+          }
         }
       }
       break //别人弯杠的牌，只能产生抢杠胡
@@ -191,7 +198,9 @@ exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
       if (wgpais.length > 0) {
         wgpais.forEach(function(e) {
           if (CommonRules.getPaiType(e) !== QueType) {
-            actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
+            if (ln > 4) {
+              actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
+            }
           }
         })
       } //暗杠检测
@@ -199,7 +208,9 @@ exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
       if (agpais.length > 0) {
         agpais.forEach(function(e) {
           if (CommonRules.getPaiType(e) !== QueType) {
-            actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
+            if (ln > 4) {
+              actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
+            }
           }
         })
       }
@@ -215,7 +226,9 @@ exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
       if (wgpais.length > 0) {
         wgpais.forEach(function(e) {
           if (CommonRules.getPaiType(e) !== QueType) {
-            actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
+            if (ln > 4) {
+              actions.push(Action.makeupAction(Action.ACTION_WGANG, e))
+            }
           }
         })
       } //暗杠检测
@@ -223,7 +236,9 @@ exports.getActions = function(shouPais, pengPais, action, desPai, QueType) {
       if (agpais.length > 0) {
         agpais.forEach(function(e) {
           if (CommonRules.getPaiType(e) !== QueType) {
-            actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
+            if (ln > 4) {
+              actions.push(Action.makeupAction(Action.ACTION_ANGANG, e))
+            }
           }
         })
       }

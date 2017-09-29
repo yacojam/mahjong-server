@@ -30,7 +30,8 @@ async function otherWgUserAction(room, seat, action) {
 			seatItem.pengPais,
 			Action.ACTION_WGANG,
 			action.pai,
-			seatItem.que
+			seatItem.que,
+			room.leftPais.length
 		)
 		if (seatItem.actions.length > 0) {
 			Publish.sendActions(room, seatItem)

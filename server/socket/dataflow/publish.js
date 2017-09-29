@@ -110,7 +110,7 @@ async function publishWanGangAction(room, seat, gPai) {
 }
 
 async function publishHuAction(room, seat) {
-	ret = room.seats.map(s => {
+	let ret = room.seats.map(s => {
 		let {
 			userid,
 			index,
@@ -142,6 +142,20 @@ async function publishHuAction(room, seat) {
 	})
 }
 
+async function publishLiuju(room) {
+	let ret = room.seats.map(s => {
+		let { userid, index, shouPais } = s
+		return { userid, index, shouPais }
+	})
+	room.seats.forEach(seatItem => {
+		connectionManager.sendMessage(seatItem.userid, 'game_liuju_push', {
+			state: room.state,
+			userid: seat.userid,
+			ret: ret
+		})
+	})
+}
+
 module.exports = {
 	publishGameStart,
 	publishDingQue,
@@ -154,5 +168,6 @@ module.exports = {
 	publishAnGangAction,
 	publishPGangAction,
 	publishWanGangAction,
-	publishHuAction
+	publishHuAction,
+	publishLiuju
 }

@@ -141,6 +141,11 @@ async function startRoom(room) {
 }
 
 async function moAction(room, pAction, gang = false) {
+	if (room.leftPais.length === 0) {
+		endGameWithLiuJu(room)
+		await Publish.publishLiuju(room)
+		return
+	}
 	let seat = room.seats[room.index]
 	let moPai = gang ? room.leftPais.shift() : room.leftPais.pop()
 	let actions = HXMJManager.getActions(
@@ -148,7 +153,8 @@ async function moAction(room, pAction, gang = false) {
 		seat.pengPais,
 		pAction,
 		moPai,
-		seat.que
+		seat.que,
+		room.leftPais.length
 	)
 	if (actions.length === 0) {
 		actions.push(Action.makeupAction(Action.ACTION_CHU, 0))
@@ -161,6 +167,16 @@ async function moAction(room, pAction, gang = false) {
 	await Publish.sendActions(room, seat)
 }
 
+function endGameWithLiuJu(room) {
+	room.pendingType = Pending.PENDING_TYPE_NULL
+	room.seats.forEach(seatItem => {
+		seatItem.ready = false
+		seatItem.actions = []
+		seatItem.pendingAction = null
+	})
+	room.state = RoomState.GAMEOVER
+}
+
 async function startAction(room) {
 	room.state = RoomState.PLAY
 	let seat = room.seats[room.index]
@@ -171,7 +187,8 @@ async function startAction(room) {
 		[],
 		Action.ACTION_MO,
 		moPai,
-		seat.que
+		seat.que,
+		room.leftPais.length
 	)
 	if (actions.length === 0) {
 		actions.push(Action.makeupAction(Action.ACTION_CHU, 0))
