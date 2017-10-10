@@ -28,7 +28,7 @@ async function dissolveRoom(rpid) {
 
 async function finishRoom(rpid) {
     var room = roomManager.getRoom(rpid)
-    await.userDao.deleteCardNum(room.createUid, room.rule.numOfJu)
+    await userDao.deleteCardNum(room.createUid, room.rule.numOfJu)
     for (let seat of room.seats) {
         if (seat.userid > 0) {
             let socket = connectionManager.get(seat.userid)
@@ -43,7 +43,6 @@ async function finishRoom(rpid) {
         }
     }
     roomManager.delRoom(rpid)
-
 }
 
 function bind(socket) {
