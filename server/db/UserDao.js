@@ -60,3 +60,10 @@ exports.getCardNum = async function(userid) {
   let ret = await DBBase.select('nv_users', `userid='${userid}'`, ['card'])
   return ret ? ret.card : 0
 }
+
+//
+exports.deleteCardNum = async function(userid, cardNum) {
+  let card = await this.getCardNum(userid)
+  card -= cardNum
+  return DBBase.update('nv_users', { card }, `userid='${userid}'`)
+}

@@ -17,13 +17,33 @@ async function dissolveRoom(rpid) {
                 socket.emit('room_dissoved', {})
             }
             roomManager.delUid(seat.userid)
-            roomManager.delRoom(rpid)
             connectionManager.del(seat.userid)
             //更新数据库信息, 加await
             await userDao.updateRoomID(seat.userid, '')
             socket.disconnect()
         }
     }
+    roomManager.delRoom(rpid)
+}
+
+async function finishRoom(rpid) {
+    var room = roomManager.getRoom(rpid)
+    await.userDao.deleteCardNum(room.createUid, room.rule.numOfJu)
+    for (let seat of room.seats) {
+        if (seat.userid > 0) {
+            let socket = connectionManager.get(seat.userid)
+            if (socket != null) {
+                socket.emit('room_finished', {})
+            }
+            roomManager.delUid(seat.userid)
+            connectionManager.del(seat.userid)
+            //更新数据库信息, 加await
+            await userDao.updateRoomID(seat.userid, '')
+            socket.disconnect()
+        }
+    }
+    roomManager.delRoom(rpid)
+
 }
 
 function bind(socket) {
@@ -194,7 +214,10 @@ function bind(socket) {
         let seat = room.seats.find(s => s.userid === userid)
 
         action = typeof action === 'string' ? JSON.parse(action) : action
-        actionHandle(room, seat, action)
+        await actionHandle(room, seat, action)
+        if (room.state === RoomState.ROOMOVER) {
+            await finishRoom(rpid)
+        }
     })
 
     socket.on('game_ping', () => {
