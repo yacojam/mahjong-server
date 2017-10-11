@@ -48,7 +48,7 @@ function updateRoom(roomPresentId) {
 function delRoom(roomPresentId) {
 	delete manager[roomPresentId]
 	ids.delete(roomPresentId)
-	roomRedisDao.deleteRoom(rpid)
+	roomRedisDao.deleteRoom(roomPresentId)
 }
 
 function setRidForUid(rpid, uid) {
