@@ -21,7 +21,7 @@ function getEmptyIndex(room) {
 }
 
 function isCreator(room, userid) {
-    return room.createUid === userid
+    return room.createUid == userid
 }
 
 function canStart(room) {
