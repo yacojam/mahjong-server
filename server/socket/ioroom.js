@@ -135,8 +135,8 @@ function bind(socket) {
             false
         )
 
-        sIndex = roomUtils.getUserIndex(room, userid)
-        room.seat[sIndex] = { userid: 0, index: -1 }
+        index = roomUtils.getUserIndex(room, userid)
+        room.seats[index] = { userid: 0, index: -1 }
         //更新数据库用户信息,加await
         await userDao.updateRoomID(userid, '')
         //清除信息
