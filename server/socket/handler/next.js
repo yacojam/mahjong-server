@@ -40,7 +40,7 @@ async function getRoomData(room, uid) {
 			let online = connectionManager.get(userid) != null
 			let isCreator = seat.isCreator
 			console.log(shouPais)
-			let shouPaisNum = shouPais.length
+			let shouPaisNum = shouPais ? shouPais.length : null
 			if (userid !== uid) {
 				actions = []
 				pendingAction = null
