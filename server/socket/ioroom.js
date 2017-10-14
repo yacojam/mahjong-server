@@ -47,6 +47,7 @@ async function finishRoom(rpid) {
 
 function bind(socket) {
     socket.on('user_join', async userData => {
+        console.log('user_join')
         if (socket.userid != null) {
             return
         }
