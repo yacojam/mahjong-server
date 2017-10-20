@@ -220,6 +220,14 @@ function bind(socket) {
         }
     })
 
+    socket.on('voice_msg', data => {
+        let userid = socket.userid
+        if (userid == null) {
+            return
+        }
+        broadcast.broadcastInRoom('voice_data', data, userid, true)
+    })
+
     socket.on('game_ping', () => {
         let userid = socket.userid
         if (userid == null) {
