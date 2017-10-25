@@ -225,7 +225,15 @@ function bind(socket) {
         if (userid == null) {
             return
         }
-        broadcast.broadcastInRoom('voice_data', data, userid, true)
+        msgData = typeof data === 'string' ? JSON.parse(data) : data
+        let { msg, time } = msgData
+        console.log(msg)
+        broadcast.broadcastInRoom(
+            'voice_data',
+            { msg, time, userid },
+            userid,
+            true
+        )
     })
 
     socket.on('game_ping', () => {
