@@ -50,9 +50,7 @@ router.post('/weixin_login', async ctx => {
       }
     }
     let ret = Object.assign({}, user, { token })
-    //let ret = { ...user, token }
     console.log('login result : ', ret)
-    // await weixinService.saveUser(userinfo, tokenInfo.openid)
     ctx.json = ret
   } catch (e) {
     console.log(e)
@@ -76,7 +74,6 @@ router.post('/quick_login', async (ctx, next) => {
           user.roomid = ''
         }
       }
-      //var ret = { ...userData, token }
       let ret = Object.assign({}, user, { token })
       console.log('login result : ' + ret)
       ctx.json = ret
