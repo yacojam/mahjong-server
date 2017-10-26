@@ -19,7 +19,7 @@ exports.updateOrCreateWXAccount = async function(wxData) {
   } else {
     await DBBase.update('nv_users', userData, `wxid='${unionid}'`)
   }
-  user = DBBase.select('nv_users', `wxid='${wxid}'`)
+  user = await DBBase.select('nv_users', `wxid='${wxid}'`)
   return Object.assign({}, user, { isNew }) //{ ...user, isNew }
 }
 
@@ -67,3 +67,19 @@ exports.deleteCardNum = async function(userid, cardNum) {
   card -= cardNum
   return DBBase.update('nv_users', { card }, `userid='${userid}'`)
 }
+
+// function test() {
+//   let data = {
+//     nickname: 'aaa',
+//     sex: 2,
+//     city: 'nanjing',
+//     province: 'test',
+//     headimgurl: null,
+//     unionid: 'teststt'
+//   }
+//   exports.updateOrCreateWXAccount(data).then(ret => {
+//     console.log(ret)
+//   })
+// }
+
+// test()

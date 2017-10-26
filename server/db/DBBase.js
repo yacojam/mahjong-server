@@ -99,9 +99,13 @@ function insertOrUpdate(table, record, condition) {
     query(sql, (error, results, fields) => {
       const count = results[0].count
       if (count == 0) {
-        insert(table, record).then(resolve).catch(reject)
+        insert(table, record)
+          .then(resolve)
+          .catch(reject)
       } else {
-        update(table, record, condition).then(resolve).catch(reject)
+        update(table, record, condition)
+          .then(resolve)
+          .catch(reject)
       }
     })
   })
