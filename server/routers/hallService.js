@@ -19,12 +19,12 @@ router.get('/get_hall_info', async (ctx, next) => {
 					user.roomid = ''
 				}
 			}
-			let userInfo = Object.assign({}, user, { token })
 			let notice = await noticeManager.getNotice()
 			if (notice == null) {
-				notice = '新 鲜 出 炉 的 和 县 麻 将'
+				notice = '新 鲜 出 炉 的 和 县 麻 将 222'
 			}
-			ctx.json = { userInfo, notice }
+			let ret = Object.assign({}, user, { token, notice })
+			ctx.json = ret
 		} else {
 			ctx.error = ErrorType.AccountError
 		}

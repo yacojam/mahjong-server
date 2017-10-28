@@ -1,6 +1,7 @@
 const UserDao = require('../db/UserDao')
 const tokenManager = require('../redis/tokenRedisDao')
 const roomManager = require('../roomManager/roomManager')
+const noticeManager = require('../redis/noticeRedisDao')
 const ErrorType = require('./ServerError')
 const Router = require('koa-router')
 const router = new Router()
@@ -18,7 +19,11 @@ router.post('/login', async (ctx, next) => {
         user.roomid = ''
       }
     }
-    let ret = Object.assign({}, user, { token })
+    let notice = await noticeManager.getNotice()
+    if (notice == null) {
+      notice = '新 鲜 出 炉 的 和 县 麻 将'
+    }
+    let ret = Object.assign({}, user, { token, notice })
     console.log('login result : ', ret)
     ctx.json = ret
     //ctx.json = { ...userData, token }
@@ -49,7 +54,11 @@ router.post('/weixin_login', async ctx => {
         user.roomid = ''
       }
     }
-    let ret = Object.assign({}, user, { token })
+    let notice = await noticeManager.getNotice()
+    if (notice == null) {
+      notice = '新 鲜 出 炉 的 和 县 麻 将'
+    }
+    let ret = Object.assign({}, user, { token, notice })
     console.log('login result : ', ret)
     ctx.json = ret
   } catch (e) {
@@ -74,7 +83,11 @@ router.post('/quick_login', async (ctx, next) => {
           user.roomid = ''
         }
       }
-      let ret = Object.assign({}, user, { token })
+      let notice = await noticeManager.getNotice()
+      if (notice == null) {
+        notice = '新 鲜 出 炉 的 和 县 麻 将'
+      }
+      let ret = Object.assign({}, user, { token, notice })
       console.log('login result : ' + ret)
       ctx.json = ret
     } else {
