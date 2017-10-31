@@ -18,6 +18,7 @@ class roomInfo {
             seat.online = false
             seat.ready = false
             seat.isCreator = false
+            seat.sex = 1
 
             //game info
             seat.score = 0

@@ -6,6 +6,25 @@ var redis = new Redis({
   password: 'Njnova211'
 })
 
+function keys() {
+  return new Promise(resolve => {
+    redis.keys('*', function(err, data) {
+      if (err) {
+        resolve(null)
+      }
+      resolve(data)
+    })
+  })
+}
+
+function clear() {
+  keys().then(keys => {
+    keys.forEach(key => {
+      del(key)
+    })
+  })
+}
+
 function set(a, b) {
   redis.set(a, b)
 }
@@ -45,7 +64,7 @@ function smembers(a) {
   })
 }
 
-module.exports = { set, get, del, sadd, srem, smembers }
+module.exports = { keys, clear, set, get, del, sadd, srem, smembers }
 
 // sadd('a', 'b')
 // sadd('a', 'c')
