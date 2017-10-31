@@ -73,7 +73,8 @@ async function endGameWithHu(room, seat, scores, isZimo, pai) {
 	seat.moMoney += 3 * scores[1] * room.rule.dfOfJu / 5
 	seat.gameResult.deltaScore = '+' + winScore
 	seat.gameResult.deltaMo = '+' + 3 * scores[1] * room.rule.dfOfJu / 5
-
+	seat.score += winScore
+	seat.moMoney += 3 * scores[1] * room.rule.dfOfJu / 5
 	room.state = RoomState.GAMEOVER
 	if (isOver) {
 		room.seats.forEach(s => {
