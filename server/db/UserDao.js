@@ -68,6 +68,12 @@ exports.deleteCardNum = async function(userid, cardNum) {
   return DBBase.update('nv_users', { card }, `userid='${userid}'`)
 }
 
+exports.addCardNum = async function(userid, cardNum) {
+  let card = await this.getCardNum(userid)
+  card += cardNum
+  return DBBase.update('nv_users', { card }, `userid='${userid}'`)
+}
+
 // function test() {
 //   let data = {
 //     nickname: 'aaa',

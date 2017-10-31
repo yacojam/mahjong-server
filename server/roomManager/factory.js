@@ -57,6 +57,7 @@ async function createRoom(userid, userCardNum, userConfigs) {
 			roomManager.setRoom(roomPresentId, room)
 			//更新数据库用户信息,加await
 			await userDao.updateRoomID(userid, roomPresentId)
+			await userDao.deleteCardNum(room.createUid, room.rule.numOfJu)
 			return ret
 		}
 	}
