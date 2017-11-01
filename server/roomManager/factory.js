@@ -31,7 +31,7 @@ async function createRoom(userid, userCardNum, userConfigs) {
 		var roomPresentId = ensureRoomValid()
 		var roomRule = ruleUtil.getRoomRule(userConfigs)
 		//加await
-		var roomid = await roomDao.sync_create_room(
+		var roomid = await roomDao.createRoom(
 			userid,
 			roomPresentId,
 			Date.now(),
