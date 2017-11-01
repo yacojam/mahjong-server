@@ -90,6 +90,7 @@ function bind(socket) {
             seat.ready = isCreator
             seat.index = index
             seat.isCreator = isCreator
+            seat.sex = dbData.sex
             roomManager.setRidForUid(roomPresentId, userid)
         }
         connectionManager.bind(socket, userid)
@@ -137,7 +138,7 @@ function bind(socket) {
         )
 
         index = roomUtils.getUserIndex(room, userid)
-        room.seats[index] = { userid: 0, index: -1 }
+        roomUtils.clearSeat(room, index)
         //更新数据库用户信息,加await
         await userDao.updateRoomID(userid, '')
         //清除信息

@@ -33,13 +33,12 @@ async function getRoomData(room, uid) {
 			return seat.userid > 0 && seat.index >= 0
 		})
 		.map(seat => {
-			let { userid, username, headimg, sip, index, ready } = seat
+			let { userid, username, headimg, sip, index, ready, sex } = seat
 			let { shouPais, chuPais, pengPais, gangPais, anGangPais } = seat
 			let { score, moMoney, que, pendingAction, actions } = seat
 			let { gameResult, juResult, roomResult } = seat
 			let online = connectionManager.get(userid) != null
 			let isCreator = seat.isCreator
-			console.log(shouPais)
 			let shouPaisNum = shouPais ? shouPais.length : null
 			if (userid !== uid) {
 				actions = []
@@ -53,6 +52,7 @@ async function getRoomData(room, uid) {
 				username,
 				headimg,
 				sip,
+				sex,
 				index,
 				ready,
 				isCreator,

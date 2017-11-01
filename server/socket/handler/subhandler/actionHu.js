@@ -24,18 +24,18 @@ async function hu(room, seat, action) {
 			allChupais.push(pai)
 		})
 	})
-	// const scores = HXMJManager.getScore(
-	// 	pengPais,
-	// 	gangPais,
-	// 	anGangPais,
-	// 	shouPais,
-	// 	action.pAction,
-	// 	action.pai,
-	// 	allChupais,
-	// 	room.rule,
-	// 	que
-	// )
-	const scores = [20, 0]
+	const scores = HXMJManager.getScore(
+		pengPais,
+		gangPais,
+		anGangPais,
+		shouPais,
+		action.pAction,
+		action.pai,
+		allChupais,
+		room.rule,
+		que
+	)
+	//const scores = [20, 0]
 	let isZimo =
 		action.pAction === Action.ACTION_ZIMO ||
 		action.pAction === Action.ACTION_GSHUA
