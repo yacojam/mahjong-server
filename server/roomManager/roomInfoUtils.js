@@ -9,6 +9,10 @@ function getUserIndex(room, userid) {
     return index
 }
 
+function getUserSeat(room, userid) {
+    return room.seats[getUserIndex(room, userid)]
+}
+
 function getEmptyIndex(room) {
     var index = -1
     for (var i = 0; i < room.seats.length; i++) {
@@ -63,11 +67,13 @@ function clearSeat(room, index) {
     seat.gameResult = null
     seat.juResult = null
     seat.roomResult = null
+    seat.dissolved = false
     room.seats[index] = seat
 }
 
 module.exports = {
     getUserIndex,
+    getUserSeat,
     getEmptyIndex,
     isCreator,
     canStart,

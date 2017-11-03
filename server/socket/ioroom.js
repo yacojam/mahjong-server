@@ -8,7 +8,7 @@ const Next = require('./handler/next')
 const RoomState = Next.RoomState
 const actionHandle = require('./handler/handler')
 
-async function dissolveRoom(rpid) {
+async function dissolveRoom(rpid, addCard = true) {
     var room = roomManager.getRoom(rpid)
     for (let seat of room.seats) {
         if (seat.userid > 0) {
@@ -24,7 +24,9 @@ async function dissolveRoom(rpid) {
         }
     }
     roomManager.delRoom(rpid)
-    await userDao.addCardNum(room.createUid, room.rule.numOfJu)
+    if (addCard) {
+        await userDao.addCardNum(room.createUid, room.rule.numOfJu)
+    }
 }
 
 async function finishRoom(rpid) {
@@ -111,6 +113,9 @@ function bind(socket) {
                 false
             )
         }
+        if (room.dissolveId != null && room.dissolveUid != null) {
+            socket.emit('dissolve_request_push', { userid, time: 60000 })
+        }
     })
 
     socket.on('user_exit', async userData => {
@@ -129,6 +134,12 @@ function bind(socket) {
         if (roomUtils.isCreator(room, userid)) {
             return
         }
+        //牌局已经开始，建议走申请牌局解散
+        if (room.state != 0) {
+            socket.emit('want_dissolve')
+            return
+        }
+
         //通知其他玩家有人退出房间
         broadcast.broadcastInRoom(
             'user_exit_room',
@@ -161,12 +172,107 @@ function bind(socket) {
         if (rpid == null) {
             return
         }
+        var room = roomManager.getRoom(rpid)
         //非房主不能解散房间
-        if (!roomUtils.isCreator(roomManager.getRoom(rpid), userid)) {
+        if (!roomUtils.isCreator(room, userid)) {
+            return
+        }
+        //牌局已经开始，建议走申请牌局解散
+        if (room.state != 0) {
+            socket.emit('want_dissolve')
             return
         }
         //
         await dissolveRoom(rpid)
+    })
+
+    socket.on('dissolve_request', async userData => {
+        let userid = socket.userid
+        if (userid == null || userid !== userData.userid) {
+            return
+        }
+        let rpid = roomManager.getRidForUid(userid)
+        if (rpid == null) {
+            return
+        }
+        let room = roomManager.getRoom(rpid)
+        //已经有人在解散房间了
+        if (room.dissolveId != null) {
+            return
+        }
+        room.dissolveId = setTimeout(async () => {
+            if (room.dissolveId) {
+                room.dissolveId = null
+                room.dissolveUid = null
+                await dissolveRoom(rpid, false)
+            }
+        }, 62000)
+        room.dissolveUid = userid
+        roomUtils.getUserSeat(room, userid).dissolved = true
+        broadcast.broadcastInRoom(
+            'dissolve_request_push',
+            { userid, time: 60000 },
+            userid,
+            true
+        )
+    })
+
+    socket.on('dissolve_request_agree', async userData => {
+        let userid = socket.userid
+        if (userid == null || userid !== userData.userid) {
+            return
+        }
+        let rpid = roomManager.getRidForUid(userid)
+        if (rpid == null) {
+            return
+        }
+        let room = roomManager.getRoom(rpid)
+        //房间已经解散了
+        if (room.dissolveId == null) {
+            return
+        }
+        let seat = roomUtils.getUserSeat(room, userid)
+        if (!seat.dissolved) {
+            seat.dissolved = true
+            socket.emit('dissolve_agree_send_success')
+            let dissolved = room.seats.every(s => s.dissolved)
+            if (dissolved) {
+                room.dissolveId = null
+                room.dissolveUid = null
+                clearTimeout(room.dissolveId)
+                await dissolveRoom(rpid, false)
+            }
+        }
+    })
+
+    socket.on('dissolve_request_reject', async userData => {
+        let userid = socket.userid
+        if (userid == null || userid !== userData.userid) {
+            return
+        }
+        let rpid = roomManager.getRidForUid(userid)
+        if (rpid == null) {
+            return
+        }
+        let room = roomManager.getRoom(rpid)
+        //房间已经解散了
+        if (room.dissolveId == null) {
+            return
+        }
+        let seat = roomUtils.getUserSeat(room, userid)
+        if (seat.dissolved) {
+            return
+        }
+        clearTimeout(room.dissolveId)
+        room.dissolveId = null
+        room.dissolveUid = null
+        room.seats.forEach(s => (s.dissolved = false))
+        broadcast.broadcastInRoom(
+            'dissolve_request_failed',
+            { userid, time: 30000 },
+            userid,
+            false
+        )
     })
 
     socket.on('user_ready', async userData => {

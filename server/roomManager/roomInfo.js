@@ -36,6 +36,7 @@ class roomInfo {
             seat.gameResult = null
             seat.juResult = null
             seat.roomResult = null
+            seat.dissolved = false
             this.seats.push(seat)
         }
         this.sign = ''
@@ -48,6 +49,8 @@ class roomInfo {
         this.currentJu = 0
         this.currentGame = 0
         this.isJuSameWithRoom = rule.numOfJu === 1
+        this.dissolveId = null
+        this.dissolveUid = null
     }
 }
 
