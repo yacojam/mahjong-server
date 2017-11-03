@@ -99,6 +99,13 @@ function bind(socket) {
 
         //返回数据给客户端
         ret = await Next.getRoomData(room, userid)
+        if (room.dissolveId != null && room.dissolveUid != null) {
+            ret.data.dissolveData = {
+                userid,
+                time: 60000,
+                dissolved: seat.dissolved
+            }
+        }
         console.log(ret)
         socket.emit('user_join_result', ret)
 
@@ -112,9 +119,6 @@ function bind(socket) {
                 userid,
                 false
             )
-        }
-        if (room.dissolveId != null && room.dissolveUid != null) {
-            socket.emit('dissolve_request_push', { userid, time: 60000 })
         }
     })
 
@@ -200,11 +204,11 @@ function bind(socket) {
         if (room.dissolveId != null) {
             return
         }
-        room.dissolveId = setTimeout(async () => {
+        room.dissolveId = setTimeout(() => {
             if (room.dissolveId) {
                 room.dissolveId = null
                 room.dissolveUid = null
-                await dissolveRoom(rpid, false)
+                dissolveRoom(rpid, false)
             }
         }, 62000)
         room.dissolveUid = userid
