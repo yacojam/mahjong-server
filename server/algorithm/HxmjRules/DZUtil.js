@@ -125,7 +125,7 @@ function getAllTypeNum(ss, ps, gs, h) {
 
 function isQys(tns) {
 	let arr1 = tns.filter(e => e > 0)
-	return arr1.length === 1 && tns.findIndex(arr1[0]) < 3
+	return arr1.length === 1 && tns.findIndex(s => s == arr1[0]) < 3
 }
 
 function isCys(arr) {

@@ -4,6 +4,7 @@ const UserDao = require('../db/UserDao')
 const tokenManager = require('../redis/tokenRedisDao')
 const roomManager = require('../roomManager/roomManager')
 const noticeManager = require('../redis/noticeRedisDao')
+const ErrorType = require('./ServerError')
 
 //获取大厅的一些展示信息
 router.get('/get_hall_info', async (ctx, next) => {

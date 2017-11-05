@@ -323,13 +323,22 @@ class Export {
 
 function getLXTScoreWithPengPais(pengPais) {
   let num = 0
-  if (pengPais.findIndex(11) >= 0 && pengPais.findIndex(19) >= 0) {
+  if (
+    pengPais.findIndex(s => s == 11) >= 0 &&
+    pengPais.findIndex(s => s == 19) >= 0
+  ) {
     num++
   }
-  if (pengPais.findIndex(21) >= 0 && pengPais.findIndex(29) >= 0) {
+  if (
+    pengPais.findIndex(s => s == 21) >= 0 &&
+    pengPais.findIndex(s => s == 29) >= 0
+  ) {
     num++
   }
-  if (pengPais.findIndex(31) >= 0 && pengPais.findIndex(39) >= 0) {
+  if (
+    pengPais.findIndex(s => s == 31) >= 0 &&
+    pengPais.findIndex(s => s == 39) >= 0
+  ) {
     num++
   }
   return num == 0 ? 0 : num == 1 ? 5 : 15

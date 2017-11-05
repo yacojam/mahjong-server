@@ -90,15 +90,15 @@ async function endGameWithHu(room, seat, scores, isZimo, pai) {
 			if (isNa) {
 				if (room.currentGame == 1) {
 					if (s.userid === seat.userid) {
-						naMoney = dfOfJu * 3
+						naMoney = room.rule.dfOfJu * 3
 					} else {
-						naMoney = 0 - dfOfJu
+						naMoney = 0 - room.rule.dfOfJu
 					}
 				} else {
 					if (s.userid === seat.userid) {
-						naMoney = dfOfJu * 3 / 5 * 3
+						naMoney = room.rule.dfOfJu * 3 / 5 * 3
 					} else {
-						naMoney = 0 - dfOfJu * 3 / 5
+						naMoney = 0 - room.rule.dfOfJu * 3 / 5
 					}
 				}
 			}
