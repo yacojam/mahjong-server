@@ -58,16 +58,16 @@ async function endGameWithHu(room, seat, scores, isZimo, pai) {
 			if (s.score > scores[0]) {
 				winScore += scores[0]
 				s.score -= scores[0]
-				s.gameResult.deltaScore = scores[0]
+				s.gameResult.deltaScore = -scores[0]
 				isNa = false
 			} else {
 				winScore += s.score
-				s.gameResult.deltaScore = s.score
+				s.gameResult.deltaScore = -s.score
 				s.score = 0
 				isOver = true
 			}
 			s.moMoney -= scores[1] * room.rule.dfOfJu / 5
-			s.gameResult.deltaMo = scores[1] * room.rule.dfOfJu / 5
+			s.gameResult.deltaMo = -scores[1] * room.rule.dfOfJu / 5
 		}
 	})
 	seat.moMoney += 3 * scores[1] * room.rule.dfOfJu / 5
