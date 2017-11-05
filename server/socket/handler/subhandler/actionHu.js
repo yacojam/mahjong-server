@@ -15,6 +15,7 @@ async function hu(room, seat, action) {
 	room.index = room.seats.findIndex(u => u.userid === seat.userid)
 	room.dealerIndex = room.index
 	const { pengPais, gangPais, anGangPais, shouPais, que } = seat
+	let copyShouPais = shouPais.concat()
 	let allChupais = []
 	room.seats.forEach(u => {
 		allChupais = allChupais.concat(u.chuPais)
@@ -24,11 +25,29 @@ async function hu(room, seat, action) {
 			allChupais.push(pai)
 		})
 	})
+
+	console.log('计算')
+	console.log('ps' + pengPais)
+	console.log('gs' + gangPais)
+	console.log('ags' + anGangPais)
+	console.log('ss' + copyShouPais)
+	console.log('action' + action.pAction)
+	console.log('pai' + action.pai)
+	console.log('acs' + allChupais)
+	console.log('rule' + room.rule)
+	console.log('que' + que)
+	let isZimo =
+		action.pAction === Action.ACTION_ZIMO ||
+		action.pAction === Action.ACTION_GSHUA
+	if (isZimo) {
+		let index = copyShouPais.findIndex(s => s === action.pai)
+		copyShouPais.splice(index, 1)
+	}
 	const scores = HXMJManager.getScore(
 		pengPais,
 		gangPais,
 		anGangPais,
-		shouPais,
+		copyShouPais,
 		action.pAction,
 		action.pai,
 		allChupais,
@@ -36,9 +55,7 @@ async function hu(room, seat, action) {
 		que
 	)
 	//const scores = [20, 0]
-	let isZimo =
-		action.pAction === Action.ACTION_ZIMO ||
-		action.pAction === Action.ACTION_GSHUA
+
 	await endGameWithHu(room, seat, scores, isZimo, action.pai)
 }
 
@@ -70,7 +87,6 @@ async function endGameWithHu(room, seat, scores, isZimo, pai) {
 			s.gameResult.deltaMo = -scores[1] * room.rule.dfOfJu / 5
 		}
 	})
-	seat.moMoney += 3 * scores[1] * room.rule.dfOfJu / 5
 	seat.gameResult.deltaScore = winScore
 	seat.gameResult.deltaMo = 3 * scores[1] * room.rule.dfOfJu / 5
 	seat.score += winScore

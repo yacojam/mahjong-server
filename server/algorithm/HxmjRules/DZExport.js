@@ -12,6 +12,7 @@ class Export {
     this.allCs = allCs
     this.h = h
     this.ht = ht
+    console.log(ht)
     this.tingPais = tingPais
     this.tingOnly = tingPais.length == 1
     this.action = action
@@ -35,7 +36,7 @@ class Export {
 
   getMozi() {
     if (this.ht == 1) {
-      return this.qgh ? 4 : this.zm ? 2 : 0
+      return this.gsh ? 4 : this.zm ? 2 : 0
     }
     if (this.ht == 2) {
       return this.util.qys ? (this.zm ? 6 : 2) : this.zm ? 2 : 0
