@@ -124,7 +124,7 @@ async function endGameWithHu(room, seat, scores, isZimo, pai) {
 				s.roomResult.score += score
 				s.roomResult.moMoney += moMoney
 				s.roomResult.naMoney += naMoney
-				s.sum += sum
+				s.roomResult.sum += sum
 			} else {
 				s.roomResult = s.juResult
 			}
