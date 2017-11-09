@@ -20,7 +20,9 @@ async function dissolveRoom(rpid, addCard = true) {
             connectionManager.del(seat.userid)
             //更新数据库信息, 加await
             await userDao.updateRoomID(seat.userid, '')
-            socket.disconnect()
+            if (socket != null) {
+                socket.disconnect()
+            }
         }
     }
     roomManager.delRoom(rpid)
@@ -41,7 +43,9 @@ async function finishRoom(rpid) {
             connectionManager.del(seat.userid)
             //更新数据库信息, 加await
             await userDao.updateRoomID(seat.userid, '')
-            socket.disconnect()
+            if (socket != null) {
+                socket.disconnect()
+            }
         }
     }
     setTimeout(() => {
