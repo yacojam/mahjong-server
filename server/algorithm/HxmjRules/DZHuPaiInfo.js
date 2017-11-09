@@ -32,7 +32,7 @@ class HuPaiInfo {
 	getSanDKType(isSF) {
 		let type = 0
 		this.hpsis.forEach(e => {
-			let temp = e.getSanDKType(SF)
+			let temp = e.getSanDKType(isSF)
 			type = temp > type ? temp : type
 		})
 		return type
