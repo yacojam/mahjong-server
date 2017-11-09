@@ -44,7 +44,9 @@ async function finishRoom(rpid) {
             socket.disconnect()
         }
     }
-    roomManager.delRoom(rpid)
+    setTimeout(() => {
+        roomManager.delRoom(rpid)
+    }, 600000)
 }
 
 function bind(socket) {
@@ -69,6 +71,7 @@ function bind(socket) {
             socket.disconnect()
             return
         }
+
         var index = roomUtils.getUserIndex(room, userid)
         //没找到对应的位置
         if (index == -1) {
@@ -95,7 +98,6 @@ function bind(socket) {
             seat.sex = dbData.sex
             roomManager.setRidForUid(roomPresentId, userid)
         }
-        connectionManager.bind(socket, userid)
 
         //返回数据给客户端
         ret = await Next.getRoomData(room, userid)
@@ -108,7 +110,12 @@ function bind(socket) {
         }
         console.log(ret)
         socket.emit('user_join_result', ret)
+        if (room.state === RoomState.ROOMOVER) {
+            socket.disconnect()
+            return
+        }
 
+        connectionManager.bind(socket, userid)
         //通知其他客户端
         if (isNewUser) {
             broadcast.broadcastInRoom('new_user_come', seat, userid, false)
