@@ -109,7 +109,7 @@ async function publishWanGangAction(room, seat, gPai) {
 	})
 }
 
-async function publishHuAction(room, seat) {
+async function publishHuAction(room, seat, action) {
 	let ret = room.seats.map(s => {
 		let {
 			userid,
@@ -134,6 +134,7 @@ async function publishHuAction(room, seat) {
 	})
 	room.seats.forEach(seatItem => {
 		connectionManager.sendMessage(seatItem.userid, 'game_hu_push', {
+			action,
 			state: room.state,
 			turn: room.index,
 			userid: seat.userid,

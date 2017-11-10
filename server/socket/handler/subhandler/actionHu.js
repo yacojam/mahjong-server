@@ -12,6 +12,7 @@ async function hu(room, seat, action) {
 		seatItem.actions = []
 		seatItem.pendingAction = null
 	})
+	let oldIndex = room.index
 	room.index = room.seats.findIndex(u => u.userid === seat.userid)
 	room.dealerIndex = room.index
 	const { pengPais, gangPais, anGangPais, shouPais, que } = seat
@@ -55,11 +56,19 @@ async function hu(room, seat, action) {
 		que
 	)
 	//const scores = [20, 0]
-
-	await endGameWithHu(room, seat, scores, isZimo, action.pai)
+	// if (action.pAction === Action.ACTION_PAOHU) {
+	// 	//炮胡，需要将出牌的一方pop
+	// 	room.seats[oldIndex].chuPais.pop()
+	// }
+	// if (action.pAction === Action.ACTION_QGHU) {
+	// 	let gangPais = room.seats[oldIndex].gangPais
+	// 	let paiIndex = gangPais.findIndex(s => s === action.pai)
+	// 	gangPais.splice(paiIndex, 1)
+	// }
+	await endGameWithHu(room, seat, scores, isZimo, action.pai, action)
 }
 
-async function endGameWithHu(room, seat, scores, isZimo, pai) {
+async function endGameWithHu(room, seat, scores, isZimo, pai, action) {
 	if (!isZimo) {
 		seat.shouPais.push(pai)
 	}
@@ -136,7 +145,7 @@ async function endGameWithHu(room, seat, scores, isZimo, pai) {
 			room.state = RoomState.JUOVER
 		}
 	}
-	await Publish.publishHuAction(room, seat)
+	await Publish.publishHuAction(room, seat, action)
 }
 
 module.exports = hu
