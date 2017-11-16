@@ -101,6 +101,8 @@ function bind(socket) {
             seat.isCreator = isCreator
             seat.sex = dbData.sex
             roomManager.setRidForUid(roomPresentId, userid)
+        } else {
+            seat.online = true
         }
 
         //返回数据给客户端

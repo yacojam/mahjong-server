@@ -36,8 +36,8 @@ async function getRoomData(room, uid) {
 			let { userid, username, headimg, sip, index, ready, sex } = seat
 			let { shouPais, chuPais, pengPais, gangPais, anGangPais } = seat
 			let { score, moMoney, que, pendingAction, actions } = seat
-			let { gameResult, juResult, roomResult } = seat
-			let online = connectionManager.get(userid) != null
+			let { gameResult, juResult, roomResult, online } = seat
+			//let online = connectionManager.get(userid) != null
 			let isCreator = seat.isCreator
 			let shouPaisNum = shouPais ? shouPais.length : null
 			if (userid !== uid) {
