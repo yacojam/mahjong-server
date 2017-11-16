@@ -1,10 +1,10 @@
 const roomRule = require('./hxdzRule')
 
 const difengs = [10, 15, 25]
-const difengDescs = ['10元一刀', '15元一刀', '25元一刀']
+const difengDescs = ['10元一刀', '15元一刀', '25元一刀', '50元一刀']
 
 const cardRules = [1, 2, 4]
-const cardRulesDescs = ['一刀一打', '2刀连打', '一局4刀']
+const cardRulesDescs = ['一刀一打', '两刀连打', '一局四刀']
 
 const naRulesDescs = [
 	'逢双(除双杠双连)',

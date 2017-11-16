@@ -17,7 +17,7 @@ init()
 function query(sql, values, cb) {
   pool.getConnection((error, connection) => {
     if (error) {
-      return cb(error, null)
+      return typeof cb === 'function' && cb(error, null)
     }
 
     const args = [sql]

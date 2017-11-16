@@ -349,7 +349,6 @@ function bind(socket) {
         }
         msgData = typeof data === 'string' ? JSON.parse(data) : data
         let { msg, time } = msgData
-        console.log(msg)
         broadcast.broadcastInRoom(
             'voice_data',
             { msg, time, userid },
