@@ -1,6 +1,6 @@
 const roomRule = require('./hxdzRule')
 
-const difengs = [10, 15, 25]
+const difengs = [10, 15, 25, 50]
 const difengDescs = ['10元一刀', '15元一刀', '25元一刀', '50元一刀']
 
 const cardRules = [1, 2, 4]
