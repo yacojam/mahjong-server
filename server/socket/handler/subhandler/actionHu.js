@@ -100,7 +100,7 @@ async function endGameWithHu(room, seat, scores, isZimo, pai, action) {
 	seat.gameResult.deltaScore = winScore
 	seat.gameResult.deltaMo = 3 * scores[1] * room.rule.dfOfJu / 5
 	seat.score += winScore
-    seat.gameResult.score = seat.score
+	seat.gameResult.score = seat.score
 	seat.moMoney += 3 * scores[1] * room.rule.dfOfJu / 5
 	room.state = RoomState.GAMEOVER
 	// 一刀结束
@@ -131,14 +131,13 @@ async function endGameWithHu(room, seat, scores, isZimo, pai, action) {
 				}
 			}
 			let sum = moMoney + scoreMoney + naMoney
-			let deltaScore = score - 50
-			s.juResult = { score, moMoney, naMoney, sum, deltaScore}
+			s.juResult = { score, moMoney, naMoney, sum, scoreMoney }
 			if (s.roomResult) {
 				s.roomResult.score += score
 				s.roomResult.moMoney += moMoney
 				s.roomResult.naMoney += naMoney
 				s.roomResult.sum += sum
-				s.roomResult.deltaScore += deltaScore
+				s.roomResult.scoreMoney += scoreMoney
 			} else {
 				s.roomResult = s.juResult
 			}
