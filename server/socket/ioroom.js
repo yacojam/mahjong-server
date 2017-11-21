@@ -359,6 +359,46 @@ function bind(socket) {
         )
     })
 
+    socket.on('quick_chat', data => {
+        let userid = socket.userid
+        if (userid == null) {
+            return
+        }
+        msgData = typeof data === 'string' ? JSON.parse(data) : data
+        let index = msgData.index
+        broadcast.broadcastInRoom(
+            'quick_chat_data',
+            { index, userid },
+            userid,
+            true
+        )
+    })
+
+    socket.on('emoji', data => {
+        let userid = socket.userid
+        if (userid == null) {
+            return
+        }
+        msgData = typeof data === 'string' ? JSON.parse(data) : data
+        let name = msgData.name
+        broadcast.broadcastInRoom('emoji_data', { name, userid }, userid, true)
+    })
+
+    socket.on('chat', data => {
+        let userid = socket.userid
+        if (userid == null) {
+            return
+        }
+        msgData = typeof data === 'string' ? JSON.parse(data) : data
+        let content = msgData.content
+        broadcast.broadcastInRoom(
+            'chat_data',
+            { content, userid },
+            userid,
+            true
+        )
+    })
+
     socket.on('game_ping', () => {
         let userid = socket.userid
         if (userid == null) {
