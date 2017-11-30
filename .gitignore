@@ -23,3 +23,5 @@ yarn-error.log*
 redis.cache
 redis.cache.prev
 .tern-port
+
+.vscode
