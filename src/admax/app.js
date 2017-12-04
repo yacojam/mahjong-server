@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import "./app.css";
+import "../iconfont/material-icons.css";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import { RaisedButton, TextField, Toggle, IconButton } from "material-ui";
-import { List, ListItem } from "material-ui/List";
+import { FlatButton, TextField, Toggle, IconButton } from "material-ui";
+
 import Box, { VBox, Flex } from "react-layout-components";
 import {
   Toolbar,
@@ -16,160 +17,128 @@ import NavigationExpandMoreIcon from "material-ui/svg-icons/navigation/expand-mo
 import MenuItem from "material-ui/MenuItem";
 import DropDownMenu from "material-ui/DropDownMenu";
 
-const styles = {
-  block: {
-    maxWidth: 250
-  },
-  toggle: {
-    width: "auto",
-    marginTop: 15,
-    marginBottom: 15
-  },
-  versionCode: {
-    width: 60,
-    marginRight: 30
-  },
-  label: {
-    paddingLeft: 30,
-    width: 200,
-    margin: "auto 0"
-  },
-  versionList: {
-    fontSize: 22,
-    textAlign: "center",
-    marginTop: 20
-  },
-  detailItem: {
-    marginTop: 30
-  }
-};
+import VersionList from "./version-list";
+import ConfigDetail from "./config-detail";
 
 export default class Admax extends Component {
+  constructor() {
+    super()
+
+    document.title = "Admax"
+
+    this.menuHandler = this._handleMenuClick.bind(this)
+    this.accountHandler = this._handleAccountMenu.bind(this)
+
+    this.state = {
+      currentTab: 1,
+      newVersion: false,
+      versions: [
+        {
+          versionName: "v1.0.0",
+          downloadUrl: "https://yueyiju.club",
+          serviceWeixin: "byhxmj",
+          tasteEnble: true,
+          tasteAccount: "13311111112",
+          pubTime: "2017-11-29 16:30:44"
+        },
+        {
+          versionName: "v1.1.0",
+          downloadUrl: "https://yueyiju.club",
+          serviceWeixin: "byhxmj",
+          tasteEnble: true,
+          tasteAccount: "13311111112",
+          pubTime: "2017-11-29 16:30:44"
+        }
+      ]
+    }
+  }
+
+  _handleMenuClick() {}
+
+  _handleAccountMenu() {}
+
   render() {
+    const selectedStyle = { color: "white" }
+    const { currentTab, versions, newVersion } = this.state
+    let { selectedVersion } = this.state
+    if (!selectedVersion && !newVersion) {
+      selectedVersion = versions[0]
+    }
+
     return (
       <MuiThemeProvider>
         <VBox style={{ width: "100%", height: "100%" }}>
-          <Toolbar>
+          <Toolbar
+            style={{
+              backgroundColor: "rgb(0, 188, 212)",
+              color: "rgba(0, 0, 0, 0.87)"
+            }}
+          >
             <ToolbarGroup firstChild={true}>
-              <DropDownMenu value={1} onChange={this.handleChange}>
-                <MenuItem value={1} primaryText="版本配置" />
-                <MenuItem value={2} primaryText="用户操作" />
-              </DropDownMenu>
+              <MenuItem
+                value={1}
+                primaryText="版本配置"
+                style={currentTab === 1 ? selectedStyle : {}}
+                onClick={this.menuHandler}
+              />
+              <MenuItem
+                value={2}
+                primaryText="用户管理"
+                style={currentTab === 2 ? selectedStyle : {}}
+                onClick={this.menuHandler}
+              />
             </ToolbarGroup>
             <ToolbarGroup>
-              <IconButton iconClassName="fa fa-user" />
+              <FlatButton
+                label="未登录"
+                icon={
+                  <FontIcon className="material-icons">account_circle</FontIcon>
+                }
+              />
             </ToolbarGroup>
           </Toolbar>
-          <Flex>
-            <VersionList />
-            <ConfigDetail />
-          </Flex>
+          {currentTab === 1 ? (
+            <Flex>
+              <VersionList
+                versions={versions}
+                creatingNew={newVersion}
+                selected={selectedVersion}
+                onVersionChosen={chosenOne => {
+                  this.setState({
+                    selectedVersion: chosenOne
+                  });
+                }}
+                onPublishNew={() => {
+                  this.setState({
+                    newVersion: true
+                  });
+                }}
+              />
+              <ConfigDetail
+                detail={selectedVersion}
+                isNew={newVersion}
+                onSubmit={data => {
+                  if (newVersion) {
+                    versions.push(data);
+                  } else {
+                    const index = versions.findIndex(
+                      item => item.versionName === data.versionName
+                    );
+                    versions.splice(index, 1, data);
+                  }
+                  this.setState({
+                    newVersion: false,
+                    versions: versions,
+                    selectedVersion: data
+                  });
+                }}
+              />
+            </Flex>
+          ) : (
+            <div />
+          )}
         </VBox>
       </MuiThemeProvider>
     )
-  }
-}
-
-class VersionList extends Component {
-  render() {
-    return (
-      <VBox style={{ padding: 20, borderRight: "1px solid #eee" }}>
-        <RaisedButton
-          label="发布新版本"
-          styles={{ marginBottom: 15 }}
-        />
-        <List style={{ width: 200, height: "100%" }}>
-          <ListItem primaryText="1.0.0" style={styles.versionList} />
-          <ListItem primaryText="1.1.0" style={styles.versionList} />
-          <ListItem primaryText="1.1.2" style={styles.versionList} />
-          <ListItem primaryText="1.1.3" style={styles.versionList} />
-          <ListItem primaryText="2.1.0" style={styles.versionList} />
-        </List>
-      </VBox>
-    );
-  }
-}
-
-class ConfigDetail extends Component {
-  render() {
-    return (
-      <VBox style={{ padding: 40, flex: 1 }}>
-        <Box style={styles.detailItem}>
-          <Box flex={1}>
-            <span style={styles.label}>版本号(vX.Y.Z)</span>
-          </Box>
-          <Box flex={2}>
-            <TextField
-              hintText="X"
-              floatingLabelText="主版本"
-              type="number"
-              style={styles.versionCode}
-            />
-            <br />
-            <TextField
-              hintText="Y"
-              type="number"
-              floatingLabelText="次版本"
-              style={styles.versionCode}
-            />
-            <br />
-            <TextField
-              hintText="Z"
-              type="number"
-              floatingLabelText="修订号"
-              style={styles.versionCode}
-            />
-            <br />
-          </Box>
-        </Box>
-        <Box style={styles.detailItem}>
-          <Box flex={1}>
-            <span style={styles.label}>下载页面</span>
-          </Box>
-          <Box flex={2}>
-            <TextField hintText="http://downloadurl" />
-          </Box>
-        </Box>
-        <Box style={styles.detailItem}>
-          <Box flex={1}>
-            <span style={styles.label}>客服微信号</span>
-          </Box>
-          <Box flex={2}>
-            <TextField hintText="微信号" />
-            <br />
-          </Box>
-        </Box>
-        <Box style={styles.detailItem}>
-          <Box flex={1}>
-            <span style={styles.label}>开启体验模式</span>
-          </Box>
-          <Box flex={2}>
-            <Toggle defaultToggled={true} style={styles.toggle} />
-          </Box>
-        </Box>
-        <Box style={styles.detailItem}>
-          <Box flex={1}>
-            <span style={styles.label}>体验账号</span>
-          </Box>
-          <Box flex={2}>
-            <TextField />
-          </Box>
-        </Box>
-        <Box style={styles.detailItem}>
-          <Box flex={1}>
-            <span style={styles.label}>发布日期</span>
-          </Box>
-          <Box flex={2}>
-            <label style={{ padding: 10 }}>2017-12-1</label>
-          </Box>
-        </Box>
-        <Box style={{...styles.detailItem, flexDirection: 'column', alignItems: 'center'}}>
-          <RaisedButton
-            label="保存"
-            primary={true}
-          />
-        </Box>
-      </VBox>
-    );
   }
 }
