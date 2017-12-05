@@ -52,27 +52,26 @@ router.get('/rooms', async ctx => {
   ctx.json = rooms
 })
 
-
 router.get('/get_game_config', async ctx => {
-    const {version} = ctx.headers
-    // 根据版本号判断是否开启体验入口
-    const defaultCfg = {
-        enableTaste: true,
-        tasteAccount: '13311111112',
-        shareUrl: 'https://yueyiju.club',
-        serviceWeixin: 'byhxmj'
-    }
+  const { version } = ctx.headers
+  // 根据版本号判断是否开启体验入口
+  const defaultCfg = {
+    enableTaste: true,
+    tasteAccount: '13311111112',
+    shareUrl: 'https://yueyiju.club',
+    serviceWeixin: 'byhxmj'
+  }
 
-    const config = (await redis.get('appInfo')) || defaultCfg
-    ctx.json = config
+  const config = (await redis.get('appInfo')) || defaultCfg
+  ctx.json = config
 })
 
 router.post('/update_game_config', async ctx => {
-    const newConfig = ctx.request.body
-    let config = (await redis.get('appInfo')) || {}
-    config = {config, ...newConfig}
-    await redis.set('appInfo', config)
-    ctx.json = true
+  const newConfig = ctx.request.body
+  let config = (await redis.get('appInfo')) || {}
+  config = Object.assign({}, config, newConfig)
+  await redis.set('appInfo', config)
+  ctx.json = true
 })
 
 module.exports = router
