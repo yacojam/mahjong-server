@@ -2,6 +2,7 @@ const UserDao = require('../db/UserDao')
 const tokenManager = require('../redis/tokenRedisDao')
 const roomManager = require('../roomManager/roomManager')
 const noticeManager = require('../redis/noticeRedisDao')
+const sharedManager = require('../sharedManager/sharedManager')
 const ErrorType = require('./ServerError')
 const Router = require('koa-router')
 const router = new Router()
@@ -115,6 +116,21 @@ router.get('/update_account_info', async (ctx, next) => {
         message: e.message || e.toString
       }
     }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
+router.get('/shared_app_for_cards', async (ctx, next) => {
+  let userid = ctx.query.userid
+  let token = ctx.query.token
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    let hasShared = sharedManager.saveIfNotShared(userid)
+    if (!hasShared) {
+      await UserDao.addCardNum(userid, 2)
+    }
+    ctx.json = { hasShared }
   } else {
     ctx.error = ErrorType.AccountValidError
   }

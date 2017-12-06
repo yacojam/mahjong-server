@@ -69,3 +69,6 @@ roomManager.start().then(() => {
   })
   server2.listen(9000)
 })
+
+const sharedManager = require('./sharedManager/sharedManager')
+sharedManager.start()
