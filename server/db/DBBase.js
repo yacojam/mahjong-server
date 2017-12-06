@@ -129,6 +129,23 @@ function select(table, condition, fields = []) {
   })
 }
 
+function deleteWhere(table, condition) {
+  return new Promise((resolve, reject) => {
+    if (!condition) {
+      reject(new Error('delete condition not exists'))
+      return
+    }
+    let sql = 'DELETE  FROM `' + table + '` WHERE ' + condition
+    query(sql, (error, results, fields) => {
+      if (results.length > 0) {
+        resolve(results[0])
+      } else {
+        resolve(null)
+      }
+    })
+  })
+}
+
 // async function test() {
 //   let ret = await select('nv_users', `account='13411111112'`)
 //   console.log(ret)
@@ -138,6 +155,7 @@ function select(table, condition, fields = []) {
 
 module.exports = {
   query,
+  deleteWhere,
   select,
   insert,
   update,

@@ -22,35 +22,61 @@ import ConfigDetail from "./config-detail";
 
 export default class Admax extends Component {
   constructor() {
-    super()
+    super();
 
-    document.title = "Admax"
+    document.title = "Admax";
 
-    this.menuHandler = this._handleMenuClick.bind(this)
-    this.accountHandler = this._handleAccountMenu.bind(this)
+    this.menuHandler = this._handleMenuClick.bind(this);
+    this.accountHandler = this._handleAccountMenu.bind(this);
+    this.submitHandler = this._handleSubmit.bind(this);
 
     this.state = {
       currentTab: 1,
       newVersion: false,
-      versions: [
-        {
-          versionName: "v1.0.0",
-          downloadUrl: "https://yueyiju.club",
-          serviceWeixin: "byhxmj",
-          tasteEnble: true,
-          tasteAccount: "13311111112",
-          pubTime: "2017-11-29 16:30:44"
-        },
-        {
-          versionName: "v1.1.0",
-          downloadUrl: "https://yueyiju.club",
-          serviceWeixin: "byhxmj",
-          tasteEnble: true,
-          tasteAccount: "13311111112",
-          pubTime: "2017-11-29 16:30:44"
+      versions: []
+    };
+  }
+
+  componentDidMount() {
+    fetch("/admax/get_versions")
+      .then(rsp => rsp.json())
+      .then(ret => {
+        if (ret.code !== 0) {
+          alert(ret.message);
+          return;
         }
-      ]
-    }
+        const versions = ret.data || [];
+        this.setState({ versions });
+      });
+  }
+
+  _handleSubmit(data) {
+    const {newVersion} = this.state
+    const url = newVersion ? "/admax/new_version" : "/admax/_version"
+    fetch(url)
+    .then(rsp => rsp.json())
+    .then(ret => {
+      if (ret.code !== 0) {
+        alert(ret.message);
+        return;
+      }
+      const {versions} = this.state
+      const {data} = ret
+      if (newVersion) {
+        versions.splice(0, 0, data )
+      } else {
+        const index = versions.findIndex(
+          item => item.versionName === data.versionName
+        );
+        versions.splice(index, 1, data);
+      }
+
+      this.setState({
+        newVersion: false,
+        versions: versions,
+        selectedVersion: data
+      });
+    });
   }
 
   _handleMenuClick() {}
@@ -58,11 +84,11 @@ export default class Admax extends Component {
   _handleAccountMenu() {}
 
   render() {
-    const selectedStyle = { color: "white" }
-    const { currentTab, versions, newVersion } = this.state
-    let { selectedVersion } = this.state
+    const selectedStyle = { color: "white" };
+    const { currentTab, versions, newVersion } = this.state;
+    let { selectedVersion } = this.state;
     if (!selectedVersion && !newVersion) {
-      selectedVersion = versions[0]
+      selectedVersion = versions[0];
     }
 
     return (
@@ -117,21 +143,7 @@ export default class Admax extends Component {
               <ConfigDetail
                 detail={selectedVersion}
                 isNew={newVersion}
-                onSubmit={data => {
-                  if (newVersion) {
-                    versions.push(data);
-                  } else {
-                    const index = versions.findIndex(
-                      item => item.versionName === data.versionName
-                    );
-                    versions.splice(index, 1, data);
-                  }
-                  this.setState({
-                    newVersion: false,
-                    versions: versions,
-                    selectedVersion: data
-                  });
-                }}
+                onSubmit={this.submitHandler}
               />
             </Flex>
           ) : (
@@ -139,6 +151,6 @@ export default class Admax extends Component {
           )}
         </VBox>
       </MuiThemeProvider>
-    )
+    );
   }
 }

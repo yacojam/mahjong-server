@@ -26,6 +26,7 @@ router.use('/dynamicjs', require('./routers/contentScript').routes())
 router.use('/user', require('./routers/userService').routes())
 router.use('/room', require('./routers/roomService').routes())
 router.use('/hall', require('./routers/hallService').routes())
+router.use('/admax', require('./routers/admaxService').routes())
 router.use('/anysdk', require('./serviceAnySDK/login').routes())
 router.use('*', require('./routers/index').routes())
 

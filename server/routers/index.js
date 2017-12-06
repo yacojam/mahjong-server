@@ -66,12 +66,4 @@ router.get('/get_game_config', async ctx => {
   ctx.json = config
 })
 
-router.post('/update_game_config', async ctx => {
-  const newConfig = ctx.request.body
-  let config = (await redis.get('appInfo')) || {}
-  config = Object.assign({}, config, newConfig)
-  await redis.set('appInfo', config)
-  ctx.json = true
-})
-
 module.exports = router
