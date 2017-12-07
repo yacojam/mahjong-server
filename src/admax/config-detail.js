@@ -68,7 +68,7 @@ export default class ConfigDetail extends Component {
       createTime
     };
     if (this.props.isNew) {
-      cfg.versionName = `v${this.state.versionX}.${this.state.versionY}.${
+      cfg.versionName = `${this.state.versionX}.${this.state.versionY}.${
         this.state.versionZ
       }`;
     } else {
@@ -98,7 +98,7 @@ export default class ConfigDetail extends Component {
       <VBox style={{ padding: 40, flex: 1 }}>
         <Box style={styles.detailItem}>
           <Box flex={1}>
-            <span style={styles.label}>版本号(vX.Y.Z)</span>
+            <span style={styles.label}>版本号(X.Y.Z)</span>
           </Box>
           {isNew ? (
             <Box flex={2}>
