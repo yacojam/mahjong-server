@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS version_configs;
 CREATE TABLE version_configs (
   versioncode int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '版本序号',
   versionname varchar(15) NOT NULL COMMENT '显示版本号',
-  downloadurl varchar(100) NOT NULL COMMENT '下载地址',
+  shareurl varchar(100) NOT NULL COMMENT '分享地址',
   serviceweixin varchar(50) DEFAULT NULL COMMENT '客服微信号',
   tasteenable bool NOT NULL COMMENT '是否开启体验入口',
   tasteaccount varchar(50) DEFAULT NULL COMMENT '体验账号',

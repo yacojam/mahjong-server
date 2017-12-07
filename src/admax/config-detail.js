@@ -54,14 +54,14 @@ export default class ConfigDetail extends Component {
   getConfig() {
     let {
       versionName,
-      downloadUrl,
+      shareUrl,
       serviceWeixin,
       tasteEnable,
       tasteAccount,
       createTime
     } = this.state;
     const cfg = {
-      downloadUrl,
+      shareUrl,
       serviceWeixin,
       tasteEnable,
       tasteAccount,
@@ -87,7 +87,7 @@ export default class ConfigDetail extends Component {
     const { isNew, onSubmit, onDelete } = this.props;
     const {
       versionName,
-      downloadUrl,
+      shareUrl,
       serviceWeixin,
       tasteEnable,
       tasteAccount,
@@ -151,16 +151,16 @@ export default class ConfigDetail extends Component {
         </Box>
         <Box style={styles.detailItem}>
           <Box flex={1}>
-            <span style={styles.label}>下载页面</span>
+            <span style={styles.label}>分享页面</span>
           </Box>
           <Box flex={2}>
             <TextField
-              id="downloadUrl"
-              hintText="http://downloadurl"
-              value={downloadUrl || ""}
+              id="shareUrl"
+              hintText="http://shareUrl"
+              value={shareUrl || ""}
               onChange={(event, newValue) => {
                 this.setState({
-                  downloadUrl: newValue
+                  shareUrl: newValue
                 });
               }}
             />

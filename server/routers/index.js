@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const redis = require('../redis')
+const AdmaxDao = require("../db/AdmaxDao");
 
 router.get('/add', async ctx => {
   ctx.json = {
@@ -55,15 +56,16 @@ router.get('/rooms', async ctx => {
 router.get('/get_game_config', async ctx => {
   const { version } = ctx.headers
   // 根据版本号判断是否开启体验入口
-  const defaultCfg = {
-    enableTaste: true,
+  let cfg = await AdmaxDao.getConfig(version)
+
+  cfg = cfg || {
+    tasteEnable: true,
     tasteAccount: '13311111112',
     shareUrl: 'https://yueyiju.club',
     serviceWeixin: 'byhxmj'
   }
 
-  const config = (await redis.get('appInfo')) || defaultCfg
-  ctx.json = config
+  ctx.json = cfg
 })
 
 module.exports = router

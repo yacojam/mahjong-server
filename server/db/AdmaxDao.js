@@ -5,11 +5,16 @@ const CONFIG_TABLE = 'version_configs'
 const CONFIG_FIELDS = {
   versioncode: 'versionCode',
   versionname: 'versionName',
-  downloadurl: 'downloadUrl',
+  shareurl: 'shareUrl',
   serviceweixin: 'serviceWeixin',
   tasteenable: 'tasteEnable',
   tasteaccount: 'tasteAccount',
   createtime: 'createTime' 
+}
+
+exports.getConfig = async function(versionName) {
+  const cfg = await DBBase.select(CONFIG_TABLE, `versionname='${versionName}'`)
+  return fieldMapper(cfg)
 }
 
 exports.getAllConfigs = async function() {
