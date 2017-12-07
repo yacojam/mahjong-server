@@ -3,13 +3,13 @@ use Nova_game;
 DROP TABLE IF EXISTS admax_user;
 
 CREATE TABLE admax_user (
-  userId int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  userName varchar(16) NOT NULL COMMENT '用户名',
+  userid int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  username varchar(16) NOT NULL COMMENT '用户名',
   passwd varchar(16) NOT NULL COMMENT '密码',
-  userRole varchar(12) DEFAULT NULL COMMENT '用户角色',
+  userrole varchar(12) DEFAULT NULL COMMENT '用户角色',
   permission varchar(256) DEFAULT NULL COMMENT '拥有权限',
   PRIMARY KEY (userid),
-  UNIQUE KEY userName (userName)
+  UNIQUE KEY username (username)
 ) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8;
 
 INSERT INTO `admax_user` VALUES ('100000', 'admin', 'yyj@1204', 'admin', null);
@@ -24,7 +24,7 @@ CREATE TABLE version_configs (
   serviceweixin varchar(50) DEFAULT NULL COMMENT '客服微信号',
   tasteenable bool NOT NULL COMMENT '是否开启体验入口',
   tasteaccount varchar(50) DEFAULT NULL COMMENT '体验账号',
-  configtime varchar(20) DEFAULT NULL COMMENT '配置时间',
+  createtime varchar(20) DEFAULT NULL COMMENT '配置时间',
   PRIMARY KEY (versioncode),
   UNIQUE KEY versionname (versionname)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
