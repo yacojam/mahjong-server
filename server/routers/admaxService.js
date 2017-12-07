@@ -4,15 +4,42 @@ const AdmaxDao = require("../db/AdmaxDao");
 const tokenManager = require("../redis/tokenRedisDao");
 const ErrorType = require("./ServerError");
 
+function checkToken() {
+  return async (ctx, next) => {
+    const routeName = ctx.path.substring(
+      ctx.path.lastIndexOf("/"),
+      ctx.path.length
+    );
+    if (routeName.startsWith("/login")) {
+        return next();
+    }
+
+    const userid = ctx.cookies.get("userid");
+    const token = ctx.cookies.get("token");
+
+    let isValid = await tokenManager.isAccountValid(userid, token);
+    if (isValid) {
+      return next();
+    } else {
+      ctx.error = ErrorType.AccountValidError;
+    }
+  };
+}
+
+router.use(checkToken());
+
 router.post("/login", async (ctx, next) => {
   try {
     const { username, passwd } = ctx.request.body;
     let user = await AdmaxDao.getUser(username, passwd);
     let token = tokenManager.generateToken(user.userid);
 
+    ctx.cookies.set("token", token);
+    ctx.cookies.set("userid", user.userid);
+    ctx.cookies.set("username", user.username);
+
     ctx.json = { ...user, token };
   } catch (e) {
-    console.log(e);
     ctx.error = {
       code: ErrorType.AccountError,
       message: e.message || e.toString
@@ -20,47 +47,41 @@ router.post("/login", async (ctx, next) => {
   }
 });
 
+router.get("/quick_login", async (ctx, next) => {
+  const userid = ctx.cookies.get("userid");
+  const userData = await AdmaxDao.getUserById(userid);
+  ctx.json = userData;
+});
+
+router.get("/logout", async (ctx, next) => {
+  ctx.cookies.set("token", null);
+  ctx.cookies.set("userid", null);
+
+  ctx.json = true;
+});
+
 //获取所有版本配置
 router.get("/get_versions", async (ctx, next) => {
-  if (checkToken()) {
-    const configs = await AdmaxDao.getAllConfigs();
-    ctx.json = configs;
-  }
+  const configs = await AdmaxDao.getAllConfigs();
+  ctx.json = configs;
 });
 
 router.post("/update_version", async (ctx, next) => {
-  if (checkToken()) {
-    const cfg = ctx.request.body.config;
-    await AdmaxDao.updateOrCreateConfig(cfg);
-    ctx.json = configs;
-  }
+  const cfg = ctx.request.body.config;
+  const newConfig = await AdmaxDao.updateOrCreateConfig(cfg);
+  ctx.json = newConfig;
 });
 
 router.post("/new_version", async (ctx, next) => {
-  if (checkToken()) {
-    const cfg = ctx.request.body.config;
-    const newVersion = await AdmaxDao.updateOrCreateConfig(cfg);
-    ctx.json = newVersion;
-  }
+  const cfg = ctx.request.body.config;
+  const newVersion = await AdmaxDao.updateOrCreateConfig(cfg);
+  ctx.json = newVersion;
 });
 
 router.post("/delete_version", async (ctx, next) => {
-  if (checkToken()) {
-    const vcode = ctx.request.body.versionCode;
-    await AdmaxDao.deleteConfig(vcode);
-    ctx.json = true;
-  }
+  const vcode = ctx.request.body.versionCode;
+  await AdmaxDao.deleteConfig(vcode);
+  ctx.json = true;
 });
-
-async function checkToken(ctx, onPassed) {
-    return true
-//   const { userid, token } = ctx.headers;
-//   let isValid = await tokenManager.isAccountValid(userid, token);
-//   if (isValid) {
-//   } else {
-//     ctx.error = ErrorType.AccountValidError;
-//   }
-//   return isValid;
-}
 
 module.exports = router;

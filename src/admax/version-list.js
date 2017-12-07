@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { List, ListItem } from "material-ui/List";
-import Box, { VBox, Flex } from "react-layout-components";
+import { VBox } from "react-layout-components";
 import { RaisedButton, Card } from "material-ui";
 
 const styles = {

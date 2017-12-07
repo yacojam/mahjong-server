@@ -19,7 +19,7 @@ exports.getAllConfigs = async function() {
 
 exports.updateOrCreateConfig = async function(data) {
   if (data.versionCode) {
-    await DBBase.update(CONFIG_TABLE, `versioncode='${versionCode}'`, data)
+    await DBBase.update(CONFIG_TABLE, data, `versioncode='${data.versionCode}'`)
   } else {
     data.createTime = getTimeString()
     await DBBase.insert(CONFIG_TABLE, data)  
@@ -33,7 +33,11 @@ exports.deleteConfig = function(versionCode) {
 }
 
 exports.getUser = function(username, passwd) {
-  return DBBase.select(ADMAX_TABLE, `username='${username}' and passwd='${passwd}'`)
+  return DBBase.select(ADMAX_TABLE, `username='${username}'` + (passwd ? ` and passwd='${passwd}'` : ''), ['userid', 'username', 'permission', 'userrole'])
+}
+
+exports.getUserById = function(userid) {
+  return DBBase.select(ADMAX_TABLE, `userid='${userid}'`, ['userid', 'username', 'permission', 'userrole'])
 }
 
 // 转换大小写和tinyint

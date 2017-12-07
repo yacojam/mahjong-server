@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Box, { VBox, Flex } from "react-layout-components";
-import { RaisedButton, TextField, Toggle, IconButton } from "material-ui";
+import Box, { VBox } from "react-layout-components";
+import { RaisedButton, TextField, Toggle } from "material-ui";
 
 const styles = {
   toggle: {
