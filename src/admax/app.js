@@ -32,7 +32,7 @@ export default class Admax extends Component {
 
     this.state = {
       currentTab: 1,
-      newVersion: false,
+      newVersion: true,
       versions: []
     };
   }
@@ -46,14 +46,22 @@ export default class Admax extends Component {
           return;
         }
         const versions = ret.data || [];
-        this.setState({ versions });
+        this.setState({ versions, newVersion: versions.length === 0 });
       });
   }
 
   _handleSubmit(data) {
     const {newVersion} = this.state
     const url = newVersion ? "/admax/new_version" : "/admax/_version"
-    fetch(url)
+    fetch(url,  {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: JSON.stringify({
+            config: data
+        })
+    })
     .then(rsp => rsp.json())
     .then(ret => {
       if (ret.code !== 0) {

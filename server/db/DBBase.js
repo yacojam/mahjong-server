@@ -129,6 +129,24 @@ function select(table, condition, fields = []) {
   })
 }
 
+function selectAll(table, condition, fields = []) {
+    return new Promise((resolve, reject) => {
+        if (!condition) {
+            reject(new Error('select condition not exists'))
+            return
+        }
+        let fieldSql = fields.length > 0 ? fields.join(',') : '*'
+        let sql = 'SELECT ' + fieldSql + ' FROM `' + table + '` WHERE ' + condition
+        query(sql, (error, results, fields) => {
+            if (results.length > 0) {
+                resolve(results)
+            } else {
+                resolve(null)
+            }
+        })
+    })
+}
+
 function deleteWhere(table, condition) {
   return new Promise((resolve, reject) => {
     if (!condition) {
@@ -156,6 +174,7 @@ function deleteWhere(table, condition) {
 module.exports = {
   query,
   deleteWhere,
+    selectAll,
   select,
   insert,
   update,

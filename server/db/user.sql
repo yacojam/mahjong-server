@@ -1,3 +1,5 @@
+use Nova_game;
+
 DROP TABLE IF EXISTS nv_users;
 CREATE TABLE nv_users (
   userid int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',

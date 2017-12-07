@@ -42,7 +42,8 @@ export default class ConfigDetail extends Component {
         versionX: 1,
         versionY: 0,
         versionZ: 0,
-        pubTime: ""
+          tasteEnable: false,
+        configTime: ""
       };
     } else {
       newState = Object.assign({}, newProps.detail);
@@ -57,14 +58,14 @@ export default class ConfigDetail extends Component {
       serviceWeixin,
       tasteEnable,
       tasteAccount,
-      pubTime
+      configTime
     } = this.state;
     const cfg = {
       downloadUrl,
       serviceWeixin,
       tasteEnable,
       tasteAccount,
-      pubTime
+      configTime
     };
     if (this.props.isNew) {
       cfg.versionName = `v${this.state.versionX}.${this.state.versionY}.${
@@ -89,7 +90,7 @@ export default class ConfigDetail extends Component {
       serviceWeixin,
       tasteEnable,
       tasteAccount,
-      pubTime
+      configTime
     } = this.state;
 
     return (
@@ -227,7 +228,7 @@ export default class ConfigDetail extends Component {
               <span style={styles.label}>发布日期</span>
             </Box>
             <Box flex={2}>
-              <label style={{ padding: 10 }}>{pubTime}</label>
+              <label style={{ padding: 10 }}>{configTime}</label>
             </Box>
           </Box>
         )}

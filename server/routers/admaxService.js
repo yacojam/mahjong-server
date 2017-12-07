@@ -38,7 +38,7 @@ router.post("/update_version", async (ctx, next) => {
 
 router.post("/new_version", async (ctx, next) => {
   if (checkToken()) {
-    const cfg = ctx.request.body.cfg;
+    const cfg = ctx.request.body.config;
     const newVersion = await AdmaxDao.updateOrCreateConfig(cfg);
     ctx.json = newVersion;
   }
