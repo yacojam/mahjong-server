@@ -28,8 +28,8 @@ export default class VersionList extends Component {
           <List style={{ width: 200, padding: 15 }}>
             {versions.map(item => {
               const isSelected =
-                selected && item.versionName === selected.versionName;
-              const itemStyle = Object.assign(styles.versionList, {
+                selected && item.versionCode === selected.versionCode;
+              const itemStyle = Object.assign({}, styles.versionList, {
                 border: isSelected ? "1px solid rgb(0, 188, 212)" : "none"
               });
               return (

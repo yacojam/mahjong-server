@@ -42,8 +42,8 @@ export default class ConfigDetail extends Component {
         versionX: 1,
         versionY: 0,
         versionZ: 0,
-          tasteEnable: false,
-        configTime: ""
+        tasteEnable: false,
+        createTime: ""
       };
     } else {
       newState = Object.assign({}, newProps.detail);
@@ -58,20 +58,21 @@ export default class ConfigDetail extends Component {
       serviceWeixin,
       tasteEnable,
       tasteAccount,
-      configTime
+      createTime
     } = this.state;
     const cfg = {
       downloadUrl,
       serviceWeixin,
       tasteEnable,
       tasteAccount,
-      configTime
+      createTime
     };
     if (this.props.isNew) {
       cfg.versionName = `v${this.state.versionX}.${this.state.versionY}.${
         this.state.versionZ
       }`;
     } else {
+      cfg.versionCode = this.state.versionCode
       cfg.versionName = versionName;
     }
 
@@ -83,14 +84,14 @@ export default class ConfigDetail extends Component {
   }
 
   render() {
-    const { isNew, onSubmit } = this.props;
+    const { isNew, onSubmit, onDelete } = this.props;
     const {
       versionName,
       downloadUrl,
       serviceWeixin,
       tasteEnable,
       tasteAccount,
-      configTime
+      createTime
     } = this.state;
 
     return (
@@ -106,7 +107,7 @@ export default class ConfigDetail extends Component {
                 hintText="X"
                 floatingLabelText="主版本"
                 type="number"
-                defaultValue={this.state.versionX}
+                value={this.state.versionX || ""}
                 style={styles.versionCode}
                 onChange={(event, newValue) => {
                   this.setState({
@@ -119,7 +120,7 @@ export default class ConfigDetail extends Component {
                 id="versionY"
                 hintText="Y"
                 type="number"
-                defaultValue={this.state.versionY}
+                value={this.state.versionY || ""}
                 floatingLabelText="次版本"
                 style={styles.versionCode}
                 onChange={(event, newValue) => {
@@ -133,7 +134,7 @@ export default class ConfigDetail extends Component {
                 id="versionZ"
                 hintText="Z"
                 type="number"
-                defaultValue={this.state.versionZ}
+                value={this.state.versionZ || ""}
                 floatingLabelText="修订号"
                 style={styles.versionCode}
                 onChange={(event, newValue) => {
@@ -156,7 +157,7 @@ export default class ConfigDetail extends Component {
             <TextField
               id="downloadUrl"
               hintText="http://downloadurl"
-              value={downloadUrl}
+              value={downloadUrl || ""}
               onChange={(event, newValue) => {
                 this.setState({
                   downloadUrl: newValue
@@ -174,7 +175,7 @@ export default class ConfigDetail extends Component {
             <TextField
               id="serviceWeixin"
               hintText="微信号"
-              value={serviceWeixin}
+              value={serviceWeixin || ""}
               onChange={(event, newValue) => {
                 this.setState({
                   serviceWeixin: newValue
@@ -208,7 +209,7 @@ export default class ConfigDetail extends Component {
             <Box flex={2}>
               <TextField
                 id="tasteAccount"
-                value={tasteAccount}
+                value={tasteAccount || ""}
                 onChange={(event, newValue) => {
                   this.setState({
                     tasteAccount: newValue
@@ -228,24 +229,33 @@ export default class ConfigDetail extends Component {
               <span style={styles.label}>发布日期</span>
             </Box>
             <Box flex={2}>
-              <label style={{ padding: 10 }}>{configTime}</label>
+              <label style={{ padding: 10 }}>{createTime}</label>
             </Box>
           </Box>
         )}
-        <Box
-          style={Object.assign(styles.detailItem, {
-            flexDirection: "column",
-            alignItems: "center"
+        <div
+          style={Object.assign({}, styles.detailItem, {
+            textAlign: 'center'
           })}
         >
+          {isNew ? (
+            ""
+          ) : (
+            <RaisedButton
+              label="删除"
+              secondary={true}
+              style={{marginRight: 30}}
+              onClick={onDelete}
+            />
+          )}
           <RaisedButton
             label={isNew ? "提交" : "保存"}
-            secondary={true}
+            primary={true}
             onClick={() => {
               onSubmit(this.getConfig());
             }}
           />
-        </Box>
+        </div>
       </VBox>
     );
   }

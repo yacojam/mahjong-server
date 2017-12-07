@@ -30,7 +30,7 @@ router.get("/get_versions", async (ctx, next) => {
 
 router.post("/update_version", async (ctx, next) => {
   if (checkToken()) {
-    const cfg = ctx.request.body.cfg;
+    const cfg = ctx.request.body.config;
     await AdmaxDao.updateOrCreateConfig(cfg);
     ctx.json = configs;
   }
@@ -41,6 +41,14 @@ router.post("/new_version", async (ctx, next) => {
     const cfg = ctx.request.body.config;
     const newVersion = await AdmaxDao.updateOrCreateConfig(cfg);
     ctx.json = newVersion;
+  }
+});
+
+router.post("/delete_version", async (ctx, next) => {
+  if (checkToken()) {
+    const vcode = ctx.request.body.versionCode;
+    await AdmaxDao.deleteConfig(vcode);
+    ctx.json = true;
   }
 });
 

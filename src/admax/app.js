@@ -2,23 +2,32 @@ import React, { Component } from "react";
 import "./app.css";
 import "../iconfont/material-icons.css";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import { FlatButton, TextField, Toggle, IconButton } from "material-ui";
+import { FlatButton, CircularProgress } from "material-ui";
 
-import Box, { VBox, Flex } from "react-layout-components";
+import { VBox, Flex } from "react-layout-components";
 import {
   Toolbar,
-  ToolbarGroup,
-  ToolbarSeparator,
-  ToolbarTitle
+  ToolbarGroup
 } from "material-ui/Toolbar";
-import IconMenu from "material-ui/IconMenu";
 import FontIcon from "material-ui/FontIcon";
-import NavigationExpandMoreIcon from "material-ui/svg-icons/navigation/expand-more";
 import MenuItem from "material-ui/MenuItem";
-import DropDownMenu from "material-ui/DropDownMenu";
 
 import VersionList from "./version-list";
 import ConfigDetail from "./config-detail";
+
+const styles = {
+    loading: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        background: 'rgba(0,0, 0, 0.3)',
+        zIndex: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column'
+    }
+}
 
 export default class Admax extends Component {
   constructor() {
@@ -29,18 +38,26 @@ export default class Admax extends Component {
     this.menuHandler = this._handleMenuClick.bind(this);
     this.accountHandler = this._handleAccountMenu.bind(this);
     this.submitHandler = this._handleSubmit.bind(this);
+    this.deleteHandler = this._handleDelete.bind(this);
 
     this.state = {
       currentTab: 1,
       newVersion: true,
+      loading: true,
       versions: []
     };
   }
 
   componentDidMount() {
+    this.setState({
+      loading: true
+    })
     fetch("/admax/get_versions")
       .then(rsp => rsp.json())
       .then(ret => {
+        this.setState({
+          loading: false
+        })
         if (ret.code !== 0) {
           alert(ret.message);
           return;
@@ -51,8 +68,12 @@ export default class Admax extends Component {
   }
 
   _handleSubmit(data) {
+    this.setState({
+      loading: true
+    })
+
     const {newVersion} = this.state
-    const url = newVersion ? "/admax/new_version" : "/admax/_version"
+    const url = newVersion ? "/admax/new_version" : "/admax/update_version"
     fetch(url,  {
         method: 'post',
         headers: {
@@ -64,6 +85,10 @@ export default class Admax extends Component {
     })
     .then(rsp => rsp.json())
     .then(ret => {
+      this.setState({
+        loading: false
+      })
+
       if (ret.code !== 0) {
         alert(ret.message);
         return;
@@ -87,16 +112,51 @@ export default class Admax extends Component {
     });
   }
 
+  _handleDelete() {
+    this.setState({
+      loading: true
+    })
+
+    const selected = this.state.selectedVersion
+    const versions = this.state.versions
+    fetch("/admax/delete_version", {
+      method: 'post',
+      headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+      },
+      body: JSON.stringify({
+          versionCode: selected.versionCode
+      })
+  })
+    .then(rsp => rsp.json())
+    .then(ret => {
+      this.setState({
+        loading: false
+      })
+      if (ret.code !== 0) {
+        alert(ret.message);
+        return;
+      }
+      const index = this.state.versions.findIndex(
+        item => item.versionCode === selected.versionCode
+      );
+      versions.splice(index, 1);
+
+      this.setState({ versions, selectedVersion: versions[0], newVersion: versions.length === 0 });
+    })
+  }
+
   _handleMenuClick() {}
 
   _handleAccountMenu() {}
 
   render() {
     const selectedStyle = { color: "white" };
-    const { currentTab, versions, newVersion } = this.state;
+    const { currentTab, versions, newVersion, loading } = this.state;
     let { selectedVersion } = this.state;
     if (!selectedVersion && !newVersion) {
-      selectedVersion = versions[0];
+      this.state.selectedVersion = versions[0];
+      selectedVersion = this.state.selectedVersion
     }
 
     return (
@@ -133,6 +193,10 @@ export default class Admax extends Component {
           </Toolbar>
           {currentTab === 1 ? (
             <Flex>
+                {loading ? <div style={styles.loading}>
+                    <CircularProgress size={80} thickness={8}/>
+                </div> : ''
+                }
               <VersionList
                 versions={versions}
                 creatingNew={newVersion}
@@ -151,6 +215,7 @@ export default class Admax extends Component {
               <ConfigDetail
                 detail={selectedVersion}
                 isNew={newVersion}
+                onDelete={this.deleteHandler}
                 onSubmit={this.submitHandler}
               />
             </Flex>
