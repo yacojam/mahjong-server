@@ -88,6 +88,7 @@ class App extends Component {
 
     this.submitHandler = this._handleSubmit.bind(this);
     this.deleteHandler = this._handleDelete.bind(this);
+    this.onTabChange = this._handleTabChange.bind(this);
 
     this.state = {
       currentTab: 1,
@@ -203,6 +204,12 @@ class App extends Component {
       });
   }
 
+  _handleTabChange(tabIndex) {
+    this.setState({
+      currentTab: tabIndex
+    })
+  }
+
   render() {
     const { userData } = this.props;
     const selectedStyle = { color: "white" };
@@ -226,13 +233,13 @@ class App extends Component {
               value={1}
               primaryText="版本配置"
               style={currentTab === 1 ? selectedStyle : {}}
-              onClick={this.menuHandler}
+              onClick={()=>this.onTabChange(1)}
             />
             <MenuItem
               value={2}
               primaryText="用户管理"
               style={currentTab === 2 ? selectedStyle : {}}
-              onClick={this.menuHandler}
+              onClick={()=>this.onTabChange(2)}
             />
           </ToolbarGroup>
           <ToolbarGroup>
