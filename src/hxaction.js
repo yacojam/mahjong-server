@@ -1,1 +1,0 @@
-../server/algorithm/HxmjRules/hxaction.js
