@@ -6,17 +6,11 @@
 3. supervisor https://github.com/petruisfan/node-supervisor 用于开发
 4. mocha https://mochajs.org/ 运行tests用
 
-## 开发
-```
-cd [project]
-yarn install
-yarn run start  # 启动前端服务器
-# 打开新的tab或窗口
-supervisor -w server server/index.js  # 启动后端server
+yarn start  # 启动开发模式
+yarn prd    #启动服务进程
+yarn stop   #停止服务进程
+yarn restart #重启服务进程
 
-```
-
-访问`http://localhost:3000`
 
 
 
