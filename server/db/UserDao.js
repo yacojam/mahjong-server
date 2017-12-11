@@ -74,6 +74,11 @@ exports.addCardNum = async function(userid, cardNum) {
   return DBBase.update('nv_users', { card }, `userid='${userid}'`)
 }
 
+exports.getUsersList = async function(keyword) {
+  let ret = await DBBase.selectAll('nv_users', 'userid is not null')
+  return ret
+}
+
 // function test() {
 //   let data = {
 //     nickname: 'aaa',
