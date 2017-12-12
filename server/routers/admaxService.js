@@ -1,17 +1,9 @@
-<<<<<<< HEAD
 const Router = require('koa-router')
 const router = new Router()
 const AdmaxDao = require('../db/AdmaxDao')
+const UserDao = require('../db/UserDao')
 const tokenManager = require('../redis/tokenRedisDao')
 const ErrorType = require('./ServerError')
-=======
-const Router = require("koa-router");
-const router = new Router();
-const AdmaxDao = require("../db/AdmaxDao");
-const UserDao = require("../db/UserDao");
-const tokenManager = require("../redis/tokenRedisDao");
-const ErrorType = require("./ServerError");
->>>>>>> origin/master
 
 function checkToken() {
   return async (ctx, next) => {
@@ -94,15 +86,15 @@ router.post('/delete_version', async (ctx, next) => {
 
 router.get('/get_users', async (ctx, next) => {
   const pageSize = 20
-  const {keyword, pageIndex} = ctx.request.body
+  const { keyword, pageIndex } = ctx.request.body
   const users = await UserDao.getUsersList(keyword)
   ctx.json = users
 })
 
-router.post("/change_card_by", async (ctx, next) => {
-  const {userid, number} = ctx.request.body;
-  await UserDao.addCardNum(userid, number);
-  ctx.json = true;
+router.post('/change_card_by', async (ctx, next) => {
+  const { userid, number } = ctx.request.body
+  await UserDao.addCardNum(userid, number)
+  ctx.json = true
 })
 
-module.exports = router;
+module.exports = router
