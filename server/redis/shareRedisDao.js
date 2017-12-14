@@ -4,7 +4,7 @@ const tag = 'shared_yyj_set'
 async function getAllSharedUsers() {
 	let allSharesUsers = await redis.smembers(tag)
 	console.log(allSharesUsers)
-	return allSharesUsers || null
+	return allSharesUsers || []
 }
 
 function save(userid) {

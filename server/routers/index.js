@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
 const redis = require('../redis')
-const AdmaxDao = require("../db/AdmaxDao");
+const AdmaxDao = require('../db/AdmaxDao')
 
 router.get('/add', async ctx => {
   ctx.json = {

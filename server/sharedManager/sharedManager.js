@@ -1,12 +1,7 @@
 const shareRedisDao = require('../redis/shareRedisDao')
 
-let allSharedUserIds = null
-
-async function start() {
-	shareRedisDao.getAllSharedUsers().then(data => {
-		allSharedUserIds = data
-		setCleanTime()
-	})
+function start() {
+	setCleanTime()
 }
 
 //设置每天的0点清理
@@ -28,28 +23,22 @@ function setCleanTime() {
 }
 
 function clean() {
-	if (allSharedUserIds && allSharedUserIds.length > 0) {
-		for (let userid of allSharedUserIds) {
-			shareRedisDao.del(userid)
+	shareRedisDao.getAllSharedUsers().then(allSharedUserIds => {
+		if (allSharedUserIds && allSharedUserIds.length > 0) {
+			for (let userid of allSharedUserIds) {
+				shareRedisDao.del(userid)
+			}
 		}
-	}
-	allSharedUserIds = null
+	})
 }
 
-function saveIfNotShared(userid) {
-	if (allSharedUserIds == null) {
-		allSharedUserIds = []
-		allSharedUserIds.push(userid)
+async function saveIfNotShared(userid) {
+	let allSharedUserIds = await shareRedisDao.getAllSharedUsers()
+	let existed = allSharedUserIds.some(id => id == userid)
+	if (!existed) {
 		shareRedisDao.save(userid)
-		return true
-	} else {
-		let existed = allSharedUserIds.some(id => id == userid)
-		if (!existed) {
-			allSharedUserIds.push(userid)
-			shareRedisDao.save(userid)
-		}
-		return existed
 	}
+	return existed
 }
 
 module.exports = { start, saveIfNotShared }
