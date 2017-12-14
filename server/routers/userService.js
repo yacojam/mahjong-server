@@ -126,7 +126,7 @@ router.get('/shared_app_for_cards', async (ctx, next) => {
   let token = ctx.query.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
-    let hasShared = sharedManager.saveIfNotShared(userid)
+    let hasShared = await sharedManager.saveIfNotShared(userid)
     if (!hasShared) {
       await UserDao.addCardNum(userid, 2)
     }
