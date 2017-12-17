@@ -19,7 +19,7 @@ class HuPaiSliceInfo {
 	//对子点数
 	getPairScore(isTingOnly, isZimo) {
 		let score = this.ps.length + this.gs.length + this.Kzs.length * 2
-		if (isTingOnly && this.h !== this.jd) {
+		if (isTingOnly && this.hITz) {
 			score += 1
 			return score
 		}
@@ -27,7 +27,7 @@ class HuPaiSliceInfo {
 			score -= 1
 		}
 		// console.log(this.hIKz + ' ' + this.hITz)
-		// console.log('score ' + score)
+		// console.log('pairscore ' + score)
 		return score
 	}
 
@@ -44,16 +44,15 @@ class HuPaiSliceInfo {
 		this.Tzs.forEach((ti, index) => {
 			if (ret.every(i => i !== index)) {
 				let pushed = false
-				let fs = this.Tzs.filter(e => e.pai === ti.pai + 3)
-				fs.forEach((fi, di) => {
-					if (!pushed) {
-						if (ret.every(i => i !== di)) {
-							ret.push(index)
-							ret.push(di)
-							pushed = true
-						}
+				for (let index2 = 0; index2 < this.Tzs.length; index2++) {
+					let ti2 = this.Tzs[index2]
+					let existed = ret.some(i => i === index2)
+					if (ti2.pai === ti.pai + 3 && !existed) {
+						ret.push(index)
+						ret.push(index2)
+						break
 					}
-				})
+				}
 			}
 		})
 		if (this.hasOneDragon() && ret.length == 2) {
