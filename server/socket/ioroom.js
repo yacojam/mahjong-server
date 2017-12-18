@@ -249,14 +249,15 @@ function bind(socket) {
             return
         }
         let seat = roomUtils.getUserSeat(room, userid)
+        console.log('dissolve_request_agree -1' + JSON.stringify(seat))
         if (!seat.dissolved) {
             seat.dissolved = true
             socket.emit('dissolve_agree_send_success')
             let dissolved = room.seats.every(s => s.dissolved)
             if (dissolved) {
+                clearTimeout(room.dissolveId)
                 room.dissolveId = null
                 room.dissolveUid = null
-                clearTimeout(room.dissolveId)
                 await dissolveRoom(rpid, false)
             }
         }
