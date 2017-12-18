@@ -205,7 +205,7 @@ function bind(socket) {
 
     socket.on('dissolve_request', async userData => {
         let userid = socket.userid
-        if (userid == null || userid !== userData.userid) {
+        if (userid == null) {
             return
         }
         let rpid = roomManager.getRidForUid(userid)
@@ -236,7 +236,7 @@ function bind(socket) {
 
     socket.on('dissolve_request_agree', async userData => {
         let userid = socket.userid
-        if (userid == null || userid !== userData.userid) {
+        if (userid == null) {
             return
         }
         let rpid = roomManager.getRidForUid(userid)
@@ -249,7 +249,6 @@ function bind(socket) {
             return
         }
         let seat = roomUtils.getUserSeat(room, userid)
-        console.log('dissolve_request_agree -1' + JSON.stringify(seat))
         if (!seat.dissolved) {
             seat.dissolved = true
             socket.emit('dissolve_agree_send_success')
@@ -265,7 +264,7 @@ function bind(socket) {
 
     socket.on('dissolve_request_reject', async userData => {
         let userid = socket.userid
-        if (userid == null || userid !== userData.userid) {
+        if (userid == null) {
             return
         }
         let rpid = roomManager.getRidForUid(userid)
