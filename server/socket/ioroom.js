@@ -404,7 +404,7 @@ function bind(socket) {
         if (userid == null) {
             return
         }
-        socket.emit('game_pong'. {})
+        socket.emit('game_pong', {})
     })
 
     socket.on('disconnect', async () => {
