@@ -153,7 +153,7 @@ function bind(socket) {
         }
         //牌局已经开始，建议走申请牌局解散
         if (room.state != 0) {
-            socket.emit('want_dissolve')
+            socket.emit('want_dissolve', {})
             return
         }
 
@@ -172,7 +172,7 @@ function bind(socket) {
         //清除信息
         roomManager.delUid(userid)
         connectionManager.del(userid)
-        socket.emit('exit_success')
+        socket.emit('exit_success', {})
         socket.disconnect()
     })
 
@@ -196,7 +196,7 @@ function bind(socket) {
         }
         //牌局已经开始，建议走申请牌局解散
         if (room.state != 0) {
-            socket.emit('want_dissolve')
+            socket.emit('want_dissolve', {})
             return
         }
         //
@@ -251,7 +251,7 @@ function bind(socket) {
         let seat = roomUtils.getUserSeat(room, userid)
         if (!seat.dissolved) {
             seat.dissolved = true
-            socket.emit('dissolve_agree_send_success')
+            socket.emit('dissolve_agree_send_success', {})
             let dissolved = room.seats.every(s => s.dissolved)
             if (dissolved) {
                 clearTimeout(room.dissolveId)
@@ -404,7 +404,7 @@ function bind(socket) {
         if (userid == null) {
             return
         }
-        socket.emit('game_pong')
+        socket.emit('game_pong'. {})
     })
 
     socket.on('disconnect', async () => {
