@@ -1,0 +1,1 @@
+{"__type__":"cc.AnimationClip","_name":"popup","_duration":0.2,"curveData":{"props":{"scaleX":[{"frame":0,"value":0.5},{"frame":0.15,"value":1.15},{"frame":0.2,"value":1}],"scaleY":[{"frame":0,"value":0.5},{"frame":0.15,"value":1.15},{"frame":0.2,"value":1}],"opacity":[{"frame":0,"value":80},{"frame":0.15,"value":255}]}}}

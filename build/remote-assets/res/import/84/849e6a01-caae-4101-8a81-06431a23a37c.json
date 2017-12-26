@@ -1,0 +1,1 @@
+{"__type__":"cc.AnimationClip","_name":"fadeOut","_duration":1.3333333333333333,"curveData":{"props":{"opacity":[{"frame":0,"value":255,"curve":"cubicIn"},{"frame":1.3333333333333333,"value":0}]}}}
