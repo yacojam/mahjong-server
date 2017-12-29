@@ -1,1 +1,1 @@
-{"__type__":"cc.AnimationClip","_name":"up_mo","_duration":0.5,"speed":5,"curveData":{"props":{"y":[{"frame":0,"value":30,"curve":"cubicIn"},{"frame":0.5,"value":0,"curve":"cubicOut"}],"opacity":[{"frame":0,"value":0},{"frame":0.5,"value":255}]}}}
+{"__type__":"cc.AnimationClip","_name":"up_mo","_duration":0.5,"speed":5,"curveData":{"props":{"y":[{"frame":0,"value":25,"curve":"cubicIn"},{"frame":0.5,"value":0,"curve":"cubicOut"}],"opacity":[{"frame":0,"value":0},{"frame":0.5,"value":255}]}}}
