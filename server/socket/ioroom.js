@@ -109,7 +109,7 @@ function bind(socket) {
         ret = await Next.getRoomData(room, userid)
         if (room.dissolveId != null && room.dissolveUid != null) {
             ret.data.dissolveData = {
-                userid,
+                userid: room.dissolveUid,
                 time: 60000,
                 dissolved: seat.dissolved
             }
