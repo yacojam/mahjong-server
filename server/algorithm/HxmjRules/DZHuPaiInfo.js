@@ -58,7 +58,7 @@ class HuPaiInfo {
 			//console.log('lxtscore: ' + this.hpsis[i].getLXTScore())
 			score += this.hpsis[i].getLXTScore()
 			let sdk = this.hpsis[i].getSanDKType(isSF)
-			score += sdk >= 50 ? 20 : sdk > 3 ? 10 : 0
+			score += sdk >= 50 ? 20 : sdk >= 3 ? 10 : 0
 			score += this.hpsis[i].pph ? 10 : 0
 			if (score > highScore) {
 				highScore = score
