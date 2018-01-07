@@ -81,7 +81,7 @@ module.exports.getRoomConfig = function(selectArray) {
 			title: '附加大拿',
 			contents: contents
 		}
-		confs.push(config3)
+		confs.push(config3.filter(s => s != null))
 	}
 
 	if (selectArray.length > 3 && selectArray[3].length > 0) {
@@ -93,7 +93,7 @@ module.exports.getRoomConfig = function(selectArray) {
 			title: '额外设置',
 			contents: contents
 		}
-		confs.push(config4)
+		confs.push(config4.filter(s => s != null))
 	}
 	return confs
 }
