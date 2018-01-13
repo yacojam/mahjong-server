@@ -149,6 +149,7 @@ async function publishLiuju(room) {
 		return { userid, index, shouPais }
 	})
 	room.seats.forEach(seatItem => {
+		seatItem.gameResult = null
 		connectionManager.sendMessage(seatItem.userid, 'game_liuju_push', {
 			state: room.state,
 			ret: ret
