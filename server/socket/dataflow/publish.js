@@ -1,4 +1,4 @@
-const connectionManager = require('../connectionManager')
+const connectionManager = require('../../manager/connectionManager/connectionManager')
 
 async function publishGameStart(room) {
 	console.log('send game start info')

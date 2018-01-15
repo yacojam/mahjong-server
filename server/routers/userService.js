@@ -1,6 +1,6 @@
 const UserDao = require('../db/UserDao')
 const tokenManager = require('../redis/tokenRedisDao')
-const roomManager = require('../roomManager/roomManager')
+const roomManager = require('../manager/roomManager/roomManager')
 const noticeManager = require('../redis/noticeRedisDao')
 const sharedManager = require('../sharedManager/sharedManager')
 const ErrorType = require('./ServerError')

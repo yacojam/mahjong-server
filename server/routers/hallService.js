@@ -2,7 +2,7 @@ const Router = require('koa-router')
 const router = new Router()
 const UserDao = require('../db/UserDao')
 const tokenManager = require('../redis/tokenRedisDao')
-const roomManager = require('../roomManager/roomManager')
+const roomManager = require('../manager/roomManager/roomManager')
 const noticeManager = require('../redis/noticeRedisDao')
 const ErrorType = require('./ServerError')
 

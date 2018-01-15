@@ -5,8 +5,8 @@ const tokenManager = require('../redis/tokenRedisDao')
 const ErrorType = require('./ServerError')
 const Router = require('koa-router')
 const router = new Router()
-const HxRulesUtils = require('../roomManager/roomRuleUtil/HxRulesUtils')
-const roomFactory = require('../roomManager/factory')
+const HxRulesUtils = require('../manager/roomManager/util/HxRulesUtils')
+const roomManager = require('../manager/roomManager/roomManager')
 
 router.get('/get_rules', async (ctx, next) => {
   let userid = ctx.query.userid
@@ -29,20 +29,16 @@ router.post('/create_private_room', async (ctx, next) => {
   }
   let isValid = await tokenManager.isAccountValid(userid, token)
   if (isValid) {
-    var cardnum_of_user = await UserDao.getCardNum(userid)
-    if (cardnum_of_user == 0) {
+    ret = await roomManager.createRoom(userid, roomConfigs)
+    if (ret.code == 1) {
       ctx.error = ErrorType.CardNotEnoughError
-    } else {
-      ret = await roomFactory.createRoom(userid, cardnum_of_user, roomConfigs)
-      if (ret.code == 1) {
-        ctx.error = ErrorType.CardNotEnoughError
-      }
-      if (ret.code == 2) {
-        ctx.error = ErrorType.RoomCreateError
-      }
-      if (ret.code == 0) {
-        ctx.json = ret.data
-      }
+    }
+    if (ret.code == 2) {
+      ctx.error = ErrorType.RoomCreateError
+    }
+    if (ret.code == 0) {
+      let room = ret.data.room
+      ctx.json = { rpid: room.roomPresentId, sign: room.sign }
     }
   } else {
     ctx.error = ErrorType.AccountValidError
@@ -55,10 +51,11 @@ router.get('/join_private_room', async (ctx, next) => {
   var rpid = ctx.query.roomid
   var isValid = await tokenManager.isAccountValid(userid, token)
   if (isValid) {
-    var ret = await roomFactory.enterRoom(userid, rpid)
+    var ret = await roomManager.preEnterRoom(userid, rpid)
     console.log(ret)
     if (ret.code == 0) {
-      ctx.json = ret.data
+      let room = ret.data.room
+      ctx.json = { rpid: room.roomPresentId, sign: room.sign }
     }
     if (ret.code == 1) {
       ctx.error = ErrorType.RoomNotExistError

@@ -8,11 +8,7 @@ const cors = require('koa2-cors')
 const convert = require('koa-convert')
 const middleware = require('./koa/middleware')
 const http = require('http')
-const io = require('./socket/io')
-const redis = require('./redis') // load reids
-;(async function() {
-  await redis.load()
-})()
+//const io = require('./socket/io')
 
 app.keys = [' some secret hurr']
 const CONFIG = {
@@ -27,7 +23,6 @@ router.use('/user', require('./routers/userService').routes())
 router.use('/room', require('./routers/roomService').routes())
 router.use('/hall', require('./routers/hallService').routes())
 router.use('/admax', require('./routers/admaxService').routes())
-router.use('/anysdk', require('./serviceAnySDK/login').routes())
 router.use('*', require('./routers/index').routes())
 
 app
@@ -51,25 +46,20 @@ app
 
 const server = http.createServer(app.callback())
 server.listen(8082, '0.0.0.0')
-io.attach(server)
+//io.attach(server)
 
 process.on('unhandledRejection', error => {
   console.error('unhandledRejection', error)
 })
 
-//test socket
-const roomManager = require('./roomManager/roomManager')
-roomManager.start().then(() => {
-  console.log(roomManager.data)
-  let app2 = new Koa()
-  let server2 = http.createServer(app2.callback())
-  var io2 = require('socket.io')(server2)
-  io2.on('connection', socket => {
-    console.log('user connected')
-    require('./socket/ioroom')(socket)
-  })
-  server2.listen(9000)
+let app2 = new Koa()
+let server2 = http.createServer(app2.callback())
+var io2 = require('socket.io')(server2)
+io2.on('connection', socket => {
+  console.log('user connected')
+  require('./socket/ioroom')(socket)
 })
+server2.listen(9000)
 
 const sharedManager = require('./sharedManager/sharedManager')
 sharedManager.start()
