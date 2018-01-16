@@ -1,4 +1,9 @@
-export default class Qipaishi {
+const UserType = {
+	OFF: 0, //离线
+	ON: 1, //在线
+	GAME: 2 //游戏
+}
+class Qipaishi {
 	constructor(item) {
 		this.qid = item.qpsid
 		this.name = item.qpsname
@@ -11,3 +16,5 @@ export default class Qipaishi {
 
 	start() {}
 }
+
+module.exports = Qipaishi
