@@ -5,7 +5,7 @@ CREATE TABLE nv_users (
   userid int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   account varchar(64) DEFAULT NULL COMMENT '手机账号',
   wxid varchar(64) DEFAULT NULL COMMENT '微信唯一标识',
-  name varchar(32) NOT NULL COMMENT '用户昵称',
+  name varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '用户昵称',
   sex int(1) DEFAULT 1,
   headimg varchar(256) DEFAULT NULL,
   city varchar(64) DEFAULT NULL,

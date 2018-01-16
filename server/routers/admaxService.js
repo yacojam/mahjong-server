@@ -18,7 +18,7 @@ function checkToken() {
     const userid = ctx.cookies.get('userid')
     const token = ctx.cookies.get('token')
 
-    let isValid = await tokenManager.isAccountValid('admxa_' + userid, token)
+    let isValid = await tokenManager.isAccountValid("admax_" + userid, token);
     if (isValid) {
       return next()
     } else {
@@ -31,14 +31,15 @@ router.use(checkToken())
 
 router.post('/login', async (ctx, next) => {
   try {
-    const { username, passwd } = ctx.request.body
-    let user = await AdmaxDao.getUser(username, passwd)
-    let token = tokenManager.generateToken('admxa_' + user.userid)
+    const { username, passwd } = ctx.request.body;
+    let user = await AdmaxDao.getUser(username, passwd);
+    let token = tokenManager.generateToken("admax_" + user.userid);
 
-    ctx.cookies.set('token', token)
-    ctx.cookies.set('userid', user.userid)
-    ctx.cookies.set('username', user.username)
-    ctx.json = Object.assign({}, user, { token })
+    ctx.cookies.set("token", token);
+    ctx.cookies.set("userid", user.userid);
+    ctx.cookies.set("username", user.username);
+
+    ctx.json = Object.assign({}, user, { token });
   } catch (e) {
     ctx.error = {
       code: ErrorType.AccountError,

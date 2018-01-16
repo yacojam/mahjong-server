@@ -14,7 +14,7 @@ const CONFIG_FIELDS = {
 
 exports.getConfig = async function(versionName) {
   const cfg = await DBBase.select(CONFIG_TABLE, `versionname='${versionName}'`)
-  return fieldMapper(cfg)
+  return cfg ? fieldMapper(cfg) : null
 }
 
 exports.getAllConfigs = async function() {
