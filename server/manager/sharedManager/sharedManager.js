@@ -1,4 +1,4 @@
-const shareRedisDao = require('../redis/shareRedisDao')
+const shareRedisDao = require('../../redis/shareRedisDao')
 
 function start() {
 	setCleanTime()

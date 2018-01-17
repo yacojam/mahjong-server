@@ -61,5 +61,5 @@ io2.on('connection', socket => {
 })
 server2.listen(9000)
 
-const sharedManager = require('./sharedManager/sharedManager')
+const sharedManager = require('./manager/sharedManager/sharedManager')
 sharedManager.start()
