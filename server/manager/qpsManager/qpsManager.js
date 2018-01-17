@@ -171,7 +171,8 @@ async function connectQps(userid, qpsid) {
 	return ret
 }
 
-async function disconnectQps(userid, qpsid) {
+function disconnectQps(userid) {
+	let qpsid = user2ids[userid]
 	let qps = QPSMap[qpsid]
 	qps.getUser(userid).onlineType = 0
 	ret.code = 0

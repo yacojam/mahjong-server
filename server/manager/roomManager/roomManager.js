@@ -231,6 +231,14 @@ function isMatched(rpid, sign) {
 	return room.sign == sign
 }
 
+function getRoomsForQps(qpsid) {
+	return Object.keys(RoomMap)
+		.map(key => RoomMap[key])
+		.filter(r => {
+			return r.state == 0 && r.qpsid && r.qpsid == qpsid
+		})
+}
+
 module.exports = {
 	createRoom,
 	preEnterRoom,
@@ -240,5 +248,6 @@ module.exports = {
 	finishRoom,
 	getRoomForUserId,
 	isMatched,
-	isRoomValid
+	isRoomValid,
+	getRoomsForQps
 }

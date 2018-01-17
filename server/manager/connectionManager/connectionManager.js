@@ -7,6 +7,7 @@ function bind(socket, userid) {
 
 function del(userid) {
 	if (!!userConnections[userid]) {
+		userConnections[userid].userid = null
 		delete userConnections[userid]
 	}
 }
