@@ -1,9 +1,27 @@
 const UserDao = require('../db/UserDao')
 const QpsDao = require('../../db/QpsDao')
 const Qipaishi = require('./qpsInfo')
+const UserType = {
+	OFF: 0, //离线
+	ON: 1, //在线
+	GAME: 2 //游戏
+}
 
 let QPSMap = {}
 let user2ids = {}
+
+async function start() {
+	let allQpsData = await QpsDao.getAllQps()
+	if (allQpsData && allQpsData.length > 0) {
+		for (let data of allQpsData) {
+			QPSMap[data.qpsid] = new Qipaishi(data)
+			let allQpsUserids = await QpsDao.getAllUserIds(data.qpsid)
+			for (let userid of allQpsUserids) {
+				await addUser(QPSMap[data.qpsid], userid)
+			}
+		}
+	}
+}
 
 async function canCreateQps(userid) {
 	let cardNum = await UserDao.getCardNum(userid)
@@ -17,11 +35,60 @@ async function canCreateQps(userid) {
 	return true
 }
 
-function getValidQpsID() {}
+function generateRandomId() {
+	var qid = ''
+	for (var i = 0; i < 6; i++) {
+		qid += Math.floor(Math.random() * 10)
+	}
+	return qid
+}
 
-async function createQps(userid, qpsname, qpsnotice, rules) {}
+function getValidQpsID() {
+	let qid = generateRandomId()
+	if (isValid(qid)) {
+		return getValidQpsID()
+	}
+	return qid
+}
 
-async function updateQps(qpsData) {}
+function isValid(qid) {
+	return QPSMap[qid] != null
+}
+
+async function activeQps(userid, qpsid) {}
+
+async function createQps(userid, qpsname, qpsnotice, rules) {
+	let ret = {}
+	let canCreate = await canCreate(userid)
+	if (!canCreate) {
+		ret.code = 1
+		return ret
+	}
+	let qpsid = getValidQpsID()
+	let data = {
+		qpsid,
+		qpsname,
+		qpsname,
+		rules: JSON.stringify(rules)
+	}
+	await QpsDao.createQps(data)
+	await QpsDao.insertRelation({
+		userid,
+		qpsid,
+		iscreator: true
+	})
+	QPSMap[qpsid] = new Qipaishi(data)
+	addUser(QPSMap[qpsid], userid)
+}
+
+async function updateQps(qpsid, qpsData) {
+	let ret = {}
+	await QpsDao.updateQps(qpsid, qpsData)
+	let qps = QPSMap[qpsid]
+	qps.update(qpsData)
+	ret.code = 0
+	return ret
+}
 
 async function deleteQps(userid, qpsid) {
 	let ret = {}
@@ -111,15 +178,6 @@ async function disconnectQps(userid, qpsid) {
 	ret.data = { qps }
 	delete user2ids[userid]
 	return ret
-}
-
-async function start() {
-	let allQpsData = await QpsDao.getAllQps()
-	if (allQpsData && allQpsData.length > 0) {
-		allQpsData.forEach(data => {
-			QPSMap[data.qpsid] = new Qipaishi(data)
-		})
-	}
 }
 
 async function addUser(qps, userid) {

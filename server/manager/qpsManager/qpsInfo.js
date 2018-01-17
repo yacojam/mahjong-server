@@ -1,8 +1,3 @@
-const UserType = {
-	OFF: 0, //离线
-	ON: 1, //在线
-	GAME: 2 //游戏
-}
 class Qipaishi {
 	constructor(item) {
 		this.qid = item.qpsid
@@ -11,10 +6,23 @@ class Qipaishi {
 		this.rules = JSON.parse(item.rules)
 		this.users = []
 		this.running = true
-		this.start()
 	}
 
-	start() {}
+	getUser(userid) {
+		return this.users.find(u => u.userid == userid)
+	}
+
+	update(item) {
+		if (item.name) {
+			this.name = item.name
+		}
+		if (item.notice) {
+			this.notice = item.notice
+		}
+		if (item.rules) {
+			this.rules = item.rules
+		}
+	}
 }
 
 module.exports = Qipaishi

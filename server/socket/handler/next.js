@@ -173,6 +173,7 @@ function endGameWithLiuJu(room) {
 		seatItem.ready = false
 		seatItem.actions = []
 		seatItem.pendingAction = null
+		seatItem.gameResult = null
 	})
 	room.state = RoomState.GAMEOVER
 }

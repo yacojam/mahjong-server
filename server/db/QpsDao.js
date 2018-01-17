@@ -12,12 +12,16 @@ function deleteQps(qpsid) {
 	return DBBase.deleteWhere('nv_qps', `qpsid='${qpsid}'`)
 }
 
-function deleteQpsAllRelation(qpsid) {
-	return DBBase.deleteWhere('nv_qps_user', `qpsid='${qpsid}'`)
+function updateQps(qpsid, data) {
+	return DBBase.update('nv_qps', data, `qpsid='${qpsid}'`)
 }
 
 function getAllQps() {
 	return DBBase.selectAll('nv_qps')
+}
+
+function deleteQpsAllRelation(qpsid) {
+	return DBBase.deleteWhere('nv_qps_user', `qpsid='${qpsid}'`)
 }
 
 function insertRelation(data) {
