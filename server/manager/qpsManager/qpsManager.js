@@ -181,6 +181,10 @@ function disconnectQps(userid) {
 	return ret
 }
 
+function getQps(qpsid) {
+	return QPSMap[qpsid] || null
+}
+
 async function addUser(qps, userid) {
 	let userData = await UserDao.getUserDataByUserid(userid)
 	userData.onlineType = 0

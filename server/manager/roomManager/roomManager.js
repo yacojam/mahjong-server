@@ -249,5 +249,6 @@ module.exports = {
 	getRoomForUserId,
 	isMatched,
 	isRoomValid,
-	getRoomsForQps
+	getRoomsForQps,
+	getRoom
 }

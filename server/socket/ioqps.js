@@ -37,7 +37,41 @@ function bind(socket) {
         disconnect(socket.userid)
     })
 
-    socket.on('user_enter_room', async userData => {})
+    socket.on('user_enter_room', async userData => {
+        if (socket.userid != null) {
+            return
+        }
+        let ret = {}
+        userData =
+            typeof userData === 'string' ? JSON.parse(userData) : userData
+        let { rpid, qpsid } = userData
+        let qps = qpsManager.getQps(qpsid)
+        if (qps.users.every(u => u.userid != socket.userid)) {
+            //参数不对
+            ret.code = 1
+            socket.emit('user_enter_room_result', ret)
+            return
+        }
+        let room = roomManager.getRoom(rpid)
+        if (room && room.qpsid && room.qpsid = qpsid) {
+            let enterRet = await roomManager.preEnterRoom(socket.userid, rpid)
+            if (enterRet.code != 0) {
+                //房间满了
+                ret.code = 2
+                socket.emit('user_enter_room_result', ret)
+                return
+            } else {
+                ret.code = 0
+                ret.data = { rpid: room.roomPresentId, sign: room.sign }
+                socket.emit('user_enter_room_result', ret)
+                return
+            }
+        } else {
+            ret.code = 1
+            socket.emit('user_enter_room_result', ret)
+            return
+        }
+    })
 }
 
 function getQpsData(qps) {
