@@ -1,5 +1,6 @@
 const roomManager = require('../manager/roomManager/roomManager')
 const connectionManager = require('../manager/connectionManager/connectionManager')
+const qpsManager = require('../manager/qpsManager/qpsManager')
 const Error = require('../routers/ServerError')
 const userDao = require('../db/UserDao')
 const Next = require('./handler/next')
@@ -172,6 +173,12 @@ function bind(socket) {
         if (!seat.dissolved) {
             seat.dissolved = true
             socket.emit('dissolve_agree_send_success', {})
+            broadcastInRoom(
+                'dissolve_request_agree_push',
+                { userid },
+                userid,
+                true
+            )
             let dissolved = room.seats.every(s => s.dissolved)
             if (dissolved) {
                 clearTimeout(room.dissolveId)
@@ -200,12 +207,7 @@ function bind(socket) {
         room.dissolveId = null
         room.dissolveUid = null
         room.seats.forEach(s => (s.dissolved = false))
-        broadcastInRoom(
-            'dissolve_request_failed',
-            { userid, time: 30000 },
-            userid,
-            false
-        )
+        broadcastInRoom('dissolve_request_failed', { userid }, userid, true)
     })
 
     socket.on('user_ready', async userData => {
@@ -336,6 +338,13 @@ function broadcastWithRoom(message, data, room, userid, includedSender) {
             }
         }
     }
+}
+
+function broadcastInQps(msg, data, qpsid) {
+    let qps = qpsManager.getQps(qpsid)
+    qps.users.filter(u => u.onlineType == 1).forEach(u => {
+        connectionManager.sendMessage(u.userid, msg, data)
+    })
 }
 
 module.exports = bind
