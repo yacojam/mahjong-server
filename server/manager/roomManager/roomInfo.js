@@ -54,6 +54,7 @@ class Room {
         this.isJuSameWithRoom = rule.numOfJu === 1
         this.dissolveId = null
         this.dissolveUid = null
+        this.dissolved = false
     }
 
     getUserIndex(userid) {

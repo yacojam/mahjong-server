@@ -172,7 +172,10 @@ async function dissolveRoom(rpid) {
 			await userDao.updateRoomID(seat.userid, '')
 		}
 	}
-	delRoom(rpid)
+	room.dissolved = true
+	setTimeout(() => {
+		delRoom(rpid)
+	}, 600000)
 	if (room.state == 0) {
 		await userDao.addCardNum(room.createUid, room.rule.numOfJu)
 	}

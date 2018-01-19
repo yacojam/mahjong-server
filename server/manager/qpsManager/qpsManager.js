@@ -1,4 +1,4 @@
-const UserDao = require('../db/UserDao')
+const UserDao = require('../../db/UserDao')
 const QpsDao = require('../../db/QpsDao')
 const Qipaishi = require('./qpsInfo')
 const UserType = {

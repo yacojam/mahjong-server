@@ -72,16 +72,22 @@ function bind(socket) {
         seat.online = true
         //返回数据给客户端
         ret = await Next.getRoomData(room, userid)
-        if (room.dissolveId != null && room.dissolveUid != null) {
+        if (
+            (room.dissolveId != null && room.dissolveUid != null) ||
+            room.dissolved
+        ) {
+            let dSeats = room.seats.filter(u => u.dissolved).map(u => u.userid)
             ret.data.dissolveData = {
+                roomDissoved: room.dissolved,
                 userid: room.dissolveUid,
-                time: 60000,
-                dissolved: seat.dissolved
+                time: room.time,
+                dissolved: seat.dissolved,
+                dSeats
             }
         }
         console.log(ret)
         socket.emit('user_join_result', ret)
-        if (room.state === RoomState.ROOMOVER) {
+        if (room.state === RoomState.ROOMOVER || room.dissolved) {
             socket.disconnect()
             return
         }
@@ -146,17 +152,21 @@ function bind(socket) {
             if (room.dissolveId) {
                 room.dissolveId = null
                 room.dissolveUid = null
+                clearInterval(room.dissolveTimeId)
+                room.dissolveTimeId = null
                 dissolveRoom(room.roomPresentId)
             }
         }, 61000)
+        room.time = 61
+        room.dissolveTimeId = setInterval(() => {
+            room.time = room.time - 1
+            if (room.time == 0) {
+                clearInterval(room.dissolveTimeId)
+            }
+        }, 1000)
         room.dissolveUid = userid
         room.getUserSeat(userid).dissolved = true
-        broadcastInRoom(
-            'dissolve_request_push',
-            { userid, time: 60000 },
-            userid,
-            true
-        )
+        broadcastInRoom('dissolve_request_push', { userid }, userid, true)
     })
 
     socket.on('dissolve_request_agree', async userData => {
@@ -204,8 +214,10 @@ function bind(socket) {
             return
         }
         clearTimeout(room.dissolveId)
+        clearInterval(room.dissolveTimeId)
         room.dissolveId = null
         room.dissolveUid = null
+        room.dissolveTimeId = null
         room.seats.forEach(s => (s.dissolved = false))
         broadcastInRoom('dissolve_request_failed', { userid }, userid, true)
     })
