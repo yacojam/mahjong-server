@@ -122,7 +122,7 @@ async function joinRoom(userid, rpid) {
 		seat.userid = userid
 		seat.username = dbData.name
 		seat.headimg = dbData.headimg
-		seat.isCreator = room.isCreator(userid)
+		seat.isCreator = room.isCreator(userid) && room.qpsid == null
 		seat.sex = dbData.sex
 		setRidForUid(rpid, userid)
 		await userDao.updateRoomID(userid, rpid)

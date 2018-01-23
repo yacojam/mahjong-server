@@ -17,3 +17,12 @@ CREATE TABLE nv_qps_user (
   iscreator bool NOT NULL COMMENT '是否是创建者',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS nv_qps_msg;
+CREATE TABLE nv_qps_msg (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  userid int(11) unsigned NOT NULL COMMENT '用户ID',
+  qpsid varchar(8) NOT NULL COMMENT '棋牌室6位展示数字'
+  PRIMARY KEY (id)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;

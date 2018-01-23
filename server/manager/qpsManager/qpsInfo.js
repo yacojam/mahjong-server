@@ -6,6 +6,7 @@ class Qipaishi {
 		this.rules = JSON.parse(item.rules)
 		this.users = []
 		this.running = true
+		this.creator = null
 	}
 
 	getUser(userid) {

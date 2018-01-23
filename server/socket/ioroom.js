@@ -8,8 +8,19 @@ const RoomState = Next.RoomState
 const actionHandle = require('./handler/handler')
 
 async function dissolveRoom(rpid) {
+    //如果解散的是棋牌室房间
+    let qpsid = roomManager.getRoom(rpid).qpsid
+    let qps = null
+    if (qpsid) {
+        qps = qpsManager.getQps(room.qpsid)
+    }
     let users = await roomManager.dissolveRoom(rpid)
     for (let userid of users) {
+        if (qpsid) {
+            let user = qps.getUser(userid)
+            user.onlineType = 0
+            broadcastInQps('qps_user_off', user, qps)
+        }
         let socket = connectionManager.get(userid)
         if (socket != null) {
             socket.emit('room_dissoved', {})
@@ -20,8 +31,19 @@ async function dissolveRoom(rpid) {
 }
 
 async function finishRoom(rpid) {
+    //如果结束的是棋牌室房间
+    let qpsid = roomManager.getRoom(rpid).qpsid
+    let qps = null
+    if (qpsid) {
+        qps = qpsManager.getQps(room.qpsid)
+    }
     let users = await roomManager.finishRoom(rpid)
     for (let userid of users) {
+        if (qpsid) {
+            let user = qps.getUser(userid)
+            user.onlineType = 0
+            broadcastInQps('qps_user_off', user, qps)
+        }
         let socket = connectionManager.get(userid)
         if (socket != null) {
             socket.emit('room_finished', {})
@@ -64,7 +86,6 @@ function bind(socket) {
             return
         }
         let { room, isnew, emptyIndex } = joinRet.data
-        console.log(room)
         if (isnew) {
             room.seats[emptyIndex].ready = room.isCreator(userid)
         }
@@ -96,6 +117,14 @@ function bind(socket) {
         let msg = isnew ? 'new_user_come' : 'user_state_changed'
         let data = isnew ? seat : { userid: userid, online: true }
         broadcastInRoom(msg, data, userid, false)
+
+        //如果进入的是棋牌室房间
+        if (isnew && room.qpsid) {
+            let qps = qpsManager.getQps(room.qpsid)
+            let user = qps.getUser(userid)
+            user.onlineType = 2
+            broadcastInQps('qps_user_game', user, qps)
+        }
     })
 
     socket.on('user_exit', async userData => {
@@ -117,6 +146,14 @@ function bind(socket) {
         connectionManager.del(userid)
         socket.emit('exit_success', {})
         socket.disconnect()
+
+        //退出的是棋牌室房间
+        if (ret.room.qpsid) {
+            let qps = qpsManager.getQps(ret.room.qpsid)
+            let user = qps.getUser(userid)
+            user.onlineType = 0
+            broadcastInQps('qps_user_off', user, qps)
+        }
     })
 
     //解散房间
@@ -352,8 +389,7 @@ function broadcastWithRoom(message, data, room, userid, includedSender) {
     }
 }
 
-function broadcastInQps(msg, data, qpsid) {
-    let qps = qpsManager.getQps(qpsid)
+function broadcastInQps(msg, data, qps) {
     qps.users.filter(u => u.onlineType == 1).forEach(u => {
         connectionManager.sendMessage(u.userid, msg, data)
     })
