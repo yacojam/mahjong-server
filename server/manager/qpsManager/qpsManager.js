@@ -16,15 +16,16 @@ async function start(func) {
 	let allQpsData = await QpsDao.getAllQps()
 	if (allQpsData && allQpsData.length > 0) {
 		for (let data of allQpsData) {
-			QPSMap[data.qpsid] = new Qipaishi(data)
+			let qps = new Qipaishi(data)
 			let allQpsUserids = await QpsDao.getAllUserIds(data.qpsid)
 			for (let userData of allQpsUserids) {
-				await addUser(QPSMap[data.qpsid], userData.userid)
+				await addUser(qps, userData.userid)
 				if (userData.iscreator) {
-					QPSMap[data.qpsid].creator = userData.userid
+					qps.creator = userData.userid
 				}
 			}
-			await _runQps(QPSMap[data.qpsid])
+			await _runQps(qps)
+			QPSMap[data.qpsid] = qps
 		}
 	}
 }
@@ -49,14 +50,38 @@ async function createRoomForQps(qps) {
 
 async function canCreateQps(userid) {
 	let cardNum = await UserDao.getCardNum(userid)
-	if (cardNum < 500) {
-		return false
+	if (cardNum < 1000) {
+		//房卡不够
+		return 1
 	}
-	let qps = await QpsDao.getCreatedQps()
-	if (qps) {
-		return false
+	let qps = await QpsDao.getAllQpsIds()
+	if (qps && qps.length > 4) {
+		//创建和加入的棋牌室总数超过限制
+		return 2
 	}
-	return true
+	return 0
+}
+
+async function createQps(userid, qpsname, qpsnotice, rules) {
+	let ret = {}
+	let qpsid = getValidQpsID()
+	let data = {
+		qpsid,
+		qpsname,
+		qpsnotice,
+		rules: JSON.stringify(rules)
+	}
+	await QpsDao.createQps(data)
+	await QpsDao.insertRelation({
+		userid,
+		qpsid,
+		iscreator: true
+	})
+	QPSMap[qpsid] = new Qipaishi(data)
+	QPSMap[qpsid].creator = userid
+	addUser(QPSMap[qpsid], userid)
+	await _runQps(QPSMap[qpsid])
+	return QPSMap[qpsid]
 }
 
 function generateRandomId() {
@@ -80,63 +105,27 @@ function isValid(qid) {
 }
 
 async function activeQps(userid, qpsid) {
-	let ret = {}
 	let qps = QPSMap[qpsid]
-	if (!qps || qps.creator != userid) {
-		ret.code = 1
-		return ret
+	if (qps.running) {
+		return true
 	}
-	let aret = await _runQps(qps)
-	if (!aret) {
-		ret.code = 2
-		return ret
+	let cardNum = await UserDao.getCardNum(userid)
+	if (cardNum < 300) {
+		return false
 	}
+	await _runQps(qps)
 	qps.running = true
-	ret.code = 0
-	return ret
-}
-
-async function createQps(userid, qpsname, qpsnotice, rules) {
-	let ret = {}
-	let canCreate = await canCreate(userid)
-	if (!canCreate) {
-		ret.code = 1
-		return ret
-	}
-	let qpsid = getValidQpsID()
-	let data = {
-		qpsid,
-		qpsname,
-		qpsname,
-		rules: JSON.stringify(rules)
-	}
-	await QpsDao.createQps(data)
-	await QpsDao.insertRelation({
-		userid,
-		qpsid,
-		iscreator: true
-	})
-	QPSMap[qpsid] = new Qipaishi(data)
-	addUser(QPSMap[qpsid], userid)
+	return true
 }
 
 async function updateQps(qpsid, qpsData) {
-	let ret = {}
 	await QpsDao.updateQps(qpsid, qpsData)
 	let qps = QPSMap[qpsid]
 	qps.update(qpsData)
-	ret.code = 0
-	return ret
 }
 
 async function deleteQps(userid, qpsid) {
 	let ret = {}
-	let qpsIdData = await QpsDao.getQpsForUserid(userid, qpsid)
-	if (!qpsIdData || !qpsIdData.iscreator) {
-		//参数不对
-		ret.code = 1
-		return ret
-	}
 	let qps = QPSMap[qpsid]
 	let userids = qps.users.filter(u => u.onlineType == 1).map(u => u.userid)
 	userids.forEach(uid => {
@@ -273,12 +262,13 @@ function getQps(qpsid) {
 
 async function addUser(qps, userid) {
 	let userData = await UserDao.getUserDataByUserid(userid)
-	userData.onlineType = 0
-	qps.users.push(userData)
+	let { userid, name, headimg } = userData
+	let onlineType = 0
+	qps.users.push({ userid, name, headimg, onlineType })
 }
 
 async function deleteUser(qps, userid) {
 	qps.users = qps.users.filter(u => u.userid != userid)
 }
 
-module.exports = { getQps }
+module.exports = { canCreateQps, createQps, updateQps, getQps }

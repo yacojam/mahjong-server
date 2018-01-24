@@ -23,6 +23,8 @@ DROP TABLE IF EXISTS nv_qps_msg;
 CREATE TABLE nv_qps_msg (
   id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
   userid int(11) unsigned NOT NULL COMMENT '用户ID',
-  qpsid varchar(8) NOT NULL COMMENT '棋牌室6位展示数字'
+  qpsid varchar(8) DEFAULT NULL COMMENT '棋牌室6位展示数字',
+  content varchar(256) DEFAULT NULL COMMENT '消息内容',
+  type int(10) unsigned NOT NULL COMMENT '消息类型',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
