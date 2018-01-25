@@ -164,14 +164,7 @@ router.get('/delete_qps', async (ctx, next) => {
         }
         return
       }
-      let ret = await qpsManager.activeQps(userid, qpsid)
-      if (!ret) {
-        ctx.error = {
-          code: -1,
-          message: '房卡不够'
-        }
-        return
-      }
+      let ret = await qpsManager.deleteQps(userid, qpsid)
       ctx.json = { result: true }
     } catch (e) {
       console.log(e)

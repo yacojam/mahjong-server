@@ -31,13 +31,16 @@ async function start(func) {
 }
 
 async function _runQps(qps) {
+	let rets = []
 	for (let i = 0; i < 2; i++) {
 		let ret = await createRoomForQps(qps)
 		if (ret.code != 0) {
-			return false
+			return rets
+		} else {
+			rets.push(ret.data.room)
 		}
 	}
-	return true
+	return rets
 }
 
 async function createRoomForQps(qps) {
@@ -113,7 +116,7 @@ async function activeQps(userid, qpsid) {
 	if (cardNum < 300) {
 		return false
 	}
-	await _runQps(qps)
+	let rets = await _runQps(qps)
 	qps.running = true
 	return true
 }
