@@ -138,7 +138,6 @@ function bind(socket) {
         }
         //牌局已经开始，建议走申请牌局解散
         if (ret.code == 2) {
-            socket.emit('want_dissolve', {})
             return
         }
         //通知其他玩家有人退出房间
@@ -169,7 +168,6 @@ function bind(socket) {
         }
         //牌局已经开始，建议走申请牌局解散
         if (room.state != 0) {
-            socket.emit('want_dissolve', {})
             return
         }
         await dissolveRoom(room.roomPresentId)
