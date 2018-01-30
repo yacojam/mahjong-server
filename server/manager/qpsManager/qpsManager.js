@@ -1,6 +1,7 @@
 const UserDao = require('../../db/UserDao')
 const QpsDao = require('../../db/QpsDao')
 const Qipaishi = require('./qpsInfo')
+const connectionManager = require('../connectionManager/connectionManager')
 const UserType = {
 	OFF: 0, //离线
 	ON: 1, //在线
@@ -9,10 +10,8 @@ const UserType = {
 
 let QPSMap = {}
 let user2ids = {}
-let createRoomFunc = null
 
 async function start(func) {
-	createRoomFunc = func
 	let allQpsData = await QpsDao.getAllQps()
 	if (allQpsData && allQpsData.length > 0) {
 		for (let data of allQpsData) {
@@ -44,9 +43,17 @@ async function _runQps(qps) {
 }
 
 async function createRoomForQps(qps) {
-	let ret = await createRoomFunc(qps.creator, qps.rules, qps.qpsid)
+	let roomManager = require('../roomManager/roomManager')
+	let ret = await roomManager.createRoom(qps.creator, qps.rules, qps.qpsid)
 	if (ret.code != 0) {
 		qps.running = false
+	} else {
+		let userids = qps.users
+			.filter(u => u.onlineType == 1)
+			.map(u => u.userid)
+		userids.forEach(uid => {
+			connectionManager.sendMessage(uid, 'qps_room_created', ret)
+		})
 	}
 	return ret
 }
@@ -133,13 +140,12 @@ async function deleteQps(userid, qpsid) {
 	let userids = qps.users.filter(u => u.onlineType == 1).map(u => u.userid)
 	userids.forEach(uid => {
 		delete user2ids[uid]
+		connectionManager.sendMessage(uid, 'qps_deleted', { qpsid })
 	})
 	delete QPSMap[qpsid]
 	await QpsDao.deleteQps(qpsid)
 	await QpsDao.deleteQpsAllRelation(qpsid)
 	await QpsDao.deleteQpsAllMsg(qpsid)
-	ret.code = 0
-	ret.data = { userids }
 }
 
 async function joinQpsRequest(userid, qpsid) {
@@ -274,4 +280,4 @@ async function deleteUser(qps, userid) {
 	qps.users = qps.users.filter(u => u.userid != userid)
 }
 
-module.exports = { canCreateQps, createQps, updateQps, getQps }
+module.exports = { canCreateQps, createQps, updateQps, getQps, deleteQps }

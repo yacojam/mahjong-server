@@ -57,7 +57,7 @@ router.get('/create_qps', async (ctx, next) => {
       if (typeof rules === 'string') {
         rules = JSON.parse(rules)
       }
-      let qps = await createQps(userid, qpsname, qpsnotice, rules)
+      let qps = await qpsManager.createQps(userid, qpsname, qpsnotice, rules)
       ctx.json = { qps }
     } catch (e) {
       console.log(e)
@@ -164,8 +164,36 @@ router.get('/delete_qps', async (ctx, next) => {
         }
         return
       }
-      let ret = await qpsManager.deleteQps(userid, qpsid)
+      await qpsManager.deleteQps(userid, qpsid)
       ctx.json = { result: true }
+    } catch (e) {
+      console.log(e)
+      ctx.error = {
+        code: -1,
+        message: e.message || e.toString
+      }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
+router.get('/get_qps', async (ctx, next) => {
+  let userid = ctx.header.userid
+  let token = ctx.header.token
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    try {
+      let { qpsid } = ctx.query
+      let qps = qpsManager.getQps(qpsid)
+      if (qps == null || qps.getUser(userid) == null) {
+        ctx.error = {
+          code: -1,
+          message: '参数校验出错'
+        }
+        return
+      }
+      ctx.json = { qps }
     } catch (e) {
       console.log(e)
       ctx.error = {
