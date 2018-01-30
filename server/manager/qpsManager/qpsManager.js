@@ -1,6 +1,7 @@
 const UserDao = require('../../db/UserDao')
 const QpsDao = require('../../db/QpsDao')
 const Qipaishi = require('./qpsInfo')
+const MsgDao = require('../../db/MsgDao')
 const connectionManager = require('../connectionManager/connectionManager')
 const UserType = {
 	OFF: 0, //离线
@@ -11,7 +12,7 @@ const UserType = {
 let QPSMap = {}
 let user2ids = {}
 
-async function start(func) {
+async function start() {
 	let allQpsData = await QpsDao.getAllQps()
 	if (allQpsData && allQpsData.length > 0) {
 		for (let data of allQpsData) {
@@ -148,94 +149,43 @@ async function deleteQps(userid, qpsid) {
 	await QpsDao.deleteQpsAllMsg(qpsid)
 }
 
-async function joinQpsRequest(userid, qpsid) {
+async function exitQps(userid, qpsid) {
 	let ret = {}
 	let qps = QPSMap[qpsid]
-	if (!qps) {
-		//棋牌室不存在
-		ret.code = 1
-		return ret
+	await deleteUser(qps, userid)
+	await QpsDao.deleteRelation(userid, qpsid)
+	ret.code = 0
+	ret.data = { qps }
+	return ret
+}
+
+async function joinQpsRequest(userid, qpsid) {
+	let qps = QPSMap[qpsid]
+	let isExist = await MsgDao.getQpsJoinMsg(userid, qpsid)
+	if (isExist != null) {
+		return
 	}
-	if (qps.users.some(user => user.userid == userid)) {
-		//已经在棋牌室里面了
-		ret.code = 2
-		return ret
-	}
-	if (qps.users.length >= 500) {
-		//已满
-		ret.code = 3
-		return ret
-	}
-	let isExist = await QpsDao.getJoinMsg(userid, qpsid)
-	if (isExist) {
-		ret.code = 4
-		return ret
-	}
-	await QpsDao.insertJoinMsg({
+	await MsgDao.insertQpsJoinMsg({
 		userid,
 		qpsid
 	})
-	ret.code = 0
-	return ret
 }
 
 async function agreeJoinQpsRequest(userid, qpsid, creator) {
 	let ret = {}
 	let qps = QPSMap[qpsid]
-	if (!qps || qps.creator != creator) {
-		//棋牌室不存在或者创建者不一致
-		ret.code = 1
-		return ret
-	}
-	if (qps.users.some(user => user.userid == userid)) {
-		//已经在棋牌室里面了
-		ret.code = 2
-		return ret
-	}
-	if (qps.users.length >= 500) {
-		//已满
-		ret.code = 3
-		return ret
-	}
-	await QpsDao.handleJoinMsg(userid, qpsid)
+	await MsgDao.handleQpsJoinMsg(userid, qpsid)
 	await addUser(qps, userid)
 	await QpsDao.insertRelation({
 		userid,
 		qpsid,
 		iscreator: false
 	})
-	ret.code = 0
-	ret.data = { qps }
-	return ret
 }
 
 async function rejectJoinQpsRequest(userid, qpsid, creator) {
-	let ret = {}
 	let qps = QPSMap[qpsid]
-	if (!qps || qps.creator != creator) {
-		//棋牌室不存在或者创建者不一致
-		ret.code = 1
-		return ret
-	}
-	await QpsDao.handleJoinMsg(userid, qpsid)
-	ret.code = 0
-	ret.data = { qps }
-	return ret
-}
-
-async function exitQps(userid, qpsid) {
-	let ret = {}
-	let qps = QPSMap[qpsid]
-	if (!qps) {
-		//棋牌室不存在
-		ret.code = 1
-		return ret
-	}
-	await deleteUser(qps, userid)
-	await QpsDao.deleteRelation(userid, qpsid)
-	ret.code = 0
-	ret.data = { qps }
-	return ret
+	await MsgDao.handleQpsJoinMsg(userid, qpsid)
 }
 
 //进入qps
@@ -280,4 +230,14 @@ async function deleteUser(qps, userid) {
 	qps.users = qps.users.filter(u => u.userid != userid)
 }
 
-module.exports = { canCreateQps, createQps, updateQps, getQps, deleteQps }
+module.exports = {
+	canCreateQps,
+	createQps,
+	updateQps,
+	getQps,
+	deleteQps,
+	exitQps,
+	joinQpsRequest,
+	agreeJoinQpsRequest,
+	rejectJoinQpsRequest
+}

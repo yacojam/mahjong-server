@@ -50,29 +50,6 @@ function getQpsForUserid(userid, qpsid) {
 	)
 }
 
-//
-function insertJoinMsg(userid, qpsid) {
-	return DBBase.insert('nv_qps_msg', { userid, qpsid })
-}
-
-function handleJoinMsg(userid, qpsid) {
-	return DBBase.deleteWhere(
-		'nv_qps_msg',
-		`userid='${userid}' and qpsid='${qpsid}'`
-	)
-}
-
-function getJoinMsg(userid, qpsid) {
-	return DBBase.select(
-		'nv_qps_msg',
-		`userid='${userid}' and qpsid='${qpsid}'`
-	)
-}
-
-function deleteQpsAllMsg(qpsid) {
-	return DBBase.deleteWhere('nv_qps_msg', `qpsid='${qpsid}'`)
-}
-
 module.exports = {
 	createQps,
 	getQpsData,

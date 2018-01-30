@@ -206,4 +206,148 @@ router.get('/get_qps', async (ctx, next) => {
   }
 })
 
+router.get('/exit_qps', async (ctx, next) => {
+  let userid = ctx.header.userid
+  let token = ctx.header.token
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    try {
+      let { qpsid } = ctx.query
+      let qps = qpsManager.getQps(qpsid)
+      if (qps == null || qps.getUser(userid) == null) {
+        ctx.error = {
+          code: -1,
+          message: '参数校验出错'
+        }
+        return
+      }
+      await qpsManager.exitQps(userid, qpsid)
+      ctx.json = { result: true }
+    } catch (e) {
+      console.log(e)
+      ctx.error = {
+        code: -1,
+        message: e.message || e.toString
+      }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
+router.get('/join_qps_request', async (ctx, next) => {
+  let userid = ctx.header.userid
+  let token = ctx.header.token
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    try {
+      let { qpsid } = ctx.query
+      let qps = qpsManager.getQps(qpsid)
+      if (qps == null) {
+        ctx.error = {
+          code: -1,
+          message: '参数校验出错'
+        }
+        return
+      }
+      if (qps.getUser(userid) != null) {
+        ctx.error = {
+          code: -1,
+          message: '您已经在棋牌室中'
+        }
+        return
+      }
+      if (qps.users.length >= 500) {
+        ctx.error = {
+          code: -1,
+          message: '棋牌室已满'
+        }
+        return
+      }
+      await qpsManager.joinQpsRequest(userid, qpsid)
+      ctx.json = { result: true }
+    } catch (e) {
+      console.log(e)
+      ctx.error = {
+        code: -1,
+        message: e.message || e.toString
+      }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
+router.get('/agree_qps_request', async (ctx, next) => {
+  let userid = ctx.header.userid
+  let token = ctx.header.token
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    try {
+      let { qpsid, applyuid } = ctx.query
+      let qps = qpsManager.getQps(qpsid)
+      if (qps == null || qps.creator != userid) {
+        ctx.error = {
+          code: -1,
+          message: '参数校验出错'
+        }
+        return
+      }
+      if (qps.getUser(applyuid) != null) {
+        ctx.error = {
+          code: -1,
+          message: '他已经在棋牌室中'
+        }
+        return
+      }
+      if (qps.users.length >= 500) {
+        ctx.error = {
+          code: -1,
+          message: '棋牌室已满'
+        }
+        return
+      }
+      await qpsManager.agreeJoinQpsRequest(userid, qpsid)
+      ctx.json = { result: true }
+    } catch (e) {
+      console.log(e)
+      ctx.error = {
+        code: -1,
+        message: e.message || e.toString
+      }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
+router.get('/reject_qps_request', async (ctx, next) => {
+  let userid = ctx.header.userid
+  let token = ctx.header.token
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    try {
+      let { qpsid, applyuid } = ctx.query
+      let qps = qpsManager.getQps(qpsid)
+      if (qps == null || qps.creator != userid) {
+        ctx.error = {
+          code: -1,
+          message: '参数校验出错'
+        }
+        return
+      }
+      await qpsManager.rejectJoinQpsRequest(userid, qpsid)
+      ctx.json = { result: true }
+    } catch (e) {
+      console.log(e)
+      ctx.error = {
+        code: -1,
+        message: e.message || e.toString
+      }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
 module.exports = router
