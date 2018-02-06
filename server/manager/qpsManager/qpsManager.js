@@ -43,6 +43,14 @@ async function _runQps(qps) {
 	return rets
 }
 
+async function getAllQps(userid) {
+	let qpsids = await QpsDao.getAllQpsIds(userid)
+	if (qpsids && qpsids.length > 0) {
+		return qpsids.map(qpsid => getQps(qpsid))
+	}
+	return []
+}
+
 async function createRoomForQps(qps) {
 	let roomManager = require('../roomManager/roomManager')
 	let ret = await roomManager.createRoom(qps.creator, qps.rules, qps.qpsid)
@@ -171,7 +179,7 @@ async function joinQpsRequest(userid, qpsid) {
 	})
 }
 
-async function agreeJoinQpsRequest(userid, qpsid, creator) {
+async function agreeJoinQpsRequest(userid, qpsid) {
 	let ret = {}
 	let qps = QPSMap[qpsid]
 	await MsgDao.handleQpsJoinMsg(userid, qpsid)
@@ -221,7 +229,7 @@ function getQps(qpsid) {
 
 async function addUser(qps, userid) {
 	let userData = await UserDao.getUserDataByUserid(userid)
-	let { userid, name, headimg } = userData
+	let { name, headimg } = userData
 	let onlineType = 0
 	qps.users.push({ userid, name, headimg, onlineType })
 }
@@ -231,6 +239,7 @@ async function deleteUser(qps, userid) {
 }
 
 module.exports = {
+	getAllQps,
 	canCreateQps,
 	createQps,
 	updateQps,
@@ -241,3 +250,7 @@ module.exports = {
 	agreeJoinQpsRequest,
 	rejectJoinQpsRequest
 }
+
+//createQps('100008', '和县麻将', '和谐游戏', [[0], [0], [0], [0]])
+//agreeJoinQpsRequest('100007', '163130')
+

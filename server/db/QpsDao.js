@@ -56,9 +56,5 @@ module.exports = {
 	insertRelation,
 	getAllQpsIds,
 	getAllUserIds,
-	getQpsForUserid,
-	insertJoinMsg,
-	getJoinMsg,
-	handleJoinMsg,
-	deleteQpsAllMsg
+	getQpsForUserid
 }

@@ -3,6 +3,37 @@ const qpsManager = require('../manager/qpsManager/qpsManager')
 const Router = require('koa-router')
 const router = new Router()
 
+router.get('/get_all_qps', async (ctc, next) => {
+  let userid = ctx.header.userid
+  let token = ctx.header.token
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    try {
+      let qpses = await qpsManager.getAllQps(userid)
+      let result = []
+      if (qpses != []) {
+        result = qpses.map(qps => {
+          let { qpsid, qpsname } = qps
+          return {
+            qpsid,
+            qpsname,
+            usernum: qps.users.length
+          }
+        })
+      }
+      ctx.json = { result }
+    } catch (e) {
+      console.log(e)
+      ctx.error = {
+        code: -1,
+        message: e.message || e.toString
+      }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
 router.get('/can_create_qps', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token

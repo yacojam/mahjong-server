@@ -22,6 +22,7 @@ router.use('/dynamicjs', require('./routers/contentScript').routes())
 router.use('/user', require('./routers/userService').routes())
 router.use('/room', require('./routers/roomService').routes())
 router.use('/hall', require('./routers/hallService').routes())
+router.use('/qps', require('./routers/qpsService').routes())
 router.use('/admax', require('./routers/admaxService').routes())
 router.use('*', require('./routers/index').routes())
 
@@ -30,13 +31,6 @@ app
   .use(middleware)
   .use(session(CONFIG, app))
   .use(async (ctx, next) => {
-    // mock user login
-    /*
-    if (!ctx.session.uid) {
-      ctx.session.uid = 'A' + new Date().getTime()
-      console.log(`new user ${ctx.session.uid} join`)
-    }
-    */
     await next()
   })
   .use(bodyParser())
