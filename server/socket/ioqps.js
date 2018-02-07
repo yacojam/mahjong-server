@@ -14,7 +14,7 @@ function bind(socket) {
             typeof userData === 'string' ? JSON.parse(userData) : userData
         var ret = {}
         let { userid, qpsid } = userData
-        let connectRet = await qpsManager.connectQps(userid, qpsid)
+        let connectRet = qpsManager.connectQps(userid, qpsid)
         if (connectRet.code == 1) {
             ret.code = 1
             ret.error = { code: -1, msg: '参数不对' }
@@ -46,14 +46,14 @@ function bind(socket) {
             typeof userData === 'string' ? JSON.parse(userData) : userData
         let { rpid, qpsid } = userData
         let qps = qpsManager.getQps(qpsid)
-        if (qps.users.every(u => u.userid != socket.userid)) {
+        if (qps == null || qps.getUser(socket.userid) == null) {
             //参数不对
             ret.code = 1
             socket.emit('user_enter_room_result', ret)
             return
         }
         let room = roomManager.getRoom(rpid)
-        if (room && room.qpsid && room.qpsid = qpsid) {
+        if (room && room.qpsid && room.qpsid == qpsid) {
             let enterRet = await roomManager.preEnterRoom(socket.userid, rpid)
             if (enterRet.code != 0) {
                 //房间满了
@@ -77,8 +77,11 @@ function bind(socket) {
 function getQpsData(qps) {
     let onlineUsers = qps.users.filter(u => u.onlineType == 1)
     let gameUsers = qps.users.filter(u => u.onlineType == 2)
-    let allRooms = roomManager.getRoomsForQps(qps.qid)
+    let allRooms = roomManager.getRoomsForQps(qps.qpsid)
     return {
+        qpsid: qps.qpsid,
+        qpsname: qps.qpsname,
+        qpsnotice: qps.qpsnotice,
         users: onlineUsers.concat(gameUsers),
         rooms: allRooms
     }
@@ -86,7 +89,7 @@ function getQpsData(qps) {
 
 function disconnect(userid) {
     let ret = qpsManager.disconnectQps()
-    broadcastInQps('qps_user_off', {}, ret.data.qps, userid, false)
+    broadcastInQps('qps_user_off', { userid }, ret.data.qps, userid, false)
     connectionManager.del(userid)
 }
 

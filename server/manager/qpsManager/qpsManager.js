@@ -197,16 +197,19 @@ async function rejectJoinQpsRequest(userid, qpsid, creator) {
 }
 
 //进入qps
-async function connectQps(userid, qpsid) {
+function connectQps(userid, qpsid) {
 	let ret = {}
-	let qpsId = await QpsDao.getQpsForUserid(userid, qpsid)
-	if (!qpsId) {
-		//参数不对
+	let qps = QPSMap[qpsid]
+	if (qps == null) {
 		ret.code = 1
 		return ret
 	}
-	let qps = QPSMap[qpsid]
-	qps.getUser(userid).onlineType = 1
+	let user = qps.getUser(userid)
+	if (user == null) {
+		ret.code = 1
+		return ret
+	}
+	user.onlineType = 1
 	user2ids[userid] = qpsid
 	ret.code = 0
 	ret.data = { qps }
@@ -248,7 +251,9 @@ module.exports = {
 	exitQps,
 	joinQpsRequest,
 	agreeJoinQpsRequest,
-	rejectJoinQpsRequest
+	rejectJoinQpsRequest,
+	connectQps,
+	disconnectQps
 }
 
 //createQps('100008', '和县麻将', '和谐游戏', [[0], [0], [0], [0]])

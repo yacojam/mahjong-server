@@ -42,16 +42,16 @@ router.get('/can_create_qps', async (ctx, next) => {
     try {
       let canCreate = await qpsManager.canCreateQps(userid)
       if (ret == 1) {
-        ctx.error = {
-          code: -1,
-          message: '房卡不够'
+        ctx.json = {
+          result: false,
+          msg: '房卡不够'
         }
         return
       }
       if (ret == 2) {
-        ctx.error = {
-          code: -1,
-          message: '数量达到限制'
+        ctx.json = {
+          result: false,
+          msg: '数量达到限制'
         }
         return
       }
