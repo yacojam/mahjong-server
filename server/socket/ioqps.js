@@ -82,6 +82,7 @@ function getQpsData(qps) {
         let { roomPresentId, conf, seats } = room
         let users = seats.map(s => {
             return {
+                userid: s.userid,
                 username: s.username,
                 headimg: s.headimg
             }

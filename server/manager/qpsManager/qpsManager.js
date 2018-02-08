@@ -57,11 +57,17 @@ async function createRoomForQps(qps) {
 	if (ret.code != 0) {
 		qps.running = false
 	} else {
+		let { roomPresentId, conf } = ret.data.room
+		let users = []
 		let userids = qps.users
 			.filter(u => u.onlineType == 1)
 			.map(u => u.userid)
 		userids.forEach(uid => {
-			connectionManager.sendMessage(uid, 'qps_room_created', ret)
+			connectionManager.sendMessage(uid, 'qps_room_created', {
+				rpid: roomPresentId,
+				conf,
+				users
+			})
 		})
 	}
 	return ret
@@ -259,4 +265,3 @@ module.exports = {
 
 //createQps('100008', '和县麻将', '和谐游戏', [[0], [0], [0], [0]])
 //agreeJoinQpsRequest('100007', '163130')
-

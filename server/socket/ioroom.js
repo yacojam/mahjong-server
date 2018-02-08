@@ -155,7 +155,7 @@ function bind(socket) {
             broadcastInQps('qps_user_off', user, qps)
             broadcastInQps(
                 'qps_user_exit_room',
-                { user, rpid: ret.room.roomPresentId },
+                { userid: user.userid, rpid: ret.room.roomPresentId },
                 qps
             )
         }
