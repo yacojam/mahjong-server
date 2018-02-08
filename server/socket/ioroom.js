@@ -124,6 +124,7 @@ function bind(socket) {
             let user = qps.getUser(userid)
             user.onlineType = 2
             broadcastInQps('qps_user_game', user, qps)
+            broadcastInQps('qps_user_join_room', { user, rpid }, qps)
         }
     })
 
@@ -152,6 +153,11 @@ function bind(socket) {
             let user = qps.getUser(userid)
             user.onlineType = 0
             broadcastInQps('qps_user_off', user, qps)
+            broadcastInQps(
+                'qps_user_exit_room',
+                { user, rpid: ret.room.roomPresentId },
+                qps
+            )
         }
     })
 
@@ -283,6 +289,17 @@ function bind(socket) {
         broadcastInRoom('user_state_changed', data, userid, true)
         //game start
         if (room.canStart()) {
+            if (room.qpsid && !continued) {
+                qps = qpsManager.getQps(room.qpsid)
+                if (qps) {
+                    broadcastInQps(
+                        'qps_room_start',
+                        { rpid: room.roomPresentId },
+                        qps
+                    )
+                    await qpsManager.createRoomForQps(qps)
+                }
+            }
             await Next.startRoom(room)
         }
     })

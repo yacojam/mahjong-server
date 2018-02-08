@@ -78,6 +78,20 @@ function getQpsData(qps) {
     let onlineUsers = qps.users.filter(u => u.onlineType == 1)
     let gameUsers = qps.users.filter(u => u.onlineType == 2)
     let allRooms = roomManager.getRoomsForQps(qps.qpsid)
+    allRooms = allRooms.map(room => {
+        let { roomPresentId, conf, seats } = room
+        let users = seats.map(s => {
+            return {
+                username: s.username,
+                headimg: s.headimg
+            }
+        })
+        return {
+            rpid: roomPresentId,
+            conf,
+            users
+        }
+    })
     return {
         qpsid: qps.qpsid,
         qpsname: qps.qpsname,
