@@ -68,7 +68,7 @@ router.get('/can_create_qps', async (ctx, next) => {
   }
 })
 
-router.get('/create_qps', async (ctx, next) => {
+router.post('/create_qps', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
@@ -102,7 +102,7 @@ router.get('/create_qps', async (ctx, next) => {
   }
 })
 
-router.get('/update_qps', async (ctx, next) => {
+router.post('/update_qps', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
@@ -180,7 +180,7 @@ router.get('/active_qps', async (ctx, next) => {
   }
 })
 
-router.get('/delete_qps', async (ctx, next) => {
+router.post('/delete_qps', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
@@ -237,7 +237,7 @@ router.get('/get_qps', async (ctx, next) => {
   }
 })
 
-router.get('/exit_qps', async (ctx, next) => {
+router.post('/exit_qps', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
@@ -266,7 +266,7 @@ router.get('/exit_qps', async (ctx, next) => {
   }
 })
 
-router.get('/join_qps_request', async (ctx, next) => {
+router.post('/join_qps_request', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
@@ -309,7 +309,7 @@ router.get('/join_qps_request', async (ctx, next) => {
   }
 })
 
-router.get('/agree_qps_request', async (ctx, next) => {
+router.post('/agree_qps_request', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
@@ -352,7 +352,7 @@ router.get('/agree_qps_request', async (ctx, next) => {
   }
 })
 
-router.get('/reject_qps_request', async (ctx, next) => {
+router.post('/reject_qps_request', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
