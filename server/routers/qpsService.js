@@ -3,7 +3,7 @@ const qpsManager = require('../manager/qpsManager/qpsManager')
 const Router = require('koa-router')
 const router = new Router()
 
-router.get('/get_all_qps', async (ctc, next) => {
+router.get('/get_all_qps', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
   let tokenValid = await tokenManager.isAccountValid(userid, token)
