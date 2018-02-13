@@ -20,9 +20,6 @@ async function start() {
 			let allQpsUserids = await QpsDao.getAllUserIds(data.qpsid)
 			for (let userData of allQpsUserids) {
 				await addUser(qps, userData.userid)
-				if (userData.iscreator) {
-					qps.creator = userData.userid
-				}
 			}
 			await _runQps(qps)
 			QPSMap[data.qpsid] = qps
@@ -44,9 +41,9 @@ async function _runQps(qps) {
 }
 
 async function getAllQps(userid) {
-	let qpsids = await QpsDao.getAllQpsIds(userid)
-	if (qpsids && qpsids.length > 0) {
-		return qpsids.map(qpsid => getQps(qpsid))
+	let qpsArray = await QpsDao.getAllQpsIds(userid)
+	if (qpsArray && qpsArray.length > 0) {
+		return qpsArray.map(qps => getQps(qps.qpsid))
 	}
 	return []
 }
@@ -79,21 +76,25 @@ async function canCreateQps(userid) {
 		//房卡不够
 		return 1
 	}
-	let qps = await QpsDao.getAllQpsIds()
-	if (qps && qps.length > 4) {
+	let qps = await QpsDao.qpsCreatedBy()
+	if (qps && qps.length === 2) {
 		//创建和加入的棋牌室总数超过限制
 		return 2
 	}
 	return 0
 }
 
-async function createQps(userid, qpsname, qpsnotice, rules) {
+async function createQps(userid, qpsname, weixin, qpsnotice, rules) {
 	let ret = {}
 	let qpsid = getValidQpsID()
+	let cardnum = 1000
 	let data = {
+		creator: userid,
 		qpsid,
 		qpsname,
+		weixin,
 		qpsnotice,
+		cardnum,
 		rules: JSON.stringify(rules)
 	}
 	await QpsDao.createQps(data)

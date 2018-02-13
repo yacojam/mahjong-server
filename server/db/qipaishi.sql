@@ -1,7 +1,10 @@
 DROP TABLE IF EXISTS nv_qps;
 CREATE TABLE nv_qps (
   id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '棋牌室id',
+  cardnum int(10) NOT NULL COMMENT '房卡数',
   qpsid varchar(8) NOT NULL COMMENT '棋牌室6位展示数字',
+  creator varchar(10) DEFAULT NOT NULL COMMENT '创建者ID',
+  weixin varchar(30) DEFAULT NOT NULL COMMENT '管理员微信',
   qpsname varchar(8) NOT NULL COMMENT '棋牌室名称',
   qpsnotice varchar(256) NOT NULL COMMENT '棋牌室公告',
   rules varchar(256) DEFAULT NULL COMMENT '棋牌室规则数组',

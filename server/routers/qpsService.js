@@ -22,7 +22,7 @@ router.get('/get_all_qps', async (ctx, next) => {
           }
         })
       }
-      ctx.json = { result }
+      ctx.json = result
     } catch (e) {
       console.log(e)
       ctx.error = {
@@ -41,18 +41,18 @@ router.get('/can_create_qps', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let canCreate = await qpsManager.canCreateQps(userid)
+      let ret = await qpsManager.canCreateQps(userid)
       if (ret == 1) {
-        ctx.json = {
-          result: false,
-          msg: '房卡不够'
+        ctx.error = {
+          code: -1,
+          message: '请确保您的房卡不少于1000张'
         }
         return
       }
       if (ret == 2) {
-        ctx.json = {
-          result: false,
-          msg: '数量达到限制'
+        ctx.error = {
+          code: -1,
+          message: '最多只能创建2个俱乐部哦'
         }
         return
       }
@@ -75,21 +75,29 @@ router.post('/create_qps', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let canCreate = await qpsManager.canCreateQps(userid)
-      if (ret != 0) {
+      let ret = await qpsManager.canCreateQps(userid)
+      if (ret == 1) {
         ctx.error = {
           code: -1,
-          message: '创建失败'
+          message: '请确保您的房卡不少于1000张'
+        }
+        return
+      }
+      if (ret == 2) {
+        ctx.error = {
+          code: -1,
+          message: '最多只能创建2个俱乐部哦'
         }
         return
       }
       let qpsname = ctx.query.qpsname
       let qpsnotice = ctx.query.qpsnotice
+      let weixin = ctx.query.weixin
       let rules = ctx.query.rules
       if (typeof rules === 'string') {
         rules = JSON.parse(rules)
       }
-      let qps = await qpsManager.createQps(userid, qpsname, qpsnotice, rules)
+      let qps = await qpsManager.createQps(userid, qpsname, weixin, qpsnotice, rules)
       ctx.json = { qps }
     } catch (e) {
       console.log(e)
