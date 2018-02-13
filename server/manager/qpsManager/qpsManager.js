@@ -248,6 +248,7 @@ async function deleteUser(qps, userid) {
 }
 
 module.exports = {
+	start,
 	getAllQps,
 	canCreateQps,
 	createQps,

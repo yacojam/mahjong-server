@@ -55,5 +55,16 @@ io2.on('connection', socket => {
 })
 server2.listen(9000)
 
+let app3 = new Koa()
+let server3 = http.createServer(app3.callback())
+var io3 = require('socket.io')(server3)
+io3.on('connection', socket => {
+  console.log('user qps connected')
+  require('./socket/ioqps')(socket)
+})
+server3.listen(9002)
+
 const sharedManager = require('./manager/sharedManager/sharedManager')
 sharedManager.start()
+
+require('./manager/qpsManager/qpsManager').start()

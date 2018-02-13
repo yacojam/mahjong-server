@@ -56,5 +56,6 @@ module.exports = {
 	insertRelation,
 	getAllQpsIds,
 	getAllUserIds,
-	getQpsForUserid
+	getQpsForUserid,
+	getAllQps
 }
