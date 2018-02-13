@@ -1,5 +1,6 @@
 const tokenManager = require('../redis/tokenRedisDao')
 const qpsManager = require('../manager/qpsManager/qpsManager')
+const ErrorType = require('./ServerError')
 const Router = require('koa-router')
 const router = new Router()
 
@@ -11,7 +12,7 @@ router.get('/get_all_qps', async (ctx, next) => {
     try {
       let qpses = await qpsManager.getAllQps(userid)
       let result = []
-      if (qpses != []) {
+      if (qpses && qpses.length > 0) {
         result = qpses.map(qps => {
           let { qpsid, qpsname } = qps
           return {
@@ -236,6 +237,35 @@ router.get('/get_qps', async (ctx, next) => {
     ctx.error = ErrorType.AccountValidError
   }
 })
+
+router.get('/search_qps', async (ctx, next) => {
+  let userid = ctx.header.userid
+  let token = ctx.header.token
+  let tokenValid = await tokenManager.isAccountValid(userid, token)
+  if (tokenValid) {
+    try {
+      let { qpsid } = ctx.query
+      let qps = qpsManager.getQps(qpsid)
+      if (qps == null) {
+        ctx.error = {
+          code: -1,
+          message: '该棋牌室不存在'
+        }
+        return
+      }
+      ctx.json = { qps }
+    } catch (e) {
+      console.log(e)
+      ctx.error = {
+        code: -1,
+        message: e.message || e.toString
+      }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
 
 router.post('/exit_qps', async (ctx, next) => {
   let userid = ctx.header.userid
