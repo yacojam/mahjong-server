@@ -4,11 +4,10 @@ class Qipaishi {
 		this.qpsname = item.qpsname
 		this.qpsnotice = item.qpsnotice
 		this.weixin = item.weixin
-		this.cardnum = item.cardnum
 		this.rules = JSON.parse(item.rules)
 		this.users = []
 		this.running = true
-		this.creator = item.creator
+		this.creator = null
 	}
 
 	getUser(userid) {
@@ -24,6 +23,9 @@ class Qipaishi {
 		}
 		if (item.rules) {
 			this.rules = item.rules
+		}
+		if (item.weixin) {
+			this.weixin = item.weixin
 		}
 	}
 }

@@ -40,7 +40,10 @@ function getAllQpsIds(userid) {
 }
 
 function qpsCreatedBy(userid) {
-	return DBBase.selectAll('nv_qps', `creator='${userid}'`)
+	return DBBase.selectAll(
+		'nv_qps_user',
+		`userid='${userid}' and iscreator='1'`
+	)
 }
 
 function getAllUserIds(qpsid) {
@@ -61,5 +64,6 @@ module.exports = {
 	getAllQpsIds,
 	getAllUserIds,
 	getQpsForUserid,
-	getAllQps
+	getAllQps,
+	qpsCreatedBy
 }

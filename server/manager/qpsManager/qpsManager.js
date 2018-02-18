@@ -20,6 +20,9 @@ async function start() {
 			let allQpsUserids = await QpsDao.getAllUserIds(data.qpsid)
 			for (let userData of allQpsUserids) {
 				await addUser(qps, userData.userid)
+				if (userData.iscreator) {
+					qps.creator = userData.userid
+				}
 			}
 			await _runQps(qps)
 			QPSMap[data.qpsid] = qps
@@ -76,9 +79,9 @@ async function canCreateQps(userid) {
 		//房卡不够
 		return 1
 	}
-	let qps = await QpsDao.qpsCreatedBy()
+	let qps = await QpsDao.qpsCreatedBy(userid)
 	if (qps && qps.length === 2) {
-		//创建和加入的棋牌室总数超过限制
+		//创建的棋牌室超过总数
 		return 2
 	}
 	return 0
