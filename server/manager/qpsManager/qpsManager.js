@@ -90,14 +90,11 @@ async function canCreateQps(userid) {
 async function createQps(userid, qpsname, weixin, qpsnotice, rules) {
 	let ret = {}
 	let qpsid = getValidQpsID()
-	let cardnum = 1000
 	let data = {
-		creator: userid,
 		qpsid,
 		qpsname,
 		weixin,
 		qpsnotice,
-		cardnum,
 		rules: JSON.stringify(rules)
 	}
 	await QpsDao.createQps(data)

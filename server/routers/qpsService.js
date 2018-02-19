@@ -76,13 +76,13 @@ router.post('/create_qps', async (ctx, next) => {
   if (tokenValid) {
     try {
       let ret = await qpsManager.canCreateQps(userid)
-      if (ret == 1) {
-        ctx.error = {
-          code: -1,
-          message: '请确保您的房卡不少于1000张'
-        }
-        return
-      }
+      // if (ret == 1) {
+      //   ctx.error = {
+      //     code: -1,
+      //     message: '请确保您的房卡不少于1000张'
+      //   }
+      //   return
+      // }
       if (ret == 2) {
         ctx.error = {
           code: -1,
@@ -90,10 +90,11 @@ router.post('/create_qps', async (ctx, next) => {
         }
         return
       }
-      let qpsname = ctx.query.qpsname
-      let qpsnotice = ctx.query.qpsnotice
-      let weixin = ctx.query.weixin
-      let rules = ctx.query.rules
+      let qpsname = ctx.request.body.qpsname
+      // TODO yyj 重名检测
+      let qpsnotice = ctx.request.body.qpsnotice
+      let weixin = ctx.request.body.weixin
+      let rules = ctx.request.body.rules
       if (typeof rules === 'string') {
         rules = JSON.parse(rules)
       }
@@ -117,7 +118,7 @@ router.post('/update_qps', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let { qpsid, qpsname, qpsnotice, rules } = ctx.query
+      let { qpsid, qpsname, qpsnotice, rules } = ctx.request.body
       let qps = qpsManager.getQps(qpsid)
       if (qps == null || qps.creator != userid) {
         ctx.error = {
@@ -195,7 +196,7 @@ router.post('/delete_qps', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let { qpsid } = ctx.query
+      let { qpsid } = ctx.request.body
       let qps = qpsManager.getQps(qpsid)
       if (qps == null || qps.creator != userid) {
         ctx.error = {
@@ -281,7 +282,7 @@ router.post('/exit_qps', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let { qpsid } = ctx.query
+      let { qpsid } = ctx.request.body
       let qps = qpsManager.getQps(qpsid)
       if (qps == null || qps.getUser(userid) == null) {
         ctx.error = {
@@ -310,7 +311,7 @@ router.post('/join_qps_request', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let { qpsid } = ctx.query
+      let { qpsid } = ctx.request.body
       let qps = qpsManager.getQps(qpsid)
       if (qps == null) {
         ctx.error = {
@@ -353,7 +354,7 @@ router.post('/agree_qps_request', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let { qpsid, applyuid } = ctx.query
+      let { qpsid, applyuid } = ctx.request.body
       let qps = qpsManager.getQps(qpsid)
       if (qps == null || qps.creator != userid) {
         ctx.error = {
@@ -396,7 +397,7 @@ router.post('/reject_qps_request', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let { qpsid, applyuid } = ctx.query
+      let { qpsid, applyuid } = ctx.request.body
       let qps = qpsManager.getQps(qpsid)
       if (qps == null || qps.creator != userid) {
         ctx.error = {
