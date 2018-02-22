@@ -180,10 +180,7 @@ async function joinQpsRequest(userid, qpsid) {
 	if (isExist != null) {
 		return
 	}
-	await MsgDao.insertQpsJoinMsg({
-		userid,
-		qpsid
-	})
+	await MsgDao.insertQpsJoinMsg(userid, qpsid)
 }
 
 async function agreeJoinQpsRequest(userid, qpsid) {

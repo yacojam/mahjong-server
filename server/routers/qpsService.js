@@ -16,8 +16,12 @@ router.get('/get_all_qps', async (ctx, next) => {
         result = qpses.map(qps => {
           let { qpsid, qpsname } = qps
           return {
-            qpsid,
-            qpsname,
+            qpsid: qps.qpsid,
+            qpsname: qps.qpsname,
+            creator: qps.creator,
+            weixin: qps.weixin,
+            qpsnotice: qps.qpsnotice,
+            rules: qps.rules,
             usernum: qps.users.length
           }
         })
@@ -76,13 +80,13 @@ router.post('/create_qps', async (ctx, next) => {
   if (tokenValid) {
     try {
       let ret = await qpsManager.canCreateQps(userid)
-      // if (ret == 1) {
-      //   ctx.error = {
-      //     code: -1,
-      //     message: '请确保您的房卡不少于1000张'
-      //   }
-      //   return
-      // }
+      if (ret == 1) {
+        ctx.error = {
+          code: -1,
+          message: '请确保您的房卡不少于1000张'
+        }
+        return
+      }
       if (ret == 2) {
         ctx.error = {
           code: -1,
@@ -99,7 +103,7 @@ router.post('/create_qps', async (ctx, next) => {
         rules = JSON.parse(rules)
       }
       let qps = await qpsManager.createQps(userid, qpsname, weixin, qpsnotice, rules)
-      ctx.json = { qps }
+      ctx.json = qps
     } catch (e) {
       console.log(e)
       ctx.error = {
@@ -234,7 +238,7 @@ router.get('/get_qps', async (ctx, next) => {
         }
         return
       }
-      ctx.json = { qps }
+      ctx.json = qps
     } catch (e) {
       console.log(e)
       ctx.error = {
@@ -262,7 +266,17 @@ router.get('/search_qps', async (ctx, next) => {
         }
         return
       }
-      ctx.json = { qps }
+
+      ctx.json = {
+        creator: qps.creator,
+        qpsid: qps.qpsid,
+        qpsname: qps.qpsname,
+        weixin: qps.weixin,
+        qpsnotice: qps.qpsnotice,
+        rules: qps.rules,
+        joined: qps.users.find(user=>user.userid === userid) != undefined,
+        usernum: qps.users.length
+      }
     } catch (e) {
       console.log(e)
       ctx.error = {
