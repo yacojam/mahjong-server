@@ -122,7 +122,7 @@ router.post('/update_qps', async (ctx, next) => {
   let tokenValid = await tokenManager.isAccountValid(userid, token)
   if (tokenValid) {
     try {
-      let { qpsid, qpsname, qpsnotice, rules } = ctx.request.body
+      let { qpsid, qpsname, qpsnotice, rules, weixin } = ctx.request.body
       let qps = qpsManager.getQps(qpsid)
       if (qps == null || qps.creator != userid) {
         ctx.error = {
@@ -137,6 +137,9 @@ router.post('/update_qps', async (ctx, next) => {
       }
       if (qpsnotice != null) {
         data.qpsnotice = qpsnotice
+      }
+      if (weixin != null) {
+        data.weixin = weixin
       }
       if (rules != null) {
         if (typeof rules === 'string') {

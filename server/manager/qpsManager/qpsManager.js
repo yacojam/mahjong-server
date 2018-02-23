@@ -145,9 +145,10 @@ async function activeQps(userid, qpsid) {
 }
 
 async function updateQps(qpsid, qpsData) {
-	await QpsDao.updateQps(qpsid, qpsData)
 	let qps = QPSMap[qpsid]
 	qps.update(qpsData)
+	qpsData.rules = JSON.stringify(qpsData.rules)
+	await QpsDao.updateQps(qpsid, qpsData)
 }
 
 async function deleteQps(userid, qpsid) {

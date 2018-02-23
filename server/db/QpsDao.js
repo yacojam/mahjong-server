@@ -65,5 +65,7 @@ module.exports = {
 	getAllUserIds,
 	getQpsForUserid,
 	getAllQps,
+	deleteRelation,
+	updateQps,
 	qpsCreatedBy
 }
