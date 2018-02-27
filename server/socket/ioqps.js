@@ -72,6 +72,14 @@ function bind(socket) {
             return
         }
     })
+
+    socket.on('game_ping', () => {
+        let userid = socket.userid
+        if (userid == null) {
+            return
+        }
+        socket.emit('game_pong', {})
+    })
 }
 
 function getQpsData(qps) {
@@ -103,7 +111,7 @@ function getQpsData(qps) {
 }
 
 function disconnect(userid) {
-    let ret = qpsManager.disconnectQps()
+    let ret = qpsManager.disconnectQps(userid)
     broadcastInQps('qps_user_off', { userid }, ret.data.qps, userid, false)
     connectionManager.del(userid)
 }

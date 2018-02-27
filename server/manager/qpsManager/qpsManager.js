@@ -222,6 +222,7 @@ function connectQps(userid, qpsid) {
 }
 
 function disconnectQps(userid) {
+	let ret = {}
 	let qpsid = user2ids[userid]
 	let qps = QPSMap[qpsid]
 	qps.getUser(userid).onlineType = 0
