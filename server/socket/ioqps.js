@@ -31,6 +31,7 @@ function bind(socket) {
     })
 
     socket.on('disconnect', async userData => {
+        console.log('disconnected')
         if (socket.userid == null) {
             return
         }
@@ -105,6 +106,7 @@ function getQpsData(qps) {
         qpsid: qps.qpsid,
         qpsname: qps.qpsname,
         qpsnotice: qps.qpsnotice,
+        qpsusernum: qps.users.length,
         users: onlineUsers.concat(gameUsers),
         rooms: allRooms
     }
