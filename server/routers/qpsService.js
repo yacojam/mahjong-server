@@ -351,8 +351,15 @@ router.post('/join_qps_request', async (ctx, next) => {
         }
         return
       }
-      await qpsManager.joinQpsRequest(userid, qpsid)
-      ctx.json = { result: true }
+      const result = await qpsManager.joinQpsRequest(userid, username, qpsid)
+      if (result === -1) {
+        ctx.error = {
+          code: -1,
+          message: '您已经申请过了，请不要重复申请。'
+        }
+      } else {
+          ctx.json = { result: true }
+        }
     } catch (e) {
       console.log(e)
       ctx.error = {

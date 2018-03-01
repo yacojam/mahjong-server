@@ -18,7 +18,7 @@ function checkToken() {
     const userid = ctx.cookies.get('userid')
     const token = ctx.cookies.get('token')
 
-    let isValid = await tokenManager.isAccountValid("admax_" + userid, token);
+    let isValid = await tokenManager.validateAdmaxAccount(userid, token);
     if (isValid) {
       return next()
     } else {

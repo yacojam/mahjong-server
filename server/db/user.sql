@@ -71,4 +71,14 @@ CREATE TABLE nv_games(
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
   
+----type : 1, 代表qps的申请消息----
+DROP TABLE IF EXISTS nv_msg;
+CREATE TABLE nv_msg (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  userid int(11) unsigned NOT NULL COMMENT '用户ID',
+  content varchar(256) DEFAULT NULL COMMENT '消息内容',
+  type int(4) unsigned NOT NULL COMMENT '消息类型',
+  state int(4) DEFAULT 0 NOT NULL COMMENT '消息状态，如未读，已读，已同意，已拒绝，已领取等',
+  PRIMARY KEY (id)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
 

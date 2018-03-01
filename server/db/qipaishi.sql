@@ -19,12 +19,13 @@ CREATE TABLE nv_qps_user (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
 
-----type : 1, 代表qps的申请消息----
-DROP TABLE IF EXISTS nv_msg;
-CREATE TABLE nv_msg (
+DROP TABLE IF EXISTS qps_apply;
+CREATE TABLE qps_apply (
   id int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
-  userid int(11) unsigned NOT NULL COMMENT '用户ID',
-  content varchar(256) DEFAULT NULL COMMENT '消息内容',
-  type int(10) unsigned NOT NULL COMMENT '消息类型',
+  senderid int(11) unsigned NOT NULL COMMENT '申请人ID',
+  sendername varchar(30) NOT NULL COMMENT '申请人名称',
+  qpsid int(10) DEFAULT NULL COMMENT '棋牌室id',
+  state int(4) DEFAULT 0 NOT NULL COMMENT '待处理(0)，已同意(1)，已拒绝(-1)',
+  updatetime timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;

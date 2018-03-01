@@ -1,7 +1,6 @@
 const UserDao = require('../../db/UserDao')
 const QpsDao = require('../../db/QpsDao')
 const Qipaishi = require('./qpsInfo')
-const MsgDao = require('../../db/MsgDao')
 const connectionManager = require('../connectionManager/connectionManager')
 const UserType = {
 	OFF: 0, //离线
@@ -177,17 +176,18 @@ async function exitQps(userid, qpsid) {
 
 async function joinQpsRequest(userid, qpsid) {
 	let qps = QPSMap[qpsid]
-	let isExist = await MsgDao.getQpsJoinMsg(userid, qpsid)
+	let isExist = await QpsDao.getMyApply(userid, qpsid)
 	if (isExist != null) {
-		return
+		return -1
 	}
-	await MsgDao.insertQpsJoinMsg(userid, qpsid)
+	const userData = await UserDao.getUserDataByUserid(userid)
+	await QpsDao.addApply(userid, userData.username, qpsid)
 }
 
 async function agreeJoinQpsRequest(userid, qpsid) {
 	let ret = {}
 	let qps = QPSMap[qpsid]
-	await MsgDao.handleQpsJoinMsg(userid, qpsid)
+	await QpsDao.acceptApply(userid, qpsid)
 	await addUser(qps, userid)
 	await QpsDao.insertRelation({
 		userid,
@@ -198,7 +198,7 @@ async function agreeJoinQpsRequest(userid, qpsid) {
 
 async function rejectJoinQpsRequest(userid, qpsid, creator) {
 	let qps = QPSMap[qpsid]
-	await MsgDao.handleQpsJoinMsg(userid, qpsid)
+	await QpsDao.refuseApply(userid, qpsid)
 }
 
 //进入qps
@@ -247,6 +247,15 @@ async function deleteUser(qps, userid) {
 	qps.users = qps.users.filter(u => u.userid != userid)
 }
 
+async function getApplyRecords(userid) {
+	const myApply = await QpsDao.getMyApply(userid)
+	myApply.forEach(apply=>{
+		const qps = getQps(apply.qpsid)
+		apply.qpsInfo = qps 
+	})
+	return myApply
+}
+
 module.exports = {
 	start,
 	getAllQps,
@@ -261,7 +270,8 @@ module.exports = {
 	rejectJoinQpsRequest,
 	createRoomForQps,
 	connectQps,
-	disconnectQps
+	disconnectQps,
+	getApplyRecords
 }
 
 //createQps('100008', '和县麻将', '和谐游戏', [[0], [0], [0], [0]])

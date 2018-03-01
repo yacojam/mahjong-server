@@ -15,6 +15,20 @@ async function isAccountValid(userid, uToken) {
 	return nowStamp < stamp
 }
 
+async function validateAdmaxAccount(userid, uToken) {
+	console.log(uToken)
+	let data = await redis.get("admax_" + userid + 'token')
+	if (data === null) {
+		return false
+	}
+	if (data != uToken) {
+		return false
+	}
+	let stamp = await redis.get("admax_" + userid + 'validtime')
+	let nowStamp = Date.parse(new Date())
+	return nowStamp < stamp
+}
+
 // TODO yyj deviceid
 function generateToken(userid, deviceid = 'device') {
 	let token = cryptoHelper.md5(userid + deviceid + Date.parse(Date.now()))
