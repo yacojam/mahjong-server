@@ -39,7 +39,8 @@ function bind(socket) {
     })
 
     socket.on('user_enter_room', async userData => {
-        if (socket.userid != null) {
+        console.log('user_enter_room -1 ')
+        if (socket.userid == null) {
             return
         }
         let ret = {}
@@ -47,6 +48,7 @@ function bind(socket) {
             typeof userData === 'string' ? JSON.parse(userData) : userData
         let { rpid, qpsid } = userData
         let qps = qpsManager.getQps(qpsid)
+        console.log('user_enter_room -2 ')
         if (qps == null || qps.getUser(socket.userid) == null) {
             //参数不对
             ret.code = 1
@@ -54,6 +56,7 @@ function bind(socket) {
             return
         }
         let room = roomManager.getRoom(rpid)
+        console.log('user_enter_room -3 ')
         if (room && room.qpsid && room.qpsid == qpsid) {
             let enterRet = await roomManager.preEnterRoom(socket.userid, rpid)
             if (enterRet.code != 0) {

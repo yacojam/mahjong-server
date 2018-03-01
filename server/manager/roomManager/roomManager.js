@@ -64,7 +64,7 @@ async function isRoomValidForUserId(userid, rpid) {
 	}
 	let room = getRoom(rpid)
 	if (room.qpsid) {
-		let isUserInQps = await QpsDao.getQpsForUserid(userid, qpsid)
+		let isUserInQps = await QpsDao.getQpsForUserid(userid, room.qpsid)
 		if (!isUserInQps) {
 			return false
 		}
