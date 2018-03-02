@@ -6,27 +6,8 @@ const tokenManager = require('../redis/tokenRedisDao')
 const roomManager = require('../manager/roomManager/roomManager')
 const noticeManager = require('../redis/noticeRedisDao')
 const ErrorType = require('./ServerError')
-
-function checkToken() {
-	return async (ctx, next) => {
-		const routeName = ctx.path.substring(
-		ctx.path.lastIndexOf('/'),
-		ctx.path.length
-		)
-
-		const userid = ctx.header.userid
-		const token = ctx.header.token
-
-		let isValid = await tokenManager.isAccountValid(userid, token);
-		if (isValid) {
-			return next()
-		} else {
-			ctx.error = ErrorType.AccountValidError
-		}
-	}
-}
   
-router.use(checkToken())
+router.use(tokenManager.tokenChecker())
 
 //获取大厅的一些展示信息
 router.get('/get_hall_info', async (ctx, next) => {

@@ -8,6 +8,7 @@ class Message {
         this.content = attrs.content
         this.updateTime = attrs.updateTime
         this.state = attrs.state
+        this.extra = attrs.extra
     }
 }
 

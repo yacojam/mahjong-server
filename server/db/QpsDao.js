@@ -61,23 +61,31 @@ function getQpsForUserid(userid, qpsid) {
 
 async function getMyApply(userid, qpsid) {
 	const myQps = await qpsCreatedBy(userid)
-	const inWhich = myQps.map(qps=>{
-		return `'${qps.qpsid}'`
-	}).join(',')
-	const applies = await DBBase.selectAll(TB_QPS_APPLY, `senderid='${userid}' or qpsid in (${inWhich})`)
-	return applies
+	if (myQps) {
+		const inWhich = myQps.map(qps=>{
+			return `'${qps.qpsid}'`
+		}).join(',')
+		const applies = await DBBase.selectAll(TB_QPS_APPLY, `senderid='${userid}' or qpsid in (${inWhich})`)
+		return applies
+	} else {
+		return await DBBase.selectAll(TB_QPS_APPLY, `senderid='${userid}'`)
+	}
+}
+
+function applyOfId(aid) {
+	return DBBase.select(TB_QPS_APPLY, `id=${aid}`)
 }
 
 function addApply(userid, username, qpsid) {
 	return DBBase.insert(TB_QPS_APPLY, { senderid: userid, sendername: username, qpsid: qpsid, state: 0 })
 }
 
-function acceptApply(userid, qpsid) {
-	return DBBase.update(TB_QPS_APPLY, {state: 1}, `qpsid=${qpsid}`)
+function acceptApply(aid) {
+	return DBBase.update(TB_QPS_APPLY, {state: 1}, `id=${aid}`)
 }
 
-function refuseApply(userid, qpsid) {
-	return DBBase.update(TB_QPS_APPLY, {state: -1}, `qpsid=${qpsid}`)
+function refuseApply(aid) {
+	return DBBase.update(TB_QPS_APPLY, {state: -1}, `id=${aid}`)
 }
 
 module.exports = {
@@ -92,6 +100,7 @@ module.exports = {
 	updateQps,
 	qpsCreatedBy,
 	getMyApply,
+	applyOfId,
 	addApply,
 	acceptApply,
 	refuseApply

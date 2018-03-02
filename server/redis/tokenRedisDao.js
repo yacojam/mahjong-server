@@ -1,5 +1,28 @@
+const ErrorType = require('../routers/ServerError')
 const redis = require('./redisHelper')
 const cryptoHelper = require('../md5/cryptoHelper')
+
+function tokenChecker(whiteList) {
+	return async (ctx, next) => {
+			const routeName = ctx.path.substring(
+				ctx.path.lastIndexOf('/'),
+				ctx.path.length
+			)
+			if (whiteList && whiteList.indexOf(routeName) != -1) {
+				return next()
+			}
+		
+			const userid = ctx.header.userid
+			const token = ctx.header.token
+	
+			let isValid = await isAccountValid(userid, token);
+			if (isValid) {
+				return next()
+			} else {
+				ctx.error = ErrorType.AccountValidError
+			}
+		}
+  }
 
 async function isAccountValid(userid, uToken) {
 	console.log(uToken)
@@ -41,7 +64,7 @@ function generateToken(userid, deviceid = 'device') {
 	return token
 }
 
-module.exports = { generateToken, isAccountValid }
+module.exports = { generateToken, isAccountValid, tokenChecker }
 
 // async function test() {
 // 	var token = generateToken('13233232', 'dshsdli')

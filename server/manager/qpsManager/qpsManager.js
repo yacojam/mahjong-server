@@ -181,24 +181,41 @@ async function joinQpsRequest(userid, qpsid) {
 		return -1
 	}
 	const userData = await UserDao.getUserDataByUserid(userid)
-	await QpsDao.addApply(userid, userData.username, qpsid)
+	await QpsDao.addApply(userid, userData.name, qpsid)
 }
 
-async function agreeJoinQpsRequest(userid, qpsid) {
-	let ret = {}
-	let qps = QPSMap[qpsid]
-	await QpsDao.acceptApply(userid, qpsid)
-	await addUser(qps, userid)
+async function agreeJoinQpsRequest(aid, userid) {
+	const apply = await QpsDao.applyOfId(aid)
+
+	let qps = QPSMap[apply.qpsid]
+	if (qps == null || qps.creator != userid) {
+		return -1
+	}
+	if (qps.getUser(apply.senderid) != null) {
+		return -2
+	}
+	if (qps.users.length >= 500) {
+		return -3
+	}
+
+	await QpsDao.acceptApply(aid)
+	await addUser(qps, apply.senderid)
 	await QpsDao.insertRelation({
-		userid,
-		qpsid,
+		userid: apply.senderid,
+		qpsid: apply.qpsid,
 		iscreator: false
 	})
 }
 
-async function rejectJoinQpsRequest(userid, qpsid, creator) {
-	let qps = QPSMap[qpsid]
-	await QpsDao.refuseApply(userid, qpsid)
+async function rejectJoinQpsRequest(aid, userid) {
+	const apply = await QpsDao.applyOfId(aid)
+
+	let qps = QPSMap[apply.qpsid]
+	if (qps == null || qps.creator != userid) {
+		return -1
+	}
+
+	await QpsDao.refuseApply(aid)
 }
 
 //进入qps
