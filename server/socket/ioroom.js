@@ -87,7 +87,7 @@ function bind(socket) {
         }
         let { room, isnew, emptyIndex } = joinRet.data
         if (isnew) {
-            room.seats[emptyIndex].ready = room.isCreator(userid)
+            room.seats[emptyIndex].ready = room.seats[emptyIndex].isCreator
         }
         let seat = Object.assign({}, room.seats[emptyIndex])
         seat.online = true

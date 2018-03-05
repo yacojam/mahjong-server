@@ -25,7 +25,8 @@ async function getRoomData(room, uid) {
 		leftPais,
 		currentJu,
 		currentGame,
-		isJuSameWithRoom
+		isJuSameWithRoom,
+		qpsid
 	} = room
 
 	let seatsData = seats
@@ -75,6 +76,7 @@ async function getRoomData(room, uid) {
 		})
 	ret.success = true
 	ret.data = {
+		qpsid,
 		roomId: roomPresentId,
 		isJuSameWithRoom,
 		state,
