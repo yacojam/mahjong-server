@@ -1,14 +1,13 @@
 class Message {
     constructor(attrs) {
-        this.fromId = attrs.from
-        this.toId = attrs.to
+        this.fromId = attrs.fromId
+        this.toId = attrs.toId
         this.title = attrs.title
         this.type = attrs.type
-        this.brief = attrs.brief || '点击查看详情'
         this.content = attrs.content
         this.updateTime = attrs.updateTime
         this.state = attrs.state
-        this.extra = attrs.extra
+        this.dataid = attrs.dataid
     }
 }
 

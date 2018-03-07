@@ -1,7 +1,9 @@
 const UserDao = require('../../db/UserDao')
 const QpsDao = require('../../db/QpsDao')
+const MsgDao = require('../../db/MsgDao')
 const Qipaishi = require('./qpsInfo')
 const connectionManager = require('../connectionManager/connectionManager')
+const qpsFomatter = require('./qpsMsgFomatter')
 const UserType = {
 	OFF: 0, //离线
 	ON: 1, //在线
@@ -176,12 +178,19 @@ async function exitQps(userid, qpsid) {
 
 async function joinQpsRequest(userid, qpsid) {
 	let qps = QPSMap[qpsid]
-	let isExist = await QpsDao.getMyApply(userid, qpsid)
-	if (isExist != null) {
+	const applys = await QpsDao.getMyApply(userid, qpsid) || []
+	let isExist = applys.find(apply=>{
+		// 我申请过，且申请还未被处理
+		return apply.senderid == userid && apply.state == 0
+	})
+	if (isExist) {
 		return -1
 	}
 	const userData = await UserDao.getUserDataByUserid(userid)
-	await QpsDao.addApply(userid, userData.name, qpsid)
+	let applyData = await QpsDao.addApply(userid, userData.name, qpsid)
+
+	await MsgDao.insertMsg(qpsFomatter.format(applyData, qps, userid))
+	await MsgDao.insertMsg(qpsFomatter.format(applyData, qps, qps.creator))
 }
 
 async function agreeJoinQpsRequest(aid, userid) {

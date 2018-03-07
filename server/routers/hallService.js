@@ -39,4 +39,10 @@ router.get('/get_messages', async (ctx, next) => {
 	ctx.json = msgs
 })
 
+router.post('/mark_msg_read', async (ctx, next) => {
+	let { msgid } = ctx.request.body
+	await msgManager.updateState(msgid, 1)
+	ctx.json = {result: true}
+})
+
 module.exports = router

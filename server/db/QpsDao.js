@@ -76,8 +76,9 @@ function applyOfId(aid) {
 	return DBBase.select(TB_QPS_APPLY, `id=${aid}`)
 }
 
-function addApply(userid, username, qpsid) {
-	return DBBase.insert(TB_QPS_APPLY, { senderid: userid, sendername: username, qpsid: qpsid, state: 0 })
+async function addApply(userid, username, qpsid) {
+	await DBBase.insert(TB_QPS_APPLY, { senderid: userid, sendername: username, qpsid: qpsid, state: 0 })
+	return DBBase.select(TB_QPS_APPLY, `senderid='${userid}' and qpsid='${qpsid}' and state='0'`)
 }
 
 function acceptApply(aid) {

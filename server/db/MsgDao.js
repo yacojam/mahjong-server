@@ -1,30 +1,32 @@
 const DBBase = require('./DBBase')
 
-function insertQpsJoinMsg(userid, qpsid) {
-	return DBBase.insert('nv_msg', { userid, content: qpsid, type: 1 })
+function insertMsg(msg) {
+	return DBBase.insert('nv_msg', msg)
 }
 
-function handleQpsJoinMsg(userid, qpsid) {
-	return DBBase.deleteWhere(
-		'nv_msg',
-		`userid='${userid}' and content='${qpsid}' and type='1'`
+function updateState(mid, state) {
+	return DBBase.update(
+		'nv_msg', {
+			state: state
+		}, 
+		`id='${mid}'`
 	)
 }
 
-function getQpsJoinMsg(userid, qpsid) {
-	return DBBase.select(
+function getMsgsOfUser(userid) {
+	return DBBase.selectAll(
 		'nv_msg',
-		`userid='${userid}' and content='${qpsid}' and type='1'`
+		`toid='${userid}'`
 	)
 }
 
-function deleteQpsAllMsg(qpsid) {
-	return DBBase.deleteWhere('nv_msg', `content='${qpsid}' and type='1'`)
+function deleteMsg(mid) {
+	return DBBase.deleteWhere('nv_msg', `id='${mid}'`)
 }
 
 module.exports = {
-	insertQpsJoinMsg,
-	getQpsJoinMsg,
-	handleQpsJoinMsg,
-	deleteQpsAllMsg
+	insertMsg,
+	updateState,
+	getMsgsOfUser,
+	deleteMsg
 }
