@@ -129,15 +129,16 @@ function select(table, condition, fields = []) {
   })
 }
 
-function selectAll(table, condition, fields = []) {
+function selectAll(table, condition, fields = [], order) {
   return new Promise((resolve, reject) => {
     if (condition) {
       condition = ' WHERE ' + condition
     } else {
       condition = ''
     }
-    let fieldSql = fields.length > 0 ? fields.join(',') : '*'
-    let sql = 'SELECT ' + fieldSql + ' FROM `' + table + '`' + condition
+    order = order ? 'order by ' + order : ''
+    let fieldSql = fields && fields.length > 0 ? fields.join(',') : '*'
+    let sql = `SELECT  ${fieldSql} FROM ${table} ${condition} ${order}`
     query(sql, (error, results, fields) => {
       if (results.length > 0) {
         resolve(results)

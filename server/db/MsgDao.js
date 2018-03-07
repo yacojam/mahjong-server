@@ -16,7 +16,9 @@ function updateState(mid, state) {
 function getMsgsOfUser(userid) {
 	return DBBase.selectAll(
 		'nv_msg',
-		`toid='${userid}'`
+		`toid='${userid}'`,
+		null, 
+		'id desc'
 	)
 }
 
