@@ -178,8 +178,8 @@ async function exitQps(userid, qpsid) {
 
 async function joinQpsRequest(userid, qpsid) {
 	let qps = QPSMap[qpsid]
-	const applys = await QpsDao.getMyApply(userid, qpsid) || []
-	let isExist = applys.find(apply=>{
+	const applys = (await QpsDao.getMyApply(userid, qpsid)) || []
+	let isExist = applys.find(apply => {
 		// 我申请过，且申请还未被处理
 		return apply.senderid == userid && apply.state == 0
 	})
@@ -275,10 +275,12 @@ async function deleteUser(qps, userid) {
 
 async function getApplyRecords(userid) {
 	const myApply = await QpsDao.getMyApply(userid)
-	myApply.forEach(apply=>{
-		const qps = getQps(apply.qpsid)
-		apply.qpsInfo = qps 
-	})
+	if (myApply && myApply.length > 0) {
+		myApply.forEach(apply => {
+			const qps = getQps(apply.qpsid)
+			apply.qpsInfo = qps
+		})
+	}
 	return myApply
 }
 
