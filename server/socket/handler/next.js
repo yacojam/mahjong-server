@@ -3,6 +3,7 @@ const Action = require('../../algorithm/HxmjRules/hxaction')
 const Publish = require('../dataflow/publish')
 const Pending = require('../../algorithm/HxmjRules/pendingtype')
 const connectionManager = require('../../manager/connectionManager/connectionManager')
+const roomManager = require('../../manager/roomManager/roomManager')
 
 const RoomState = {
 	READY: 0,
@@ -132,6 +133,7 @@ async function start(room, isRoom, isJu, isGame) {
 
 async function startRoom(room) {
 	if (room.state === RoomState.READY) {
+		await roomManager.startRoom(room)
 		await start(room, true, false, false)
 	}
 	if (room.state === RoomState.GAMEOVER) {
@@ -150,6 +152,10 @@ async function moAction(room, pAction, gang = false) {
 	}
 	let seat = room.seats[room.index]
 	let moPai = gang ? room.leftPais.shift() : room.leftPais.pop()
+	let rAction = gang
+		? Action.makeupAction(Action.ACTION_GMO, moPai)
+		: Action.makeupAction(Action.ACTION_MO, moPai)
+	room.recordAction(seat, rAction)
 	let actions = HXMJManager.getActions(
 		seat.shouPais,
 		seat.pengPais,
@@ -182,6 +188,7 @@ function endGameWithLiuJu(room) {
 
 async function startAction(room) {
 	room.state = RoomState.PLAY
+	roomManager.startRoomRecord(room)
 	let seat = room.seats[room.index]
 	let copyShouPais = seat.shouPais.concat()
 	let moPai = copyShouPais.pop()

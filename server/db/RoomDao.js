@@ -15,3 +15,13 @@ exports.createRoom = function(createuserid, presentid, createtime, baseinfo) {
             return 0
         })
 }
+
+exports.updateUsers = function(roomid, userids) {
+    let record = {
+        userid0: userids[0],
+        userid1: userids[1],
+        userid2: userids[2],
+        userid3: userids[3]
+    }
+    return DBBase.update('nv_rooms', record, `id='${roomid}'`)
+}

@@ -30,7 +30,8 @@ function getEmptySeat(i) {
 }
 
 class Room {
-    constructor(roomPresentId, createUid, rule, conf, qpsid) {
+    constructor(rid, roomPresentId, createUid, rule, conf, qpsid) {
+        this.rid = rid
         this.roomPresentId = roomPresentId
         this.createUid = createUid
         this.rule = rule
@@ -55,6 +56,7 @@ class Room {
         this.dissolveId = null
         this.dissolveUid = null
         this.dissolved = false
+        this.records = []
     }
 
     getUserIndex(userid) {
@@ -100,6 +102,33 @@ class Room {
 
     clearSeat(index) {
         this.seats[index] = getEmptySeat(index)
+    }
+
+    generateRecordInfo() {
+        let newRecord = {
+            rid: this.rid
+        }
+        newRecord.pais = this.seats
+            .map(s => JSON.stringify(s.shouPais))
+            .join('&')
+        newRecord.dingques = this.seats.map(s => s.que).join('&')
+        newRecord.actions = []
+        newRecord.gameresult = []
+        newRecord.success = true
+        this.records.push(newRecord)
+    }
+
+    getCurrentRecord() {
+        let length = this.records.length
+        if (length > 0) {
+            return this.records[length - 1]
+        }
+        return null
+    }
+
+    recordAction(seat, action) {
+        let info = [seat.index, action.pAction, action.pai]
+        this.getCurrentRecord().actions.push(info.join('&'))
     }
 }
 

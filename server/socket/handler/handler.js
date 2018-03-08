@@ -49,6 +49,7 @@ async function handle(room, seat, action) {
     await Publish.sendCancel(room, seat)
   }
   if (action.pAction === Action.ACTION_CHU) {
+    room.recordAction(seat, action)
     await actionChu(room, seat, action)
   } else {
     await handlePendingAction(room, seat, action)
@@ -78,15 +79,18 @@ async function handlePendingAction(room, seat, action) {
   //mo pending
   if (room.pendingType === Pending.PENDING_TYPE_MO) {
     if (action.pAction === Action.ACTION_ANGANG) {
+      room.recordAction(seat, action)
       await actionGang(room, seat, action, true)
     }
     if (
       action.pAction === Action.ACTION_GSHUA ||
       action.pAction === Action.ACTION_ZIMO
     ) {
+      room.recordAction(seat, action)
       await actionHu(room, seat, action)
     }
     if (action.pAction === Action.ACTION_WGANG) {
+      room.recordAction(seat, action)
       await actionWanGang(room, seat, action)
     }
     if (action.pAction === Action.ACTION_CANCEL) {
@@ -139,13 +143,15 @@ async function handlePendingAction(room, seat, action) {
     let a = actionUser.pendingAction.pAction
     console.log(a)
     if (a === Action.ACTION_PENG) {
+      room.recordAction(actionUser, actionUser.pendingAction)
       room = await actionPeng(room, actionUser, actionUser.pendingAction)
     }
     if (a === Action.ACTION_PGANG) {
+      room.recordAction(actionUser, actionUser.pendingAction)
       room = await actionGang(room, actionUser, actionUser.pendingAction)
     }
-
     if (a === Action.ACTION_PAOHU || a === Action.ACTION_QGHU) {
+      room.recordAction(actionUser, actionUser.pendingAction)
       room = await actionHu(room, actionUser, actionUser.pendingAction)
     }
   }

@@ -49,7 +49,7 @@ async function createRoom(userid, userConfigs, qpsid) {
 		return ret
 	}
 	var conf = ruleUtil.getRoomConfig(userConfigs)
-	var room = new Room(rpid, userid, roomRule, conf, qpsid)
+	var room = new Room(roomid, rpid, userid, roomRule, conf, qpsid)
 	room.sign = crypto.md5(rpid)
 	ret.code = 0
 	ret.data = { room }
@@ -132,6 +132,15 @@ async function joinRoom(userid, rpid) {
 	}
 	ret.code = 2 //房间已满
 	return ret
+}
+
+async function startRoom(room) {
+	let userids = room.seats.map(s => s.userid)
+	await roomDao.updateUsers(room.rid, userids)
+}
+
+async function startRoomRecord(room) {
+	room.generateRecordInfo()
 }
 
 async function exitRoom(userid) {
@@ -247,6 +256,8 @@ module.exports = {
 	preEnterRoom,
 	joinRoom,
 	exitRoom,
+	startRoom,
+	startRoomRecord,
 	dissolveRoom,
 	finishRoom,
 	getRoomForUserId,
