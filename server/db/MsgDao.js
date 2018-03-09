@@ -26,9 +26,14 @@ function deleteMsg(mid) {
 	return DBBase.deleteWhere('nv_msg', `id='${mid}'`)
 }
 
+function getLastMsg(userid) {
+	return DBBase.select('nv_msg', 'id=(select max(id) from nv_msg)')
+}
+
 module.exports = {
 	insertMsg,
 	updateState,
 	getMsgsOfUser,
-	deleteMsg
+	deleteMsg,
+	getLastMsg
 }

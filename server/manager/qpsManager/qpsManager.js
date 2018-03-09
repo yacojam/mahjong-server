@@ -189,7 +189,7 @@ async function joinQpsRequest(userid, qpsid) {
 	const userData = await UserDao.getUserDataByUserid(userid)
 	let applyData = await QpsDao.addApply(userid, userData.name, qpsid)
 
-	await MsgDao.insertMsg(qpsFomatter.format(applyData, qps, userid))
+	// 通知棋牌室管理员
 	await MsgDao.insertMsg(qpsFomatter.format(applyData, qps, qps.creator))
 }
 
@@ -214,6 +214,9 @@ async function agreeJoinQpsRequest(aid, userid) {
 		qpsid: apply.qpsid,
 		iscreator: false
 	})
+	 
+	// 通知申请人
+	await MsgDao.insertMsg(qpsFomatter.format(apply, qps, apply.senderid))
 }
 
 async function rejectJoinQpsRequest(aid, userid) {
@@ -225,6 +228,8 @@ async function rejectJoinQpsRequest(aid, userid) {
 	}
 
 	await QpsDao.refuseApply(aid)
+	// 通知申请人
+	await MsgDao.insertMsg(qpsFomatter.format(apply, qps, apply.senderid))
 }
 
 //进入qps
@@ -274,14 +279,7 @@ async function deleteUser(qps, userid) {
 }
 
 async function getApplyRecords(userid) {
-	const myApply = await QpsDao.getMyApply(userid)
-	if (myApply && myApply.length > 0) {
-		myApply.forEach(apply => {
-			const qps = getQps(apply.qpsid)
-			apply.qpsInfo = qps
-		})
-	}
-	return myApply
+	return await QpsDao.getMyApply(userid)
 }
 
 module.exports = {

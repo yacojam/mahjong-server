@@ -26,9 +26,14 @@ async function deleteMessage(id) {
 	await MsgDao.deleteMsg(id)
 }
 
+async function getLastMsg(userid) {
+	return await MsgDao.getLastMsg(userid)
+}
+
 module.exports = {
 	getUserMessages,
 	insertMessage,
 	updateState,
-	deleteMessage
+	deleteMessage,
+	getLastMsg
 }

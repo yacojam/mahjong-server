@@ -15,6 +15,7 @@ router.get('/get_hall_info', async (ctx, next) => {
 	const token = ctx.header.token
 	var user = await UserDao.getUserDataByUserid(userid)
 	if (user) {
+		const lastMsg = await msgManager.getLastMsg(userid)
 		if (user.roomid && user.roomid.length > 0) {
 			if (!roomManager.isRoomValid(user.roomid)) {
 				await UserDao.updateRoomID(user.userid, '')
@@ -23,9 +24,13 @@ router.get('/get_hall_info', async (ctx, next) => {
 		}
 		let notice = await noticeManager.getNotice()
 		if (notice == null) {
-			notice = '新 鲜 出 炉 的 和 县 麻 将 222'
+			notice = '新 鲜 出 炉 的 和 县 麻 将'
 		}
 		let ret = Object.assign({}, user, { token, notice })
+		// 返回最新消息的id
+		if (lastMsg) {
+			ret.msgIndex = lastMsg.id
+		}
 		ctx.json = ret
 	} else {
 		ctx.error = ErrorType.AccountError
