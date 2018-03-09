@@ -144,8 +144,8 @@ class Room {
         record.gameresult = this.seats
             .map(s => {
                 let ret = []
-                ret.push(s.gameresult.deltaScore)
-                ret.push(s.gameresult.deltaMo)
+                ret.push(s.gameResult.deltaScore)
+                ret.push(s.gameResult.deltaMo)
                 return JSON.stringify(ret)
             })
             .join('&')

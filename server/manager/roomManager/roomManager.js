@@ -148,7 +148,15 @@ function endRoomRecord(room) {
 		return
 	}
 	room.records.filter(r => r.success).forEach(r => {
-		roomDao.insertRecore(r)
+		let { rid, scores, pais, dingques, actions, gameresult } = r
+		roomDao.insertRecore({
+			rid,
+			scores,
+			pais,
+			dingques,
+			actions,
+			gameresult
+		})
 	})
 }
 
