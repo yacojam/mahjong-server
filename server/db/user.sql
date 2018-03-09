@@ -58,9 +58,10 @@ DROP TABLE IF EXISTS nv_games;
 CREATE TABLE nv_games(
   id int(11) unsigned NOT NULL AUTO_INCREMENT,
   rid int(11) unsigned NOT NULL COMMENT '房间id',
+  scores varchar(256) NOT NULL COMMENT '4名玩家初始score，包括自摸点数',
   pais varchar(256) NOT NULL COMMENT '4名玩家初始手牌,形如[]&[]&[]&[]',
   dingques varchar(8) NOT NULL COMMENT '4名玩家定缺type,形如1&2&3&2',
-  actions varchar(256) DEFAULT '一个牌局中记录的所有的actions，形如[2&3&23, 2&3&23...]',
+  actions varchar(256) NOT NULL COMMENT '一个牌局中记录的所有的actions，形如[2&3&23, 2&3&23...]',
   gameresult varchar(8) DEFAULT '',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

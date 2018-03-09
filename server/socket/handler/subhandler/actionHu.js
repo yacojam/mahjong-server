@@ -103,6 +103,7 @@ async function endGameWithHu(room, seat, scores, isZimo, pai, action) {
 	seat.gameResult.score = seat.score
 	seat.moMoney += 3 * scores[1] * room.rule.dfOfJu / 5
 	room.state = RoomState.GAMEOVER
+	room.recordResult()
 	// 一刀结束
 	if (isOver) {
 		room.seats.forEach(s => {

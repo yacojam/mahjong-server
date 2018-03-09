@@ -177,6 +177,7 @@ async function moAction(room, pAction, gang = false) {
 
 function endGameWithLiuJu(room) {
 	room.pendingType = Pending.PENDING_TYPE_NULL
+	room.recordLiuju()
 	room.seats.forEach(seatItem => {
 		seatItem.ready = false
 		seatItem.actions = []

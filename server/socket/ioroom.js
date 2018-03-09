@@ -12,7 +12,7 @@ async function dissolveRoom(rpid) {
     let qpsid = roomManager.getRoom(rpid).qpsid
     let qps = null
     if (qpsid) {
-        qps = qpsManager.getQps(room.qpsid)
+        qps = qpsManager.getQps(qpsid)
     }
     let users = await roomManager.dissolveRoom(rpid)
     for (let userid of users) {
@@ -35,7 +35,7 @@ async function finishRoom(rpid) {
     let qpsid = roomManager.getRoom(rpid).qpsid
     let qps = null
     if (qpsid) {
-        qps = qpsManager.getQps(room.qpsid)
+        qps = qpsManager.getQps(qpsid)
     }
     let users = await roomManager.finishRoom(rpid)
     for (let userid of users) {

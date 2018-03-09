@@ -143,6 +143,15 @@ async function startRoomRecord(room) {
 	room.generateRecordInfo()
 }
 
+function endRoomRecord(room) {
+	if (room.records.length == 0) {
+		return
+	}
+	room.records.filter(r => r.success).forEach(r => {
+		roomDao.insertRecore(r)
+	})
+}
+
 async function exitRoom(userid) {
 	let ret = {}
 	var rpid = getRidForUid(userid)
@@ -173,6 +182,7 @@ async function exitRoom(userid) {
 
 async function dissolveRoom(rpid) {
 	let room = getRoom(rpid)
+	endRoomRecord(room)
 	let users = []
 	for (let seat of room.seats) {
 		if (seat.userid > 0) {
@@ -193,6 +203,7 @@ async function dissolveRoom(rpid) {
 
 async function finishRoom(rpid) {
 	let room = getRoom(rpid)
+	endRoomRecord(room)
 	let users = []
 	for (let seat of room.seats) {
 		if (seat.userid > 0) {

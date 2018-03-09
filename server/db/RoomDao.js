@@ -25,3 +25,7 @@ exports.updateUsers = function(roomid, userids) {
     }
     return DBBase.update('nv_rooms', record, `id='${roomid}'`)
 }
+
+exports.insertRecore = function(records) {
+    return DBBase.insert('nv_games', records)
+}

@@ -113,8 +113,16 @@ class Room {
             .join('&')
         newRecord.dingques = this.seats.map(s => s.que).join('&')
         newRecord.actions = []
-        newRecord.gameresult = []
-        newRecord.success = true
+        newRecord.gameresult = ''
+        newRecord.success = false
+        newRecord.scores = this.seats
+            .map(s => {
+                let ret = []
+                ret.push(s.score)
+                ret.push(s.moMoney)
+                return JSON.stringify(ret)
+            })
+            .join('&')
         this.records.push(newRecord)
     }
 
@@ -129,6 +137,26 @@ class Room {
     recordAction(seat, action) {
         let info = [seat.index, action.pAction, action.pai]
         this.getCurrentRecord().actions.push(info.join('&'))
+    }
+
+    recordResult() {
+        let record = this.getCurrentRecord()
+        record.gameresult = this.seats
+            .map(s => {
+                let ret = []
+                ret.push(s.gameresult.deltaScore)
+                ret.push(s.gameresult.deltaMo)
+                return JSON.stringify(ret)
+            })
+            .join('&')
+        record.actions = JSON.stringify(record.actions)
+        record.success = true
+    }
+
+    recordLiuju() {
+        let record = this.getCurrentRecord()
+        record.actions = JSON.stringify(record.actions)
+        record.success = true
     }
 }
 
