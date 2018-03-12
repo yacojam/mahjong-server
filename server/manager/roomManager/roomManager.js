@@ -289,5 +289,6 @@ module.exports = {
 	isMatched,
 	isRoomValid,
 	getRoomsForQps,
-	getRoom
+	getRoom,
+	recordRoomResult
 }

@@ -14,6 +14,7 @@ async function dissolveRoom(rpid) {
     if (qpsid) {
         qps = qpsManager.getQps(qpsid)
     }
+    await calculateDissolveResult(roomManager.getRoom(rpid))
     let users = await roomManager.dissolveRoom(rpid)
     for (let userid of users) {
         if (qpsid) {
@@ -28,6 +29,34 @@ async function dissolveRoom(rpid) {
             connectionManager.del(userid)
         }
     }
+}
+
+async function calculateDissolveResult(room) {
+    if (room.state == 0) {
+        return
+    }
+    if (room.state != 4) {
+        room.seats.forEach(s => {
+            let { score, moMoney } = s
+            let isScoreWin = score - 50 > 0
+            let scoreMoney = Math.round(
+                Math.abs(score - 50) * room.rule.dfOfJu / 50.0
+            )
+            if (!isScoreWin) {
+                scoreMoney = 0 - scoreMoney
+            }
+            let sum = moMoney + scoreMoney
+            if (s.roomResult) {
+                s.roomResult.score += score
+                s.roomResult.moMoney += moMoney
+                s.roomResult.sum += sum
+                s.roomResult.scoreMoney += scoreMoney
+            } else {
+                s.roomResult = { score, moMoney, naMoney: 0, sum, scoreMoney }
+            }
+        })
+    }
+    await roomManager.recordRoomResult(room)
 }
 
 async function finishRoom(rpid) {
