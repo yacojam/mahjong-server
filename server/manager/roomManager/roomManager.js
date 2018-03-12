@@ -212,6 +212,7 @@ async function dissolveRoom(rpid) {
 async function finishRoom(rpid) {
 	let room = getRoom(rpid)
 	endRoomRecord(room)
+	await recordRoomResult(room)
 	let users = []
 	for (let seat of room.seats) {
 		if (seat.userid > 0) {
@@ -224,6 +225,11 @@ async function finishRoom(rpid) {
 		delRoom(rpid)
 	}, 600000)
 	return users
+}
+
+async function recordRoomResult(room) {
+	let results = room.seats.map(s => s.roomResult.sum)
+	await roomDao.updateRoomResult(room.rid, JSON.stringify(results))
 }
 
 function getRoomForUserId(userid) {
