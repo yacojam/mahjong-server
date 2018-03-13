@@ -107,6 +107,8 @@ function getQpsData(qps) {
     })
     return {
         qpsid: qps.qpsid,
+        creator: qps.creator,
+        weixin: qps.weixin,
         qpsname: qps.qpsname,
         qpsnotice: qps.qpsnotice,
         qpsusernum: qps.users.length,

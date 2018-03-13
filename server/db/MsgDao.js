@@ -27,7 +27,7 @@ function deleteMsg(mid) {
 }
 
 function getLastMsg(userid) {
-	return DBBase.select('nv_msg', 'id=(select max(id) from nv_msg)')
+	return DBBase.select('nv_msg', `id=(select max(id) from nv_msg where toid='${userid}')`)
 }
 
 module.exports = {
