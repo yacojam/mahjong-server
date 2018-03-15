@@ -15,7 +15,6 @@ router.get('/get_all_qps', async (ctx, next) => {
     let result = []
     if (qpses && qpses.length > 0) {
       result = qpses.map(qps => {
-        let { qpsid, qpsname } = qps
         return {
           qpsid: qps.qpsid,
           qpsname: qps.qpsname,
@@ -23,7 +22,8 @@ router.get('/get_all_qps', async (ctx, next) => {
           weixin: qps.weixin,
           qpsnotice: qps.qpsnotice,
           rules: qps.rules,
-          usernum: qps.users.length
+          usernum: qps.users.length,
+          running: qps.running
         }
       })
     }
@@ -147,12 +147,12 @@ router.post('/update_qps', async (ctx, next) => {
   }
 })
 
-router.get('/active_qps', async (ctx, next) => {
+router.post('/active_qps', async (ctx, next) => {
   let userid = ctx.header.userid
   let token = ctx.header.token
 
   try {
-    let { qpsid } = ctx.query
+    let { qpsid } = ctx.request.body
     let qps = qpsManager.getQps(qpsid)
     if (qps == null || qps.creator != userid) {
       ctx.error = {
@@ -165,7 +165,7 @@ router.get('/active_qps', async (ctx, next) => {
     if (!ret) {
       ctx.error = {
         code: -1,
-        message: '房卡不够'
+        message: '房卡不少于300张时才能激活棋牌室哦'
       }
       return
     }

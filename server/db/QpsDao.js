@@ -104,5 +104,7 @@ module.exports = {
 	applyOfId,
 	addApply,
 	acceptApply,
-	refuseApply
+	refuseApply,
+	deleteQps,
+	deleteQpsAllRelation
 }

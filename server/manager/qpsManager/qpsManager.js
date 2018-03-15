@@ -163,7 +163,7 @@ async function deleteQps(userid, qpsid) {
 	delete QPSMap[qpsid]
 	await QpsDao.deleteQps(qpsid)
 	await QpsDao.deleteQpsAllRelation(qpsid)
-	await QpsDao.deleteQpsAllMsg(qpsid)
+	await MsgDao.deleteMsgWhere(`type in (1, 2) and dataid=${qpsid}`)
 }
 
 async function exitQps(userid, qpsid) {
@@ -289,6 +289,7 @@ module.exports = {
 	createQps,
 	updateQps,
 	getQps,
+	activeQps,
 	deleteQps,
 	exitQps,
 	joinQpsRequest,
