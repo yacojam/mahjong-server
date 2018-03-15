@@ -13,7 +13,7 @@ router.get('/get_game_config', async ctx => {
     shareUrl: 'https://yueyiju.club',
     serviceWeixin: 'byhxmj'
   }
-
+  cfg.clientVersion = '1.1.0'
   ctx.json = cfg
 })
 
