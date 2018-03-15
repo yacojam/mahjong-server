@@ -9,12 +9,20 @@ const actionHandle = require('./handler/handler')
 
 async function dissolveRoom(rpid) {
     //如果解散的是棋牌室房间
-    let qpsid = roomManager.getRoom(rpid).qpsid
+    let room = roomManager.getRoom(rpid)
+    let qpsid = room.qpsid
     let qps = null
     if (qpsid) {
         qps = qpsManager.getQps(qpsid)
     }
-    await calculateDissolveResult(roomManager.getRoom(rpid))
+    await calculateDissolveResult(room)
+    let data = { ret: null }
+    if (room.state != 0) {
+        data.ret = room.seats.map(s => {
+            let { index, roomResult, userid } = s
+            return { index, roomResult, userid }
+        })
+    }
     let users = await roomManager.dissolveRoom(rpid)
     for (let userid of users) {
         if (qpsid) {
@@ -24,7 +32,7 @@ async function dissolveRoom(rpid) {
         }
         let socket = connectionManager.get(userid)
         if (socket != null) {
-            socket.emit('room_dissoved', {})
+            socket.emit('room_dissoved', data)
             socket.disconnect()
             connectionManager.del(userid)
         }
