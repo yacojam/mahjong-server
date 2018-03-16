@@ -78,10 +78,12 @@ router.get('/get_all_results', async (ctx, next) => {
     if (rooms == null) {
       ctx.json = { rooms }
     } else {
-      rooms = rooms.map(s => {
-        return roomManager.transformRoomInfo(s)
-      })
-      ctx.json = { rooms }
+      let rets = []
+      for (let s of rooms) {
+        let ret = await roomManager.transformRoomInfo(s)
+        rets.push(ret)
+      }
+      ctx.json = { rooms: rets }
     }
   } else {
     ctx.error = ErrorType.AccountValidError

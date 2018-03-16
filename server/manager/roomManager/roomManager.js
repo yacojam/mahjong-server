@@ -8,7 +8,7 @@ const Room = require('./roomInfo')
 let user2ids = {}
 let RoomMap = {}
 
-function transformRoomInfo(roomInfo) {
+async function transformRoomInfo(roomInfo) {
 	let {
 		presentid,
 		baseinfo,
@@ -24,22 +24,27 @@ function transformRoomInfo(roomInfo) {
 	var conf = ruleUtil.getRoomConfig(userConfigs)
 	let roomResult = JSON.parse(roomresult)
 	let seats = [userid0, userid1, userid2, userid3]
-	seats = seats.map(async (s, index) => {
-		let userData = await userDao.getUserDataByUserid(s)
+	let seatDatas = []
+	for (let i = 0; i < 4; i++) {
+		let userData = await userDao.getUserDataByUserid(seats[i])
 		let { name, sex, headimg } = userData
-		return {
-			userid: s,
+		seatDatas.push({
+			index: i,
+			userid: seats[i],
 			username: name,
 			sex,
 			headimg,
-			isCreator: s == createuserid
-		}
-	})
+			isCreator: seats[i] == createuserid
+		})
+	}
+
 	return {
+		createUserid: createuserid,
+		createTime: createtime,
 		roomId: presentid,
 		conf,
 		roomResult,
-		seats
+		seats: seatDatas
 	}
 }
 
