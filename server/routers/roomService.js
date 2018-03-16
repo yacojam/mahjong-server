@@ -67,4 +67,25 @@ router.get('/join_private_room', async (ctx, next) => {
     ctx.error = ErrorType.AccountValidError
   }
 })
+
+//获取用户的战绩记录
+router.get('/get_all_results', async (ctx, next) => {
+  const userid = ctx.header.userid
+  const token = ctx.header.token
+  var isValid = await tokenManager.isAccountValid(userid, token)
+  if (isValid) {
+    var rooms = await RoomDao.getAllRoomsForUserId(userid)
+    if (rooms == null) {
+      ctx.json = { rooms }
+    } else {
+      rooms = rooms.map(s => {
+        return roomManager.transformRoomInfo(s)
+      })
+      ctx.json = { rooms }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
 module.exports = router

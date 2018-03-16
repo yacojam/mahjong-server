@@ -34,3 +34,29 @@ exports.updateRoomResult = function(roomid, roomresult) {
 exports.insertRecore = function(records) {
     return DBBase.insert('nv_games', records)
 }
+
+exports.getAllRoomsForUserId = function(userid) {
+    return DBBase.selectAll(
+        'nv_rooms',
+        `userid0='${userid}' or userid1='${userid}' or userid2='${userid}' or userid3='${userid}'`
+    ).then(rooms => {
+        if (rooms == null) {
+            return null
+        } else {
+            rooms = rooms.sort((a, b) => {
+                return b.id - a.id
+            })
+            if (rooms.length > 15) {
+                rooms = rooms.slice(0, 15)
+            }
+            return rooms
+        }
+    })
+}
+
+// async function test() {
+//     let ret = await exports.getAllRoomsForUserId('100001')
+//     console.log(JSON.stringify(ret))
+// }
+
+// test()

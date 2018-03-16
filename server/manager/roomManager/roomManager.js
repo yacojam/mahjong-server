@@ -8,6 +8,41 @@ const Room = require('./roomInfo')
 let user2ids = {}
 let RoomMap = {}
 
+function transformRoomInfo(roomInfo) {
+	let {
+		presentid,
+		baseinfo,
+		createuserid,
+		createtime,
+		userid0,
+		userid1,
+		userid2,
+		userid3,
+		roomresult
+	} = roomInfo
+	let userConfigs = JSON.parse(baseinfo)
+	var conf = ruleUtil.getRoomConfig(userConfigs)
+	let roomResult = JSON.parse(roomresult)
+	let seats = [userid0, userid1, userid2, userid3]
+	seats = seats.map(async (s, index) => {
+		let userData = await userDao.getUserDataByUserid(s)
+		let { name, sex, headimg } = userData
+		return {
+			userid: s,
+			username: name,
+			sex,
+			headimg,
+			isCreator: s == createuserid
+		}
+	})
+	return {
+		roomId: presentid,
+		conf,
+		roomResult,
+		seats
+	}
+}
+
 function generateRandomId() {
 	var roomid = ''
 	for (var i = 0; i < 6; i++) {
@@ -37,17 +72,17 @@ async function createRoom(userid, userConfigs, qpsid) {
 		return ret
 	}
 	var rpid = ensureRoomValid()
-	var roomRule = ruleUtil.getRoomRule(userConfigs)
 	var roomid = await roomDao.createRoom(
 		userid,
 		rpid,
-		Date.now(),
-		JSON.stringify(roomRule)
+		getTimeString(),
+		JSON.stringify(userConfigs)
 	)
 	if (roomid == 0) {
 		ret.code = 2 //创建房间失败
 		return ret
 	}
+	var roomRule = ruleUtil.getRoomRule(userConfigs)
 	var conf = ruleUtil.getRoomConfig(userConfigs)
 	var room = new Room(roomid, rpid, userid, roomRule, conf, qpsid)
 	room.sign = crypto.md5(rpid)
@@ -276,7 +311,14 @@ function getRoomsForQps(qpsid) {
 		})
 }
 
+function getTimeString() {
+	const now = new Date()
+	return `${now.getFullYear()}-${now.getMonth() +
+		1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+}
+
 module.exports = {
+	transformRoomInfo,
 	createRoom,
 	preEnterRoom,
 	joinRoom,
