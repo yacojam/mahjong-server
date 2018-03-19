@@ -28,7 +28,7 @@ router.get('/get_hall_info', async (ctx, next) => {
 		}
 		let ret = Object.assign({}, user, { token, notice })
 		// 返回最新消息的id
-		if (lastMsg) {
+		if (lastMsg && lastMsg.state == 0) {
 			ret.msgIndex = lastMsg.id
 		}
 		ctx.json = ret
