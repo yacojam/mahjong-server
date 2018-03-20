@@ -114,6 +114,8 @@ class Room {
         newRecord.dingques = this.seats.map(s => s.que).join('&')
         newRecord.actions = []
         newRecord.gameresult = ''
+        newRecord.gamenum = this.currentGame
+        newRecord.junum = this.currentJu
         newRecord.success = false
         newRecord.scores = this.seats
             .map(s => {
