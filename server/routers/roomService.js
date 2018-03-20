@@ -90,4 +90,27 @@ router.get('/get_all_results', async (ctx, next) => {
   }
 })
 
+//获取用户的某个房间的游戏记录
+router.get('/get_room_records', async (ctx, next) => {
+  const userid = ctx.header.userid
+  const token = ctx.header.token
+  let isValid = await tokenManager.isAccountValid(userid, token)
+  if (isValid) {
+    let { rid, createTime } = ctx.query
+    let room = await RoomDao.getRoomForRecord(rid, createTime, userid)
+    if (room == null) {
+      ctx.error = {
+        code: -1,
+        message: '参数错误'
+      }
+    } else {
+      let roomRet = await roomManager.transformRoomInfo(room)
+      roomRet.records = await RoomDao.getRoomsAllRecords(room.id)
+      ctx.json = { ret: roomRet }
+    }
+  } else {
+    ctx.error = ErrorType.AccountValidError
+  }
+})
+
 module.exports = router

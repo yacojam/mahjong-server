@@ -54,8 +54,39 @@ exports.getAllRoomsForUserId = function(userid) {
     })
 }
 
+exports.getRoomForRecord = function(presentid, createtime, userid) {
+    return DBBase.select(
+        'nv_rooms',
+        `presentid='${presentid}' and createtime='${createtime}'`
+    ).then(room => {
+        if (room == null) {
+            return null
+        } else {
+            let { userid0, userid1, userid2, userid3, createuserid } = room
+            if (
+                userid == userid0 ||
+                userid == userid1 ||
+                userid == userid2 ||
+                userid == userid3 ||
+                userid == createuserid
+            ) {
+                return room
+            }
+            return null
+        }
+    })
+}
+
+exports.getRoomsAllRecords = function(rid) {
+    return DBBase.selectAll('nv_games', `rid='${rid}'`)
+}
+
 // async function test() {
-//     let ret = await exports.getAllRoomsForUserId('100001')
+//     let ret = await exports.getRoomForRecord(
+//         '334636',
+//         '2018-3-16 21:46:58',
+//         100004
+//     ) //await exports.getAllRoomsForUserId('100001')
 //     console.log(JSON.stringify(ret))
 // }
 
