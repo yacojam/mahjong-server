@@ -80,7 +80,9 @@ router.get('/get_all_results', async (ctx, next) => {
     } else {
       let rets = []
       for (let s of rooms) {
+        let records = await RoomDao.getRoomsAllRecords(room.id)
         let ret = await roomManager.transformRoomInfo(s)
+        ret.records = records
         rets.push(ret)
       }
       ctx.json = { rooms: rets }
