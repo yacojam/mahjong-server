@@ -89,6 +89,13 @@ router.post('/create_qps', async (ctx, next) => {
     }
     let qpsname = ctx.request.body.qpsname
     // TODO yyj 重名检测
+    if (qpsManager.getQpsByName(qpsname)) {
+      ctx.error = {
+        code: -1,
+        message: '该棋牌室名称已被占用'
+      }
+      return
+    }
     let qpsnotice = ctx.request.body.qpsnotice
     let weixin = ctx.request.body.weixin
     let rules = ctx.request.body.rules
@@ -112,6 +119,13 @@ router.post('/update_qps', async (ctx, next) => {
 
   try {
     let { qpsid, qpsname, qpsnotice, rules, weixin } = ctx.request.body
+    if (qpsManager.getQpsByName(qpsname)) {
+      ctx.error = {
+        code: -1,
+        message: '该棋牌室名称已被占用'
+      }
+      return
+    }
     let qps = qpsManager.getQps(qpsid)
     if (qps == null || qps.creator != userid) {
       ctx.error = {

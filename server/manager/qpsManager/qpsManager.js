@@ -267,6 +267,12 @@ function getQps(qpsid) {
 	return QPSMap[qpsid] || null
 }
 
+function getQpsByName(name) {
+	return Object.keys(QPSMap).find(qpsId=>{
+		return QPSMap[qpsId].qpsname === name
+	})
+}
+
 async function addUser(qps, userid) {
 	let userData = await UserDao.getUserDataByUserid(userid)
 	let { name, headimg } = userData
@@ -298,7 +304,8 @@ module.exports = {
 	createRoomForQps,
 	connectQps,
 	disconnectQps,
-	getApplyRecords
+	getApplyRecords,
+	getQpsByName
 }
 
 //createQps('100008', '和县麻将', '和谐游戏', [[0], [0], [0], [0]])
