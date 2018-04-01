@@ -23,7 +23,7 @@ router.get('/get_all_qps', async (ctx, next) => {
           qpsnotice: qps.qpsnotice,
           rules: qps.rules,
           usernum: qps.users.length,
-          running: qps.state == 1
+          state: qps.state
         }
       })
     }
