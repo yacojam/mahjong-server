@@ -5,19 +5,7 @@ const tokenManager = require('../redis/tokenRedisDao')
 const ErrorType = require('./ServerError')
 const Router = require('koa-router')
 const router = new Router()
-const HxRulesUtils = require('../manager/roomManager/util/HxRulesUtils')
 const roomManager = require('../manager/roomManager/roomManager')
-
-router.get('/get_rules', async (ctx, next) => {
-  let userid = ctx.query.userid
-  let token = ctx.query.token
-  let isValid = await tokenManager.isAccountValid(userid, token)
-  if (isValid) {
-    ctx.json = HxRulesUtils.rules
-  } else {
-    ctx.error = ErrorType.AccountValidError
-  }
-})
 
 //创建房间
 router.post('/create_private_room', async (ctx, next) => {

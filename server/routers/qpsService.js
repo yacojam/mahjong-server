@@ -23,7 +23,7 @@ router.get('/get_all_qps', async (ctx, next) => {
           qpsnotice: qps.qpsnotice,
           rules: qps.rules,
           usernum: qps.users.length,
-          running: qps.running
+          running: qps.state == 1
         }
       })
     }
@@ -119,14 +119,14 @@ router.post('/update_qps', async (ctx, next) => {
 
   try {
     let { qpsid, qpsname, qpsnotice, rules, weixin } = ctx.request.body
-    if (qpsManager.getQpsByName(qpsname)) {
+    let qps = qpsManager.getQps(qpsid)
+    if (qps.qpsname != qpsname && qpsManager.getQpsByName(qpsname)) {
       ctx.error = {
         code: -1,
         message: '该棋牌室名称已被占用'
       }
       return
     }
-    let qps = qpsManager.getQps(qpsid)
     if (qps == null || qps.creator != userid) {
       ctx.error = {
         code: -1,

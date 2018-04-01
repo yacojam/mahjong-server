@@ -1,6 +1,7 @@
 const UserDao = require('../../db/UserDao')
 const QpsDao = require('../../db/QpsDao')
-const MsgDao = require('../../db/MsgDao')
+const Message = require('../msgManager/Message')
+const msgManager = require('../msgManager/msgManager')
 const Qipaishi = require('./qpsInfo')
 const connectionManager = require('../connectionManager/connectionManager')
 const qpsFomatter = require('./qpsMsgFomatter')
@@ -34,6 +35,9 @@ async function start() {
 async function _runQps(qps) {
 	let rets = []
 	for (let i = 0; i < 2; i++) {
+		if (qps.state == -1) {
+			continue
+		}
 		let ret = await createRoomForQps(qps)
 		if (ret.code != 0) {
 			return rets
@@ -54,9 +58,30 @@ async function getAllQps(userid) {
 
 async function createRoomForQps(qps) {
 	let roomManager = require('../roomManager/roomManager')
+	// 如果管理员房卡数低于10张，发送提醒消息
+	var userCard = await UserDao.getCardNum(qps.creator)
+	if (userCard <= 10) {
+		await msgManager.sendMessage(new Message({
+			toId: qps.creator,
+			title: '您的房卡不多了',
+			content: '您的房卡已不足10张，房卡耗尽后您的棋牌室将无法继续使用，请尽快充值房卡。'
+		}))
+	}
+	if (qps.state === -1) {
+		return {
+			code: -1,
+			message: '您的棋牌室已停用'
+		}
+	}
 	let ret = await roomManager.createRoom(qps.creator, qps.rules, qps.qpsid)
 	if (ret.code != 0) {
-		qps.running = false
+		await msgManager.sendMessage(new Message({
+			toId: qps.creator,
+			title: '您的棋牌室无法创建房间',
+			content: ret.code == 1 ? '由于您的房卡已不足，棋牌室已暂停使用。请尽快充值房卡。' : '抱歉，棋牌室房间创建失败，具体原因请联系客服咨询。'
+		}))
+		qps.state = -1
+		await QpsDao.updateQps(qps.qpsid, {state: -1})
 	} else {
 		let { roomPresentId, conf } = ret.data.room
 		let users = []
@@ -96,6 +121,7 @@ async function createQps(userid, qpsname, weixin, qpsnotice, rules) {
 		qpsname,
 		weixin,
 		qpsnotice,
+		state: 1,
 		rules: JSON.stringify(rules)
 	}
 	await QpsDao.createQps(data)
@@ -104,8 +130,8 @@ async function createQps(userid, qpsname, weixin, qpsnotice, rules) {
 		qpsid,
 		iscreator: true
 	})
+	data.creator = userid
 	QPSMap[qpsid] = new Qipaishi(data)
-	QPSMap[qpsid].creator = userid
 	addUser(QPSMap[qpsid], userid)
 	await _runQps(QPSMap[qpsid])
 	return QPSMap[qpsid]
@@ -133,7 +159,7 @@ function isValid(qid) {
 
 async function activeQps(userid, qpsid) {
 	let qps = QPSMap[qpsid]
-	if (qps.running) {
+	if (qps.state != -1) {
 		return true
 	}
 	let cardNum = await UserDao.getCardNum(userid)
@@ -141,7 +167,8 @@ async function activeQps(userid, qpsid) {
 		return false
 	}
 	let rets = await _runQps(qps)
-	qps.running = true
+	qps.state = 1
+	await QpsDao.updateQps(qps.qpsid, {state: 1})
 	return true
 }
 
@@ -163,7 +190,7 @@ async function deleteQps(userid, qpsid) {
 	delete QPSMap[qpsid]
 	await QpsDao.deleteQps(qpsid)
 	await QpsDao.deleteQpsAllRelation(qpsid)
-	await MsgDao.deleteMsgWhere(`type in (1, 2) and dataid=${qpsid}`)
+	await msgManager.deleteDataRelatedMsg([1, 2], qpsid)
 }
 
 async function exitQps(userid, qpsid) {
@@ -190,7 +217,7 @@ async function joinQpsRequest(userid, qpsid) {
 	let applyData = await QpsDao.addApply(userid, userData.name, qpsid)
 
 	// 通知棋牌室管理员
-	await MsgDao.insertMsg(qpsFomatter.format(applyData, qps, qps.creator))
+	await msgManager.sendMessage(qpsFomatter.format(applyData, qps, qps.creator))
 }
 
 async function agreeJoinQpsRequest(aid, userid) {
@@ -216,7 +243,7 @@ async function agreeJoinQpsRequest(aid, userid) {
 	})
 	 
 	// 通知申请人
-	await MsgDao.insertMsg(qpsFomatter.format(apply, qps, apply.senderid))
+	await msgManager.sendMessage(qpsFomatter.format(apply, qps, apply.senderid))
 }
 
 async function rejectJoinQpsRequest(aid, userid) {
@@ -229,7 +256,7 @@ async function rejectJoinQpsRequest(aid, userid) {
 
 	await QpsDao.refuseApply(aid)
 	// 通知申请人
-	await MsgDao.insertMsg(qpsFomatter.format(apply, qps, apply.senderid))
+	await msgManager.sendMessage(qpsFomatter.format(apply, qps, apply.senderid))
 }
 
 //进入qps

@@ -6,8 +6,8 @@ class Qipaishi {
 		this.weixin = item.weixin
 		this.rules = JSON.parse(item.rules)
 		this.users = []
-		this.running = true
-		this.creator = null
+		this.state = item.state
+		this.creator = item.creator
 	}
 
 	getUser(userid) {

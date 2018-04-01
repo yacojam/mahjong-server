@@ -1,0 +1,92 @@
+[
+    {
+        "name": "和县刀子",
+        "key": "hxdz",
+        "rules": [
+            {
+                "title": "房间设置",
+                "key": "fjsz",
+                "options": [
+                    {
+                        "title": "一刀一打",
+                        "value": 1
+                    }, {
+                        "title": "两刀连打",
+                        "value": 2
+                    }, {
+                        "title": "一局四刀",
+                        "value": 4
+                    }
+                ],
+                "default": [0],
+                "mutex": true
+            }, {
+                "title": "刀子底分",
+                "key": "dzdf",
+                "options": [
+                    {
+                        "title": "10元一刀",
+                        "value": 10
+                    }, {
+                        "title": "15元一刀",
+                        "value": 15
+                    }, {
+                        "title": "25元一刀",
+                        "value": 25
+                    }, {
+                        "title": "50元一刀",
+                        "value": 50
+                    }
+                ],
+                "default": [0],
+                "mutex": true
+            }, {
+                "title": "附加大拿",
+                "key": "fjdn",
+                "options": [
+                    {
+                        "title": "逢双(除双杠双连)",
+                        "value": "fs"
+                    }, {
+                        "title": "三杠",
+                        "value": "3gang"
+                    }, {
+                        "title": "清一色",
+                        "value": "qys"
+                    }, {
+                        "title": "31加10",
+                        "value": "31+10"
+                    }, {
+                        "title": "三大砍带头",
+                        "value": "sdkdt"
+                    }, {
+                        "title": "红三番",
+                        "value": "hsf"
+                    }, {
+                        "title": "暗老小头",
+                        "value": "alxt"
+                    }, {
+                        "title": "点炮50点自摸100点",
+                        "value": "dp50zm100"
+                    }, {
+                        "title": "大跳车自摸",
+                        "value": "dtczm"
+                    }  
+                ],
+                "default": [],
+                "mutex": false
+            }, {
+                "title": "额外设置",
+                "key": "ewsz",
+                "options": [
+                    {
+                        "title": "随风三大砍",
+                        "value": "sfsdk"
+                    }
+                ],
+                "default": [],
+                "mutex": false
+            }
+        ]
+    }
+]

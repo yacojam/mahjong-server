@@ -6,6 +6,7 @@ CREATE TABLE nv_qps (
   qpsname varchar(8) NOT NULL COMMENT '棋牌室名称',
   qpsnotice varchar(256) NOT NULL COMMENT '棋牌室公告',
   rules varchar(256) DEFAULT NULL COMMENT '棋牌室规则数组',
+  state tinyint DEFAULT NULL COMMENT '棋牌室状态(1:运行中，-1: 停运)',
   PRIMARY KEY (id),
   UNIQUE KEY qpsid (qpsid)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
