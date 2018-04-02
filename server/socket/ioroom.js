@@ -4,7 +4,7 @@ const qpsManager = require('../manager/qpsManager/qpsManager')
 const Error = require('../routers/ServerError')
 const userDao = require('../db/UserDao')
 const Next = require('./handler/next')
-const RoomState = Next.RoomState
+const RoomState = require('../manager/roomManager/RoomState')
 const actionHandle = require('./handler/handler')
 
 async function dissolveRoom(rpid) {
@@ -17,7 +17,7 @@ async function dissolveRoom(rpid) {
     }
     await calculateDissolveResult(room)
     let data = { ret: null }
-    if (room.state != 0) {
+    if (room.state != RoomState.READY) {
         data.ret = room.seats.map(s => {
             let { index, roomResult, userid } = s
             return { index, roomResult, userid }
@@ -40,10 +40,10 @@ async function dissolveRoom(rpid) {
 }
 
 async function calculateDissolveResult(room) {
-    if (room.state == 0) {
+    if (room.state == RoomState.READY) {
         return
     }
-    if (room.state != 4) {
+    if (room.state != RoomState.JUOVER) {
         room.seats.forEach(s => {
             let { score, moMoney } = s
             let isScoreWin = score - 50 > 0
@@ -210,7 +210,7 @@ function bind(socket) {
             return
         }
         //牌局已经开始，建议走申请牌局解散
-        if (room.state != 0) {
+        if (room.state != RoomState.READY) {
             return
         }
         await dissolveRoom(room.roomPresentId)

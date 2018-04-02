@@ -4,15 +4,7 @@ const Publish = require('../dataflow/publish')
 const Pending = require('../../algorithm/HxmjRules/pendingtype')
 const connectionManager = require('../../manager/connectionManager/connectionManager')
 const roomManager = require('../../manager/roomManager/roomManager')
-
-const RoomState = {
-	READY: 0,
-	QINGQUE: 1,
-	PLAY: 2,
-	GAMEOVER: 3,
-	JUOVER: 4,
-	ROOMOVER: 5
-}
+const RoomState = require('../../manager/roomManager/RoomState')
 
 async function getRoomData(room, uid) {
 	let ret = {}
@@ -223,6 +215,5 @@ module.exports = {
 	startRoom,
 	moAction,
 	startAction,
-	nextUser,
-	RoomState: RoomState
+	nextUser
 }

@@ -1,5 +1,7 @@
 const tokenManager = require('../redis/tokenRedisDao')
 const qpsManager = require('../manager/qpsManager/qpsManager')
+const roomManager = require('../manager/roomManager/roomManager')
+const RoomState = require('../manager/roomManager/RoomState')
 const ErrorType = require('./ServerError')
 const Router = require('koa-router')
 const router = new Router()
@@ -199,6 +201,15 @@ router.post('/delete_qps', async (ctx, next) => {
 
   try {
     let { qpsid } = ctx.request.body
+    let rooms = roomManager.getRoomsForQps(qpsid) || []
+    let playingRoom = rooms.find(r => r.state != RoomState.READY || r.state != RoomState.ROOMOVER)
+    if (playingRoom) {
+      ctx.error = {
+        code: -1,
+        message: '您的棋牌室有房间正在进行游戏，请等待房间结束后重试。'
+      }
+      return
+    }
     let qps = qpsManager.getQps(qpsid)
     if (qps == null || qps.creator != userid) {
       ctx.error = {

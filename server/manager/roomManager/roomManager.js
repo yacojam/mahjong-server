@@ -4,6 +4,7 @@ const userDao = require('../../db/UserDao')
 const QpsDao = require('../../db/QpsDao')
 const crypto = require('../../md5/cryptoHelper')
 const Room = require('./roomInfo')
+const RoomState = require('./RoomState')
 
 let user2ids = {}
 let RoomMap = {}
@@ -224,7 +225,7 @@ async function exitRoom(userid) {
 		return ret
 	}
 	//牌局已经开始，建议走申请牌局解散
-	if (room.state != 0) {
+	if (room.state != RoomState.READY) {
 		ret.code = 2
 		return ret
 	}
@@ -254,7 +255,7 @@ async function dissolveRoom(rpid) {
 	setTimeout(() => {
 		delRoom(rpid)
 	}, 600000)
-	if (room.state == 0) {
+	if (room.state == RoomState.READY) {
 		await userDao.addCardNum(room.createUid, room.rule.numOfJu)
 	}
 	return users
@@ -323,7 +324,7 @@ function getRoomsForQps(qpsid) {
 	return Object.keys(RoomMap)
 		.map(key => RoomMap[key])
 		.filter(r => {
-			return r.state == 0 && r.qpsid && r.qpsid == qpsid
+			return r.state == RoomState.READY && r.qpsid && r.qpsid == qpsid
 		})
 }
 

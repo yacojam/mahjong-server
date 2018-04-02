@@ -1,3 +1,5 @@
+const RoomState = require('./RoomState')
+
 function getEmptySeat(i) {
     let seat = {}
     seat.userid = 0
@@ -46,7 +48,7 @@ class Room {
         this.sign = ''
         this.result = []
         this.gameRecord = []
-        this.state = 0
+        this.state = RoomState.READY
         this.index = -1
         this.leftPais = []
         this.pendingType = null

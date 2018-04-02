@@ -4,7 +4,7 @@ const Publish = require('../../dataflow/publish')
 const HXMJManager = require('../../../algorithm/HxmjRules/HxmjManager')
 const Action = require('../../../algorithm/HxmjRules/hxaction')
 const Next = require('../next')
-const RoomState = Next.RoomState
+const RoomState = require('../../../manager/roomManager/RoomState')
 
 async function hu(room, seat, action) {
 	room.pendingType = Pending.PENDING_TYPE_NULL
