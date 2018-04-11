@@ -47,9 +47,7 @@ async function calculateDissolveResult(room) {
         room.seats.forEach(s => {
             let { score, moMoney } = s
             let isScoreWin = score - 50 > 0
-            let scoreMoney = Math.round(
-                Math.abs(score - 50) * room.rule.dfOfJu / 50.0
-            )
+            let scoreMoney = Math.round(Math.abs(score - 50) * room.rule.dfOfJu / 50.0)
             if (!isScoreWin) {
                 scoreMoney = 0 - scoreMoney
             }
@@ -96,8 +94,7 @@ function bind(socket) {
         if (socket.userid != null) {
             return
         }
-        userData =
-            typeof userData === 'string' ? JSON.parse(userData) : userData
+        userData = typeof userData === 'string' ? JSON.parse(userData) : userData
         var ret = {}
         let { userid, rpid, sign } = userData
         if (!roomManager.isMatched(rpid, sign)) {
@@ -130,10 +127,7 @@ function bind(socket) {
         seat.online = true
         //返回数据给客户端
         ret = await Next.getRoomData(room, userid)
-        if (
-            (room.dissolveId != null && room.dissolveUid != null) ||
-            room.dissolved
-        ) {
+        if ((room.dissolveId != null && room.dissolveUid != null) || room.dissolved) {
             let dSeats = room.seats.filter(u => u.dissolved).map(u => u.userid)
             ret.data.dissolveData = {
                 roomDissoved: room.dissolved,
@@ -190,11 +184,7 @@ function bind(socket) {
             let user = qps.getUser(userid)
             user.onlineType = 0
             broadcastInQps('qps_user_off', user, qps)
-            broadcastInQps(
-                'qps_user_exit_room',
-                { userid: user.userid, rpid: ret.room.roomPresentId },
-                qps
-            )
+            broadcastInQps('qps_user_exit_room', { userid: user.userid, rpid: ret.room.roomPresentId }, qps)
         }
     })
 
@@ -234,13 +224,11 @@ function bind(socket) {
                 room.dissolveTimeId = null
                 dissolveRoom(room.roomPresentId)
             }
-        }, 61000)
-        room.time = 61
+        }, 60000)
+        room.time = 60
         room.dissolveTimeId = setInterval(() => {
             room.time = room.time - 1
-            if (room.time == 0) {
-                clearInterval(room.dissolveTimeId)
-            }
+            broadcastInRoom('dissolve_left_time', { time: room.time }, userid, true)
         }, 1000)
         room.dissolveUid = userid
         room.getUserSeat(userid).dissolved = true
@@ -261,12 +249,7 @@ function bind(socket) {
         if (!seat.dissolved) {
             seat.dissolved = true
             socket.emit('dissolve_agree_send_success', {})
-            broadcastInRoom(
-                'dissolve_request_agree_push',
-                { userid },
-                userid,
-                true
-            )
+            broadcastInRoom('dissolve_request_agree_push', { userid }, userid, true)
             let dissolved = room.seats.every(s => s.dissolved)
             if (dissolved) {
                 clearTimeout(room.dissolveId)
@@ -316,10 +299,7 @@ function bind(socket) {
         }
         room.seats[index].ready = true
         let continued = false
-        if (
-            room.state === RoomState.GAMEOVER ||
-            room.state === RoomState.JUOVER
-        ) {
+        if (room.state === RoomState.GAMEOVER || room.state === RoomState.JUOVER) {
             continued = true
         }
         let data = { userid: userid, ready: true, continued }
@@ -329,11 +309,7 @@ function bind(socket) {
             if (room.qpsid && !continued) {
                 qps = qpsManager.getQps(room.qpsid)
                 if (qps) {
-                    broadcastInQps(
-                        'qps_room_start',
-                        { rpid: room.roomPresentId },
-                        qps
-                    )
+                    broadcastInQps('qps_room_start', { rpid: room.roomPresentId }, qps)
                     await qpsManager.createRoomForQps(qps)
                 }
             }
@@ -431,11 +407,7 @@ function broadcastWithRoom(message, data, room, userid, includedSender) {
                 if (room.seats[i].userid == userid && !includedSender) {
                     continue
                 }
-                connectionManager.sendMessage(
-                    room.seats[i].userid,
-                    message,
-                    data
-                )
+                connectionManager.sendMessage(room.seats[i].userid, message, data)
             }
         }
     }
